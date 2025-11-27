@@ -433,9 +433,9 @@ const TensorSecurityAcademy = () => {
   ];
 
 const socialLinks: SocialLink[] = [
-  { name: 'LinkedInIcon',  icon: Linkedin,  url: 'https://linkedin.com/YOUR_PROFILE', color: '#1DA1F2' },
-  { name: 'InstagramIcon', icon: Instagram, url: 'https://instagram.com/YOUR_PROFILE', color: '#E4405F' },
-  { name: 'FacebookIcon',  icon: Facebook,  url: 'https://facebook.com/YOUR_PAGE',    color: '#1877F2' },
+  { name: 'LinkedIn',  icon: Linkedin,  url: 'https://linkedin.com/YOUR_PROFILE', color: '#1DA1F2' },
+  { name: 'Instagram', icon: Instagram, url: 'https://instagram.com/YOUR_PROFILE', color: '#E4405F' },
+  { name: 'Facebook',  icon: Facebook,  url: 'https://facebook.com/YOUR_PAGE',    color: '#1877F2' },
   { name: 'X',         icon: X,         url: 'https://twitter.com/YOUR_HANDLE',   color: '#1DA1F2' },
 ];
 
