@@ -587,7 +587,7 @@ const socialLinks: SocialLink[] = [
       {/* WhatsApp Button */}
       {mounted && (
         <a 
-          href="https://wa.me/01331759287"
+          href="https://wa.me/88001331759287"
           target="_blank"
           rel="noopener noreferrer"
           style={{
