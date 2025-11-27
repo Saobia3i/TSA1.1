@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 // UI icons from Lucide
-// UI icons from Lucide
+
 import {
   Shield, Code, Bug, Brain, Zap, Globe, LucideIcon, Lock, Target,
   Users, CheckCircle, Menu, MessageCircle, ArrowRight, Eye, Bot,
-  Mail, MapPin, ChevronDown   
+  Mail, MapPin, ChevronDown
 } from 'lucide-react';
 
 import Linkedin from '@mui/icons-material/LinkedIn';
@@ -497,6 +497,7 @@ const socialLinks: SocialLink[] = [
     }
     setMobileMenuOpen(false);
     setSocialsOpen(false);
+    
   };
 
   // ============================================
@@ -587,7 +588,7 @@ const socialLinks: SocialLink[] = [
       {/* WhatsApp Button */}
       {mounted && (
         <a 
-          href="https://wa.me/88001331759287"
+          href="https://wa.me/8801331759287"
           target="_blank"
           rel="noopener noreferrer"
           style={{
