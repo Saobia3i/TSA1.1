@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, Code, Bug, Brain, Zap, Globe, LucideIcon, Lock, Target,
   Users, CheckCircle, Menu, MessageCircle, ArrowRight, Eye, Bot,
-  Mail, MapPin, ChevronDown
+  Mail, MapPin, ChevronDown, X as CloseIcon
 } from 'lucide-react';
 
 import Linkedin from '@mui/icons-material/LinkedIn';
@@ -490,15 +490,26 @@ const socialLinks: SocialLink[] = [
   // HELPER FUNCTIONS
   // ============================================
   
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-    setMobileMenuOpen(false);
-    setSocialsOpen(false);
-    
-  };
+ const scrollToSection = (id: string) => {
+  const element = document.getElementById(id);
+  if (!element) return;
+
+  const headerOffset = 90;
+  const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+  const offsetPosition = elementPosition - headerOffset;
+
+  setMobileMenuOpen(false);
+  setSocialsOpen(false);
+
+  setTimeout(() => {
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth',
+    });
+  }, 10);
+};
+
+
 
   // ============================================
   // NAV LINK COMPONENT
@@ -737,7 +748,7 @@ const socialLinks: SocialLink[] = [
               zIndex: 50,
             }}
           >
-            {mobileMenuOpen ? <X style={{ width: '28px', height: '28px' }} /> : <Menu style={{ width: '28px', height: '28px' }} />}
+            {mobileMenuOpen ? <CloseIcon style={{ width: '28px', height: '28px' }} /> : <Menu style={{ width: '28px', height: '28px' }} />}
           </button>
         </div>
 
