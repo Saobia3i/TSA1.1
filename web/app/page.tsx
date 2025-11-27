@@ -2,7 +2,22 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Code, Bug, Brain, Zap, Globe, Lock, Target, Users, CheckCircle, Menu, X, Linkedin, MessageCircle, ArrowRight, Eye, Bot, Mail, MapPin, ChevronDown, Instagram, Facebook, Twitter, LucideIcon } from 'lucide-react';
+// UI icons from Lucide
+// UI icons from Lucide
+import {
+  Shield, Code, Bug, Brain, Zap, Globe, LucideIcon, Lock, Target,
+  Users, CheckCircle, Menu, MessageCircle, ArrowRight, Eye, Bot,
+  Mail, MapPin, ChevronDown   
+} from 'lucide-react';
+
+import Linkedin from '@mui/icons-material/LinkedIn';
+import Instagram from '@mui/icons-material/Instagram';
+import Facebook from '@mui/icons-material/Facebook';
+import X from '@mui/icons-material/X'; // Twitter er latest name (X)
+
+import type { SvgIconComponent } from '@mui/icons-material';
+
+
 
 
 interface CardItem {
@@ -15,7 +30,7 @@ interface CardItem {
 
 interface SocialLink {
   name: string;
-  icon: LucideIcon;
+  icon: SvgIconComponent;
   url: string;
   color: string;
 }
@@ -122,7 +137,7 @@ const CyberSecurityBackground = () => {
   if (!mounted) return null;
 
   return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden',  zIndex: 0  }}>
       {/* Animated Matrix Grid */}
       <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
         <defs>
@@ -185,7 +200,7 @@ const CyberSecurityBackground = () => {
             ease: 'easeInOut',
           }}
         >
-          {['[0x', '1010', '<?>', 'SSH', 'API', 'TCP'][i % 6]}
+         
         </motion.div>
       ))}
 
@@ -417,12 +432,13 @@ const TensorSecurityAcademy = () => {
     { title: "Web Development Services", description: "Fast, secure, and scalable web applications with security-first approach.", icon: Globe, showButton: false }
   ];
 
-  const socialLinks: SocialLink[] = [
-    { name: 'LinkedIn', icon: Linkedin, url: 'https://linkedin.com/YOUR_PROFILE', color: '#0A66C2' },
-    { name: 'Instagram', icon: Instagram, url: 'https://instagram.com/YOUR_PROFILE', color: '#E4405F' },
-    { name: 'Facebook', icon: Facebook, url: 'https://facebook.com/YOUR_PAGE', color: '#1877F2' },
-    { name: 'Twitter', icon: Twitter, url: 'https://twitter.com/YOUR_HANDLE', color: '#1DA1F2' },
-  ];
+const socialLinks: SocialLink[] = [
+  { name: 'LinkedInIcon',  icon: Linkedin,  url: 'https://linkedin.com/YOUR_PROFILE', color: '#1DA1F2' },
+  { name: 'InstagramIcon', icon: Instagram, url: 'https://instagram.com/YOUR_PROFILE', color: '#E4405F' },
+  { name: 'FacebookIcon',  icon: Facebook,  url: 'https://facebook.com/YOUR_PAGE',    color: '#1877F2' },
+  { name: 'X',         icon: X,         url: 'https://twitter.com/YOUR_HANDLE',   color: '#1DA1F2' },
+];
+
 
   // ============================================
   // USE EFFECTS
@@ -571,7 +587,7 @@ const TensorSecurityAcademy = () => {
       {/* WhatsApp Button */}
       {mounted && (
         <a 
-          href="https://wa.me/YOUR_PHONE_NUMBER"
+          href="https://wa.me/01331759287"
           target="_blank"
           rel="noopener noreferrer"
           style={{
@@ -600,7 +616,7 @@ const TensorSecurityAcademy = () => {
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 40,
+        zIndex: 90,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         backdropFilter: 'blur(12px)',
         borderBottom: '1px solid rgba(6, 182, 212, 0.2)',
@@ -803,6 +819,7 @@ const TensorSecurityAcademy = () => {
           position: 'absolute',
           inset: 0,
           background: 'linear-gradient(to bottom right, rgba(0, 20, 40, 0.95), rgba(0, 0, 0, 0.98), rgba(20, 0, 40, 0.95))',
+          zIndex: 0,
         }} />
 
         <CyberSecurityBackground />
@@ -1128,7 +1145,7 @@ const TensorSecurityAcademy = () => {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <Mail style={{ width: '16px', height: '16px', color: '#22d3ee' }} />
-                  <span style={{ color: '#9ca3af', fontSize: '13px' }}>info@tensorsecurity.com</span>
+                  <span style={{ color: '#9ca3af', fontSize: '13px' }}>abrar@tensorsecurity.com</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <MapPin style={{ width: '16px', height: '16px', color: '#22d3ee' }} />
