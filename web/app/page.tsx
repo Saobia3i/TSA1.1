@@ -4,11 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Code, Bug, Brain, Zap, Globe, Lock, Target, Users, CheckCircle, Menu, X, Linkedin, MessageCircle, ArrowRight, Eye, Bot, Mail, MapPin, ChevronDown, Instagram, Facebook, Twitter, LucideIcon } from 'lucide-react';
 
-// ============================================
-// TYPE DEFINITIONS - সব types এখানে define করা
-// ============================================
 
-// Course/Service Card এর type
 interface CardItem {
   title: string;
   description: string;
@@ -17,7 +13,6 @@ interface CardItem {
   tag?: string; // Optional
 }
 
-// Social Link এর type
 interface SocialLink {
   name: string;
   icon: LucideIcon;
@@ -25,7 +20,6 @@ interface SocialLink {
   color: string;
 }
 
-// Instructor এর type
 interface Instructor {
   name: string;
   role: string;
