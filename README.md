@@ -32,12 +32,9 @@
 This project was developed across multiple repos for the same codebase.  
 Below are the WakaTime badges tracking total coding time:
 
-[![wakatime – TSA Main](https://wakatime.com/badge/user/7f0860ba-774e-43d9-8390-34249079bba4/project/b6a444c6-e080-4dbd-ad13-7e863cfc6302.svg)](https://wakatime.com/badge/user/7f0860ba-774e-43d9-8390-34249079bba4/project/b6a444c6-e080-4dbd-ad13-7e863cfc6302)
-[![wakatime – TSA UI](https://wakatime.com/badge/user/7f0860ba-774e-43d9-8390-34249079bba4/project/11db647e-4f0f-4a6a-97f2-dd586675a17f.svg)](https://wakatime.com/badge/user/7f0860ba-774e-43d9-8390-34249079bba4/project/11db647e-4f0f-4a6a-97f2-dd586675a17f)
+[![wakatime](https://wakatime.com/badge/user/7f0860ba-774e-43d9-8390-34249079bba4/project/14cc4ab8-602c-4fc1-81c7-7f6139131b95.svg)]
 
-> Same project, split across two repositories – these badges together represent the full development time.
 
----
 
 ## <ins>🌐 Live Demo</ins>
 
