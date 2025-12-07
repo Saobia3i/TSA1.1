@@ -37,12 +37,10 @@ export default function HomePage() {
     offset: ['start center', 'end center'],
   });
 
-  // Smooth scrolling enabled via CSS - no script interference for performance
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Auto-play services slideshow
   useEffect(() => {
     if (isServicePaused) return;
 
@@ -53,7 +51,6 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, [isServicePaused, featuredServices.length]);
 
-  // 3D Course Card Carousel
   const handleCourseNext = () => {
     setCourseIndex((prev) => (prev + 1) % featuredCourses.length);
   };
@@ -67,7 +64,6 @@ export default function HomePage() {
     setIsServicePaused(true);
   };
 
-  // Get visible course cards
   const getVisibleCourses = () => {
     const cards = [];
     for (let i = -1; i <= 1; i++) {
@@ -453,7 +449,7 @@ export default function HomePage() {
                               zIndex: 10,
                             }}
                           >
-                            {badgeText}
+                            {badgeText === 'Trending' && '🔥 '}{badgeText}
                           </motion.div>
                         )}
 

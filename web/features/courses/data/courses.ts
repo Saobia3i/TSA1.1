@@ -8,7 +8,7 @@ export interface Course {
   description: string;
   icon: LucideIcon;
   duration: string;
-  badge?: string; 
+  badge?: string; // এটি এখন optional আছে
   level: string;
   tags: string[];
   topics?: string[];
@@ -22,6 +22,7 @@ export const courses: Course[] = [
     description: 'Comprehensive training program designed to take you from beginner to job-ready security analyst. Learn SOC operations, threat hunting, incident response, and master industry-standard SIEM tools.',
     icon: Shield,
     duration: '12 Weeks',
+    badge: 'Beginner to Advanced',
     level: 'Beginner',
     tags: ['SOC', 'SIEM', 'Threat Intelligence', 'Live Training'],
     topics: [
@@ -40,8 +41,9 @@ export const courses: Course[] = [
     description: 'Advanced penetration testing course covering reconnaissance, exploitation, privilege escalation, and post-exploitation. Learn to think like an attacker and master red team operations.',
     icon: Target,
     duration: '16 Weeks',
+    badge: 'Trending',
     level: 'Intermediate',
-    tags: ['Pentesting', 'Red Team', 'Exploitation', 'Trending'],
+    tags: ['Pentesting', 'Red Team', 'Exploitation', 'Live Training'],
     topics: [
       'Reconnaissance & Information Gathering',
       'Vulnerability Assessment',
@@ -78,6 +80,7 @@ export const courses: Course[] = [
     description: 'Complete machine learning course from fundamentals to advanced techniques. Learn Python, data preprocessing, model building, and deployment of real-world ML applications.',
     icon: Brain,
     duration: '14 Weeks',
+    badge: 'Coming Soon',
     level: 'Beginner',
     tags: ['Machine Learning', 'AI', 'Python', 'Data Science'],
     topics: [
@@ -116,6 +119,7 @@ export const courses: Course[] = [
     description: 'Complete web development bootcamp covering frontend, backend, databases, and security. Build secure, scalable web applications using modern technologies and best practices.',
     icon: Code,
     duration: '20 Weeks',
+    badge: 'Beginner to Advanced',
     level: 'Beginner',
     tags: ['Web Development', 'Full Stack', 'Security', 'React', 'Node.js'],
     topics: [

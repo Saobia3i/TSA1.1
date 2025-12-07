@@ -10,17 +10,19 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 html {
   overflow-x: hidden;
   max-width: 100vw;
   scroll-behavior: smooth;
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 /* Apply design system font family globally */
 body, *, *::before, *::after {
-  font-family: var(--font-family-base) !important;
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 body {
@@ -30,11 +32,12 @@ body {
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 /* All Headings */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-family-base) !important;
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   font-weight: var(--font-weight-semibold);
   letter-spacing: var(--letter-spacing-tight);
   line-height: var(--line-height-tight);
@@ -43,7 +46,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Navigation */
 nav, nav *, nav a, nav button, nav span {
-  font-family: var(--font-family-base) !important;
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 nav a {
@@ -57,7 +60,7 @@ nav a:hover {
 
 /* Buttons */
 button, .btn, a.btn {
-  font-family: var(--font-family-base) !important;
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   font-weight: var(--font-weight-medium);
   position: relative;
   overflow: hidden;
@@ -76,12 +79,37 @@ button:focus-visible, .btn:focus-visible {
 
 /* Paragraphs and Text */
 p, span, div, section, article {
-  font-family: var(--font-family-base) !important;
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 p {
   line-height: var(--line-height-normal);
   color: var(--color-text);
+}
+
+/* Links */
+a {
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* Form elements */
+input, textarea, select, label {
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* Code and Pre */
+code, pre, kbd, samp {
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* Table elements */
+table, thead, tbody, tfoot, tr, th, td {
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* List elements */
+ul, ol, li, dl, dt, dd {
+  font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
 }
 
 /* Scrollbar */
@@ -107,13 +135,23 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Animation for glow effect */
+/* Animation for glow effect - Light Mode */
 @keyframes glowPulse {
   0%, 100% {
     box-shadow: 0 0 15px rgba(var(--color-teal-500-rgb), 0.5), 0 0 30px rgba(var(--color-teal-500-rgb), 0.3);
   }
   50% {
     box-shadow: 0 0 25px rgba(var(--color-teal-500-rgb), 0.7), 0 0 40px rgba(var(--color-teal-500-rgb), 0.5);
+  }
+}
+
+/* Animation for glow effect - Dark Mode */
+@keyframes glowPulseDark {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(var(--color-teal-300-rgb), 0.5), 0 0 30px rgba(var(--color-teal-300-rgb), 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(var(--color-teal-300-rgb), 0.7), 0 0 40px rgba(var(--color-teal-300-rgb), 0.5);
   }
 }
 
@@ -128,15 +166,8 @@ html {
   }
 }
 
-[data-color-scheme="dark"] {
-  @keyframes glowPulse {
-    0%, 100% {
-      box-shadow: 0 0 15px rgba(var(--color-teal-300-rgb), 0.5), 0 0 30px rgba(var(--color-teal-300-rgb), 0.3);
-    }
-    50% {
-      box-shadow: 0 0 25px rgba(var(--color-teal-300-rgb), 0.7), 0 0 40px rgba(var(--color-teal-300-rgb), 0.5);
-    }
-  }
+[data-color-scheme="dark"] .glow-button {
+  animation: glowPulseDark 2s ease-in-out infinite;
 }
 
 .glow-button {
@@ -151,19 +182,23 @@ html {
 
   h1 {
     font-size: var(--font-size-2xl);
+    font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   }
 
   h2 {
     font-size: var(--font-size-xl);
+    font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   }
 
   h3 {
     font-size: var(--font-size-lg);
+    font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   }
 
   button, .btn, a.btn {
     padding: var(--space-8) var(--space-12);
     font-size: var(--font-size-sm);
+    font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   }
 
   ::-webkit-scrollbar {
@@ -178,6 +213,7 @@ html {
   p {
     font-size: var(--font-size-base);
     line-height: var(--line-height-normal);
+    font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   }
 
   /* Adjust spacing for mobile */
@@ -191,5 +227,6 @@ html {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+    font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   }
 }
