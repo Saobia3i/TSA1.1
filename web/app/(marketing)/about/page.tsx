@@ -32,7 +32,7 @@ const teamMembers = [
   {
     name: 'Saobia Tinni',
     role: 'Principal Web Engineer',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop',
+    image: 'https://ik.imagekit.io/ekb0d0it0/Saobia%20Islam.png?updatedAt=1764317906408',
     mail: 'islamsaobia@gmail.com',
     isFounder: false,
   },

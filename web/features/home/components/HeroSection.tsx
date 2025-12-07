@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Users, Zap, CheckCircle, Shield } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 const heroSlides = [
   'FORGE YOUR FUTURE IN TECH SECURITY',
@@ -32,9 +31,11 @@ export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [clickEffects, setClickEffects] = useState<ClickEffect[]>([]);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationFrameRef = useRef<number>();
   const mouseXRef = useRef(0);
@@ -49,6 +50,25 @@ export default function HeroSection() {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Ensure video plays smoothly
+  useEffect(() => {
+    if (videoRef.current && mounted) {
+      videoRef.current.play().catch((error) => {
+        console.log('Video autoplay blocked:', error);
+        // Retry on user interaction
+        const playOnInteraction = () => {
+          if (videoRef.current) {
+            videoRef.current.play();
+          }
+          document.removeEventListener('click', playOnInteraction);
+          document.removeEventListener('touchstart', playOnInteraction);
+        };
+        document.addEventListener('click', playOnInteraction);
+        document.addEventListener('touchstart', playOnInteraction);
+      });
+    }
+  }, [mounted]);
 
   // Canvas mouse trail effect
   useEffect(() => {
@@ -106,56 +126,54 @@ export default function HeroSection() {
       }
     };
 
-    containerRef.current.addEventListener('mousemove', handleMouseMove);
-    containerRef.current.addEventListener('touchmove', handleTouchMove);
+    const currentContainer = containerRef.current;
+    currentContainer.addEventListener('mousemove', handleMouseMove);
+    currentContainer.addEventListener('touchmove', handleTouchMove);
 
-   const animate = () => {
-  if (!ctx || !canvas.width || !canvas.height) return;
+    const animate = () => {
+      if (!ctx || !canvas.width || !canvas.height) return;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Mouse glow effect - CYAN
-  const gradient = ctx.createRadialGradient(
-    mouseXRef.current,
-    mouseYRef.current,
-    0,
-    mouseXRef.current,
-    mouseYRef.current,
-    150
-  );
-  gradient.addColorStop(0, 'rgba(34, 211, 238, 0.4)'); // Cyan
-  gradient.addColorStop(0.5, 'rgba(34, 211, 238, 0.15)'); // Cyan
-  gradient.addColorStop(1, 'rgba(34, 211, 238, 0)'); // Transparent
+      // Mouse glow effect - CYAN
+      const gradient = ctx.createRadialGradient(
+        mouseXRef.current,
+        mouseYRef.current,
+        0,
+        mouseXRef.current,
+        mouseYRef.current,
+        150
+      );
+      gradient.addColorStop(0, 'rgba(34, 211, 238, 0.4)');
+      gradient.addColorStop(0.5, 'rgba(34, 211, 238, 0.15)');
+      gradient.addColorStop(1, 'rgba(34, 211, 238, 0)');
 
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Update and draw particles - CYAN
-  particlesRef.current = particlesRef.current.filter(p => p.life > 0);
-  particlesRef.current.forEach(particle => {
-    particle.x += particle.speedX;
-    particle.y += particle.speedY;
-    particle.life -= 2;
-    if (particle.size > 0.2) particle.size -= 0.05;
+      // Update and draw particles - CYAN
+      particlesRef.current = particlesRef.current.filter(p => p.life > 0);
+      particlesRef.current.forEach(particle => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        particle.life -= 2;
+        if (particle.size > 0.2) particle.size -= 0.05;
 
-    ctx.fillStyle = `rgba(34, 211, 238, ${particle.life / 100})`; // CYAN particles
-    ctx.beginPath();
-    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-    ctx.fill();
-  });
+        ctx.fillStyle = `rgba(34, 211, 238, ${particle.life / 100})`;
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
-  animationFrameRef.current = requestAnimationFrame(animate);
-};
-
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
 
     animate();
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
-      if (containerRef.current) {
-        containerRef.current.removeEventListener('mousemove', handleMouseMove);
-        containerRef.current.removeEventListener('touchmove', handleTouchMove);
-      }
+      currentContainer.removeEventListener('mousemove', handleMouseMove);
+      currentContainer.removeEventListener('touchmove', handleTouchMove);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
@@ -209,7 +227,7 @@ export default function HeroSection() {
         overflow: 'hidden',
       }}
     >
-      {/* GIF Background */}
+      {/* VIDEO Background - Smooth Autoplay */}
       <div
         style={{
           position: 'absolute',
@@ -218,20 +236,55 @@ export default function HeroSection() {
           width: '100%',
           height: '100%',
           zIndex: 0,
+          backgroundColor: '#000',
         }}
       >
-        <Image
-          src="/hero-background.gif"
-          alt="Animated hero background"
-          fill
-          priority
-          quality={100}
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          onLoadedData={() => setVideoLoaded(true)}
           style={{
+            width: '100%',
+            height: '100%',
             objectFit: 'cover',
             objectPosition: 'center',
+            opacity: videoLoaded ? 1 : 0,
+            transition: 'opacity 0.5s ease-in-out',
           }}
-          unoptimized
-        />
+        >
+          <source src="/hero-background.mp4" type="video/mp4" />
+          <source src="/hero-background.webm" type="video/webm" />
+          Your browser does not support the video tag.
+        </video>
+
+        {/* Fallback poster/loading state */}
+        {!videoLoaded && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'linear-gradient(135deg, #000000 0%, #001a33 50%, #000000 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <motion.div
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              style={{ color: '#22d3ee', fontSize: '18px', fontWeight: 600 }}
+            >
+              Loading...
+            </motion.div>
+          </div>
+        )}
       </div>
 
       {/* Canvas for mouse trail */}
@@ -248,7 +301,7 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Click/Touch Golden Star Burst Effects */}
+      {/* Click/Touch Cyan Star Burst Effects */}
       {clickEffects.map(effect => (
         <div 
           key={effect.id} 
@@ -270,8 +323,8 @@ export default function HeroSection() {
               width: '60px',
               height: '60px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(255, 215, 0, 0.8), transparent)',
-              boxShadow: '0 0 40px rgba(255, 215, 0, 0.6)',
+              background: 'radial-gradient(circle, rgba(34, 211, 238, 0.8), transparent)',
+              boxShadow: '0 0 40px rgba(34, 211, 238, 0.6)',
               transform: 'translate(-50%, -50%)',
             }}
           />
@@ -307,20 +360,20 @@ export default function HeroSection() {
                   style={{ 
                     width: '100%', 
                     height: '100%',
-                    filter: 'drop-shadow(0 0 4px rgba(255, 215, 0, 0.9))',
+                    filter: 'drop-shadow(0 0 4px rgba(34, 211, 238, 0.9))',
                   }}
                 >
                   <path
                     d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
-                    fill="url(#gold-gradient)"
-                    stroke="rgba(255, 223, 0, 0.9)"
+                    fill="url(#cyan-gradient)"
+                    stroke="rgba(34, 211, 238, 0.9)"
                     strokeWidth="0.5"
                   />
                   <defs>
-                    <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" style={{ stopColor: '#FFD700', stopOpacity: 1 }} />
-                      <stop offset="50%" style={{ stopColor: '#FFA500', stopOpacity: 1 }} />
-                      <stop offset="100%" style={{ stopColor: '#FFD700', stopOpacity: 1 }} />
+                    <linearGradient id="cyan-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style={{ stopColor: '#22d3ee', stopOpacity: 1 }} />
+                      <stop offset="50%" style={{ stopColor: '#06b6d4', stopOpacity: 1 }} />
+                      <stop offset="100%" style={{ stopColor: '#22d3ee', stopOpacity: 1 }} />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -348,8 +401,8 @@ export default function HeroSection() {
                   width: '3px',
                   height: '3px',
                   borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #FFD700, #FFA500)',
-                  boxShadow: '0 0 6px rgba(255, 215, 0, 0.9)',
+                  background: 'linear-gradient(135deg, #22d3ee, #06b6d4)',
+                  boxShadow: '0 0 6px rgba(34, 211, 238, 0.9)',
                   transform: 'translate(-50%, -50%)',
                 }}
               />
@@ -407,7 +460,7 @@ export default function HeroSection() {
             A Globally Trusted Edtech
           </motion.div>
 
-          {/* Headline - Nunito Sans Bold with Letter Spacing */}
+          {/* Headline */}
           <div style={{ width: '100%', minHeight: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <AnimatePresence mode="wait">
               <motion.h1
@@ -450,63 +503,62 @@ export default function HeroSection() {
             Go from curious to career-ready with <span style={{ color: '#22d3ee', fontWeight: 700 }}>elite mentorship</span>, hands-on training, and real-world projects.
           </motion.p>
 
-         {/* CTA Button - Neon Blinking with Rounded Border */}
-<motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.5, duration: 0.8 }}
-  style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '12px', pointerEvents: 'auto' }}
->
-  <Link href="/courses" style={{ textDecoration: 'none' }}>
-    <motion.div
-      animate={{
-        boxShadow: [
-          '0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(236, 72, 153, 0.4)',
-          '0 0 40px rgba(168, 85, 247, 0.9), 0 0 80px rgba(236, 72, 153, 0.7)',
-          '0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(236, 72, 153, 0.4)',
-        ],
-      }}
-      transition={{
-        duration: 2,
-        repeat: Infinity,
-        ease: 'easeInOut',
-      }}
-      style={{
-        borderRadius: '50px',
-        padding: '3px', // Border thickness
-        background: 'linear-gradient(135deg, #a855f7, #ec4899)',
-        display: 'inline-block',
-      }}
-    >
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        style={{
-          padding: '16px 32px',
-          fontSize: '16px',
-          fontWeight: 800,
-          borderRadius: '50px',
-          border: 'none',
-          background: 'rgba(0, 0, 0, 0.8)',
-          color: '#ffffff',
-          cursor: 'pointer',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '10px',
-          fontFamily: 'var(--font-nunito)',
-          letterSpacing: '1px',
-          backdropFilter: 'blur(10px)',
-          transition: 'all 0.3s ease',
-          width: '100%',
-        }}
-      >
-        Explore Courses
-        <ArrowRight style={{ width: '16px', height: '20px' }} />
-      </motion.button>
-    </motion.div>
-  </Link>
-</motion.div>
-
+          {/* CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '12px', pointerEvents: 'auto' }}
+          >
+            <Link href="/courses" style={{ textDecoration: 'none' }}>
+              <motion.div
+                animate={{
+                  boxShadow: [
+                    '0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(236, 72, 153, 0.4)',
+                    '0 0 40px rgba(168, 85, 247, 0.9), 0 0 80px rgba(236, 72, 153, 0.7)',
+                    '0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(236, 72, 153, 0.4)',
+                  ],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+                style={{
+                  borderRadius: '50px',
+                  padding: '3px',
+                  background: 'linear-gradient(135deg, #a855f7, #ec4899)',
+                  display: 'inline-block',
+                }}
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{
+                    padding: '16px 32px',
+                    fontSize: '16px',
+                    fontWeight: 800,
+                    borderRadius: '50px',
+                    border: 'none',
+                    background: 'rgba(0, 0, 0, 0.8)',
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    fontFamily: 'var(--font-nunito)',
+                    letterSpacing: '1px',
+                    backdropFilter: 'blur(10px)',
+                    transition: 'all 0.3s ease',
+                    width: '100%',
+                  }}
+                >
+                  Explore Courses
+                  <ArrowRight style={{ width: '16px', height: '20px' }} />
+                </motion.button>
+              </motion.div>
+            </Link>
+          </motion.div>
 
           {/* Feature Grid */}
           <div
