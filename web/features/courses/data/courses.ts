@@ -8,6 +8,7 @@ export interface Course {
   description: string;
   icon: LucideIcon;
   duration: string;
+  badge?: string; 
   level: string;
   tags: string[];
   topics?: string[];
