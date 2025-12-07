@@ -1,148 +1,180 @@
-import { Shield, Target, Bug, Brain, Zap, Code } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+'use client';
 
-export interface Course {
-  slug: string;
-  title: string;
-  shortDescription: string;
-  description: string;
-  icon: LucideIcon;
-  duration: string;
-  badge?: string; // Optional badge property
-  level: string;
-  tags: string[];
-  topics?: string[];
+import { motion } from 'framer-motion';
+import { ArrowLeft, Clock, BarChart, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
+import { getCourseBySlug } from '@/features/courses/data/courses';
+import { notFound } from 'next/navigation';
+
+interface CourseDetailsPageProps {
+  params: { courseSlug: string };
 }
 
-export const courses: Course[] = [
-  {
-    slug: 'security-analyst-bootcamp',
-    title: 'Beginner to Hired: Security Analyst Live Training',
-    shortDescription: 'Launch your cybersecurity career from scratch with SOC operations, threat intelligence, and SIEM tools.',
-    description: 'Comprehensive training program designed to take you from beginner to job-ready security analyst. Learn SOC operations, threat hunting, incident response, and master industry-standard SIEM tools.',
-    icon: Shield,
-    duration: '12 Weeks',
-    badge: 'Beginner to Advanced',
-    level: 'Beginner',
-    tags: ['SOC', 'SIEM', 'Threat Intelligence', 'Live Training'],
-    topics: [
-      'SOC Fundamentals & Operations',
-      'Threat Intelligence Analysis',
-      'SIEM Tools (Splunk, ELK Stack)',
-      'Incident Response & Handling',
-      'Log Analysis & Correlation',
-      'Security Monitoring Best Practices',
-    ],
-  },
-  {
-    slug: 'ethical-hacking-red-team',
-    title: 'Ethical Hacking & Red Teaming Live Training',
-    shortDescription: 'Master penetration testing methodologies and advanced exploitation techniques.',
-    description: 'Advanced penetration testing course covering reconnaissance, exploitation, privilege escalation, and post-exploitation. Learn to think like an attacker and master red team operations.',
-    icon: Target,
-    duration: '16 Weeks',
-    badge: 'Trending',
-    level: 'Intermediate',
-    tags: ['Pentesting', 'Red Team', 'Exploitation', 'Live Training'],
-    topics: [
-      'Reconnaissance & Information Gathering',
-      'Vulnerability Assessment',
-      'Web Application Exploitation',
-      'Network Penetration Testing',
-      'Privilege Escalation Techniques',
-      'Active Directory Attacks',
-      'Post-Exploitation & Pivoting',
-    ],
-  },
-  {
-    slug: 'bug-bounty-mastery',
-    title: 'Advanced Bug Bounty Training',
-    shortDescription: 'Learn to find critical vulnerabilities in web applications on platforms like HackerOne.',
-    description: 'Specialized training for bug bounty hunters. Master advanced web vulnerabilities, automation, and learn how to earn from bug bounty programs on HackerOne, Bugcrowd, and more.',
-    icon: Bug,
-    duration: '10 Weeks',
-    level: 'Intermediate',
-    tags: ['Bug Bounty', 'Web Security', 'OWASP'],
-    topics: [
-      'OWASP Top 10 Deep Dive',
-      'Advanced XSS & CSRF',
-      'SQL Injection Techniques',
-      'SSRF & XXE Exploitation',
-      'Authentication Bypass',
-      'Bug Bounty Automation',
-      'Report Writing & Communication',
-    ],
-  },
-  {
-    slug: 'machine-learning-zero-to-alpha',
-    title: 'Machine Learning: Zero to Alpha',
-    shortDescription: 'Build powerful machine learning models with data science fundamentals.',
-    description: 'Complete machine learning course from fundamentals to advanced techniques. Learn Python, data preprocessing, model building, and deployment of real-world ML applications.',
-    icon: Brain,
-    duration: '14 Weeks',
-    badge: 'Coming Soon',
-    level: 'Beginner',
-    tags: ['Machine Learning', 'AI', 'Python', 'Data Science'],
-    topics: [
-      'Python for Data Science',
-      'Statistics & Mathematics Fundamentals',
-      'Supervised Learning Algorithms',
-      'Unsupervised Learning & Clustering',
-      'Neural Networks & Deep Learning',
-      'Model Evaluation & Optimization',
-      'ML Project Deployment',
-    ],
-  },
-  {
-    slug: 'ai-automation-for-business',
-    title: 'How to Build AI Automations for Businesses',
-    shortDescription: 'Create custom automation bots and integrate AI APIs for real business solutions.',
-    description: 'Practical AI automation course focused on building real business solutions. Learn to create chatbots, automate workflows, and integrate AI APIs like OpenAI, Claude, and more.',
-    icon: Zap,
-    duration: '8 Weeks',
-    level: 'Intermediate',
-    tags: ['AI Automation', 'LLMs', 'APIs', 'Business'],
-    topics: [
-      'AI & LLM Fundamentals',
-      'OpenAI & Claude API Integration',
-      'Building Custom Chatbots',
-      'Workflow Automation',
-      'Document Processing with AI',
-      'Voice & Speech Recognition',
-      'Deploying AI Solutions',
-    ],
-  },
-  {
-    slug: 'professional-web-developer',
-    title: 'Professional Web Developer',
-    shortDescription: 'Master full stack development with emphasis on security best practices.',
-    description: 'Complete web development bootcamp covering frontend, backend, databases, and security. Build secure, scalable web applications using modern technologies and best practices.',
-    icon: Code,
-    duration: '20 Weeks',
-    badge: 'Beginner to Advanced',
-    level: 'Beginner',
-    tags: ['Web Development', 'Full Stack', 'Security', 'React', 'Node.js'],
-    topics: [
-      'HTML, CSS, JavaScript Fundamentals',
-      'React & Modern Frontend',
-      'Node.js & Express Backend',
-      'Database Design (SQL & NoSQL)',
-      'RESTful API Development',
-      'Authentication & Authorization',
-      'Web Security Best Practices',
-      'Deployment & DevOps Basics',
-    ],
-  },
-];
+export default function CourseDetailsPage({ params }: CourseDetailsPageProps) {
+  const course = getCourseBySlug(params.courseSlug);
 
-export function getAllCourses() {
-  return courses;
-}
+  if (!course) {
+    notFound();
+  }
 
-export function getCourseBySlug(slug: string) {
-  return courses.find((c) => c.slug === slug);
-}
+  const Icon = course.icon;
 
-export function getFeaturedCourses(count: number = 3) {
-  return courses.slice(0, count);
+  return (
+    <div style={{ backgroundColor: '#000', minHeight: '100vh', paddingTop: '90px', overflowX: 'hidden' }}>
+      <div style={{ maxWidth: '1024px', margin: '0 auto', padding: '60px 24px' }}>
+        
+        <Link href="/courses" style={{ textDecoration: 'none' }}>
+          <motion.button
+            whileHover={{ scale: 1.05, x: -5 }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(17, 24, 39, 0.7)',
+              border: '2px solid rgba(255, 255, 255, 0.3)',
+              borderRadius: '10px',
+              padding: '10px 20px',
+              color: 'white',
+              fontSize: '14px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              marginBottom: '40px',
+              fontFamily: 'var(--font-nunito)',
+            }}
+          >
+            <ArrowLeft style={{ width: '18px', height: '18px' }} />
+            Back to Courses
+          </motion.button>
+        </Link>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            padding: '40px',
+            backgroundColor: 'rgba(17, 24, 39, 0.7)',
+            borderRadius: '20px',
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+          }}
+        >
+          <div
+            style={{
+              width: '70px',
+              height: '70px',
+              borderRadius: '16px',
+              background: 'linear-gradient(to bottom right, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.2))',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '24px',
+            }}
+          >
+            <Icon style={{ width: '36px', height: '36px', color: '#06b6d4' }} />
+          </div>
+
+          <h1
+            style={{
+              fontSize: 'clamp(28px, 4vw, 40px)',
+              fontWeight: 700,
+              color: 'white',
+              marginBottom: '16px',
+              fontFamily: 'var(--font-nunito)',
+            }}
+          >
+            {course.title}
+          </h1>
+
+          <p style={{ fontSize: '18px', color: '#d1d5db', lineHeight: 1.7, marginBottom: '24px' }}>
+            {course.description}
+          </p>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '32px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Clock style={{ width: '20px', height: '20px', color: '#22d3ee' }} />
+              <span style={{ fontSize: '15px', color: '#9ca3af' }}>{course.duration}</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <BarChart style={{ width: '20px', height: '20px', color: '#22d3ee' }} />
+              <span style={{ fontSize: '15px', color: '#9ca3af' }}>{course.level}</span>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
+            {course.tags.map((tag) => (
+              <span
+                key={tag}
+                style={{
+                  padding: '6px 16px',
+                  background: 'rgba(6, 182, 212, 0.1)',
+                  border: '1px solid rgba(6, 182, 212, 0.3)',
+                  borderRadius: '8px',
+                  fontSize: '13px',
+                  color: '#22d3ee',
+                  fontWeight: 600,
+                }}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {course.topics && course.topics.length > 0 && (
+            <div style={{ marginBottom: '32px' }}>
+              <h3
+                style={{
+                  fontSize: '22px',
+                  fontWeight: 700,
+                  color: 'white',
+                  marginBottom: '20px',
+                  fontFamily: 'var(--font-nunito)',
+                }}
+              >
+                What You'll Learn
+              </h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                {course.topics.map((topic, idx) => (
+                  <motion.li
+                    key={idx}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    style={{
+                      fontSize: '15px',
+                      color: '#d1d5db',
+                      marginBottom: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                    }}
+                  >
+                    <CheckCircle style={{ width: '20px', height: '20px', color: '#22d3ee', flexShrink: 0 }} />
+                    {topic}
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            style={{
+              padding: '16px 40px',
+              fontSize: '16px',
+              fontWeight: 600,
+              borderRadius: '10px',
+              border: '2px solid rgba(255, 255, 255, 0.3)',
+              background: 'linear-gradient(to right, rgba(6, 182, 212, 0.3), rgba(168, 85, 247, 0.3))',
+              color: 'white',
+              cursor: 'pointer',
+              fontFamily: 'var(--font-nunito)',
+            }}
+          >
+            Enroll Now
+          </motion.button>
+        </motion.div>
+      </div>
+    </div>
+  );
 }
