@@ -1,4 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 @import "tailwindcss";
+
+:root {
+  --font-family-base: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
 
 * {
   margin: 0;
@@ -7,109 +13,183 @@
 }
 
 html {
-  scroll-behavior: smooth;
   overflow-x: hidden;
+  max-width: 100vw;
+  scroll-behavior: smooth;
+}
+
+/* Apply design system font family globally */
+body, *, *::before, *::after {
+  font-family: var(--font-family-base) !important;
 }
 
 body {
-  background-color: #000;
-  color: #fff;
   overflow-x: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  max-width: 100vw;
+  background-color: var(--color-background);
+  color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
 }
 
-/* Prevent horizontal scroll on all elements */
-#__next,
-#root {
-  overflow-x: hidden;
+/* All Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-base) !important;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+  color: var(--color-text);
 }
 
-/* Custom scrollbar */
+/* Navigation */
+nav, nav *, nav a, nav button, nav span {
+  font-family: var(--font-family-base) !important;
+}
+
+nav a {
+  color: var(--color-text);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+nav a:hover {
+  color: var(--color-primary);
+}
+
+/* Buttons */
+button, .btn, a.btn {
+  font-family: var(--font-family-base) !important;
+  font-weight: var(--font-weight-medium);
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-8) var(--space-16);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-base);
+  transition: all var(--duration-normal) var(--ease-standard);
+  border: 1px solid var(--color-border);
+}
+
+button:focus-visible, .btn:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+  box-shadow: var(--focus-ring);
+}
+
+/* Paragraphs and Text */
+p, span, div, section, article {
+  font-family: var(--font-family-base) !important;
+}
+
+p {
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #000;
+  background: var(--color-surface);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #00d4ff, #a855f7);
-  border-radius: 5px;
+  background: linear-gradient(to bottom, var(--color-primary), var(--color-primary-hover));
+  border-radius: var(--radius-sm);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #00ffff, #c084fc);
+  background: linear-gradient(to bottom, var(--color-primary-hover), var(--color-primary-active));
 }
 
-/* Ensure images are responsive by default */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
 }
 
-/* Fix for text overflow */
-h1, h2, h3, h4, h5, h6, p {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  hyphens: auto;
-}
-
-/* Smooth transitions for all interactive elements */
-a, button {
-  transition: all 0.3s ease;
-}
-
-/* Prevent layout shift from buttons */
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Mobile-first responsive containers */
-.container {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (min-width: 640px) {
-  .container {
-    max-width: 640px;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+/* Animation for glow effect */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(var(--color-teal-500-rgb), 0.5), 0 0 30px rgba(var(--color-teal-500-rgb), 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(var(--color-teal-500-rgb), 0.7), 0 0 40px rgba(var(--color-teal-500-rgb), 0.5);
   }
 }
 
-@media (min-width: 768px) {
-  .container {
-    max-width: 768px;
-    padding-left: 2rem;
-    padding-right: 2rem;
+@media (prefers-color-scheme: dark) {
+  @keyframes glowPulse {
+    0%, 100% {
+      box-shadow: 0 0 15px rgba(var(--color-teal-300-rgb), 0.5), 0 0 30px rgba(var(--color-teal-300-rgb), 0.3);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(var(--color-teal-300-rgb), 0.7), 0 0 40px rgba(var(--color-teal-300-rgb), 0.5);
+    }
   }
 }
 
-@media (min-width: 1024px) {
-  .container {
-    max-width: 1024px;
+[data-color-scheme="dark"] {
+  @keyframes glowPulse {
+    0%, 100% {
+      box-shadow: 0 0 15px rgba(var(--color-teal-300-rgb), 0.5), 0 0 30px rgba(var(--color-teal-300-rgb), 0.3);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(var(--color-teal-300-rgb), 0.7), 0 0 40px rgba(var(--color-teal-300-rgb), 0.5);
+    }
   }
 }
 
-@media (min-width: 1280px) {
-  .container {
-    max-width: 1280px;
-  }
+.glow-button {
+  animation: glowPulse 2s ease-in-out infinite;
 }
 
-@media (min-width: 1536px) {
-  .container {
-    max-width: 1536px;
+/* Mobile responsive styles */
+@media (max-width: 480px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: var(--font-size-2xl);
+  }
+
+  h2 {
+    font-size: var(--font-size-xl);
+  }
+
+  h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  button, .btn, a.btn {
+    padding: var(--space-8) var(--space-12);
+    font-size: var(--font-size-sm);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .glow-button {
+    animation: none;
+  }
+
+  /* Ensure text is readable on mobile */
+  p {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+  }
+
+  /* Adjust spacing for mobile */
+  section {
+    padding: var(--space-16);
+  }
+
+  /* Make navigation more touch-friendly */
+  nav a, nav button {
+    padding: var(--space-12);
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
 }
