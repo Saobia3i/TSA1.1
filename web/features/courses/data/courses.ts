@@ -8,7 +8,7 @@ export interface Course {
   description: string;
   icon: LucideIcon;
   duration: string;
-  badge?: string; // এটি এখন optional আছে
+  badge?: string; // Optional badge property
   level: string;
   tags: string[];
   topics?: string[];
