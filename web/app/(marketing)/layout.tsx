@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Nunito_Sans } from 'next/font/google';
-import "./globals.css";
+import "@/app/globals.css";  // ← Fix this path
 import Navbar from '@/features/layout/components/Navbar';
 import Footer from '@/features/layout/components/Footer';
 
@@ -61,7 +61,6 @@ export const metadata: Metadata = {
     canonical: 'https://www.tensorsecurityacademy.com',
   },
 };
-
 
 export default function RootLayout({
   children,
