@@ -130,7 +130,7 @@ export default function CourseDetailsPage({ params }: CourseDetailsPageProps) {
                   fontFamily: 'var(--font-nunito)',
                 }}
               >
-                What You'll Learn
+                What You&apos;ll Learn
               </h3>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 {course.topics.map((topic, idx) => (
