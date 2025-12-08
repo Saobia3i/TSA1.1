@@ -37,7 +37,7 @@ export default function HeroSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const particlesRef = useRef<Particle[]>([]);
-  const animationFrameRef = useRef<number>();
+const animationFrameRef = useRef<number | null>(null); 
   const mouseXRef = useRef(0);
   const mouseYRef = useRef(0);
 
