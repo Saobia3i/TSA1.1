@@ -6,9 +6,10 @@ import { ArrowRight, MessageCircle, Quote } from 'lucide-react';
 import { useRef, useEffect, useState } from 'react';
 
 import HeroSection from '@/features/home/components/HeroSection';
-import { getFeaturedCourses } from '@/features/courses/data/courses';
+import { getFeaturedCourses, type Course } from '@/features/courses/data/courses';
 import { getAllServices } from '@/features/services/data/services';
 import { GlowingCard } from '@/components/ui/animated-cards';
+import CourseDetailsModal from '@/features/courses/components/CourseDetailsModal';
 
 export default function HomePage() {
   const featuredCourses = getFeaturedCourses();
@@ -21,6 +22,7 @@ export default function HomePage() {
   const [courseIndex, setCourseIndex] = useState(0);
   const [serviceIndex, setServiceIndex] = useState(0);
   const [isServicePaused, setIsServicePaused] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
 
   const { scrollYProgress: founderProgress } = useScroll({
     target: founderRef,
@@ -527,31 +529,35 @@ export default function HomePage() {
                         </div>
 
                         {/* Button */}
-                        <Link href={`/courses/${course.slug}`} style={{ textDecoration: 'none', position: 'relative', zIndex: 5 }}>
-                          <motion.button
-                            whileHover={{ 
-                              scale: 1.05,
-                              boxShadow: '0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(168, 85, 247, 0.4)',
-                            }}
-                            whileTap={{ scale: 0.95 }}
-                            style={{
-                              width: '100%',
-                              padding: '12px',
-                              fontSize: 'clamp(12px, 2vw, 13px)',
-                              fontWeight: 600,
-                              borderRadius: '10px',
-                              border: '2px solid rgba(34, 211, 238, 0.6)',
-                              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
-                              color: '#22d3ee',
-                              cursor: 'pointer',
-                              fontFamily: 'var(--font-nunito)',
-                              transition: 'all 0.3s ease',
-                              boxShadow: '0 0 15px rgba(34, 211, 238, 0.3)',
-                            }}
-                          >
-                            Learn More →
-                          </motion.button>
-                        </Link>
+                        <motion.button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCourse(course);
+                          }}
+                          whileHover={{ 
+                            scale: 1.05,
+                            boxShadow: '0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(168, 85, 247, 0.4)',
+                          }}
+                          whileTap={{ scale: 0.95 }}
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            fontSize: 'clamp(12px, 2vw, 13px)',
+                            fontWeight: 600,
+                            borderRadius: '10px',
+                            border: '2px solid rgba(34, 211, 238, 0.6)',
+                            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
+                            color: '#22d3ee',
+                            cursor: 'pointer',
+                            fontFamily: 'var(--font-nunito)',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 0 15px rgba(34, 211, 238, 0.3)',
+                            position: 'relative',
+                            zIndex: 5,
+                          }}
+                        >
+                          Learn More →
+                        </motion.button>
                       </div>
                     </GlowingCard>
                   </motion.div>
@@ -851,6 +857,16 @@ export default function HomePage() {
           )}
         </div>
       </motion.section>
+
+      {/* Course Details Modal */}
+      <AnimatePresence>
+        {selectedCourse && (
+          <CourseDetailsModal 
+            course={selectedCourse} 
+            onClose={() => setSelectedCourse(null)} 
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
