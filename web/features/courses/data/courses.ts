@@ -2,20 +2,23 @@ import { Shield, Target, Bug, Brain, Zap, Code } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Course {
+  id: string;
   slug: string;
   title: string;
   shortDescription: string;
   description: string;
   icon: LucideIcon;
   duration: string;
-  badge?: string; // Optional badge property
+  badge?: string;
   level: string;
   tags: string[];
-  topics?: string[];
+  topics: string[];
+  color: string;
 }
 
 export const courses: Course[] = [
   {
+    id: '1',
     slug: 'security-analyst-bootcamp',
     title: 'Beginner to Hired: Security Analyst Live Training',
     shortDescription: 'Launch your cybersecurity career from scratch with SOC operations, threat intelligence, and SIEM tools.',
@@ -24,6 +27,7 @@ export const courses: Course[] = [
     duration: '12 Weeks',
     badge: 'Beginner to Advanced',
     level: 'Beginner',
+    color: '#22d3ee',
     tags: ['SOC', 'SIEM', 'Threat Intelligence', 'Live Training'],
     topics: [
       'SOC Fundamentals & Operations',
@@ -35,6 +39,7 @@ export const courses: Course[] = [
     ],
   },
   {
+    id: '2',
     slug: 'ethical-hacking-red-team',
     title: 'Ethical Hacking & Red Teaming Live Training',
     shortDescription: 'Master penetration testing methodologies and advanced exploitation techniques.',
@@ -43,6 +48,7 @@ export const courses: Course[] = [
     duration: '16 Weeks',
     badge: 'Trending',
     level: 'Intermediate',
+    color: '#ec4899',
     tags: ['Pentesting', 'Red Team', 'Exploitation', 'Live Training'],
     topics: [
       'Reconnaissance & Information Gathering',
@@ -55,6 +61,7 @@ export const courses: Course[] = [
     ],
   },
   {
+    id: '3',
     slug: 'bug-bounty-mastery',
     title: 'Advanced Bug Bounty Training',
     shortDescription: 'Learn to find critical vulnerabilities in web applications on platforms like HackerOne.',
@@ -62,6 +69,7 @@ export const courses: Course[] = [
     icon: Bug,
     duration: '10 Weeks',
     level: 'Intermediate',
+    color: '#a855f7',
     tags: ['Bug Bounty', 'Web Security', 'OWASP'],
     topics: [
       'OWASP Top 10 Deep Dive',
@@ -74,6 +82,7 @@ export const courses: Course[] = [
     ],
   },
   {
+    id: '4',
     slug: 'machine-learning-zero-to-alpha',
     title: 'Machine Learning: Zero to Alpha',
     shortDescription: 'Build powerful machine learning models with data science fundamentals.',
@@ -82,6 +91,7 @@ export const courses: Course[] = [
     duration: '14 Weeks',
     badge: 'Coming Soon',
     level: 'Beginner',
+    color: '#10b981',
     tags: ['Machine Learning', 'AI', 'Python', 'Data Science'],
     topics: [
       'Python for Data Science',
@@ -94,6 +104,7 @@ export const courses: Course[] = [
     ],
   },
   {
+    id: '5',
     slug: 'ai-automation-for-business',
     title: 'How to Build AI Automations for Businesses',
     shortDescription: 'Create custom automation bots and integrate AI APIs for real business solutions.',
@@ -101,6 +112,7 @@ export const courses: Course[] = [
     icon: Zap,
     duration: '8 Weeks',
     level: 'Intermediate',
+    color: '#f59e0b',
     tags: ['AI Automation', 'LLMs', 'APIs', 'Business'],
     topics: [
       'AI & LLM Fundamentals',
@@ -113,6 +125,7 @@ export const courses: Course[] = [
     ],
   },
   {
+    id: '6',
     slug: 'professional-web-developer',
     title: 'Professional Web Developer',
     shortDescription: 'Master full stack development with emphasis on security best practices.',
@@ -121,6 +134,7 @@ export const courses: Course[] = [
     duration: '20 Weeks',
     badge: 'Beginner to Advanced',
     level: 'Beginner',
+    color: '#8b5cf6',
     tags: ['Web Development', 'Full Stack', 'Security', 'React', 'Node.js'],
     topics: [
       'HTML, CSS, JavaScript Fundamentals',
@@ -135,14 +149,14 @@ export const courses: Course[] = [
   },
 ];
 
-export function getAllCourses() {
+export function getAllCourses(): Course[] {
   return courses;
 }
 
-export function getCourseBySlug(slug: string) {
+export function getCourseBySlug(slug: string): Course | undefined {
   return courses.find((c) => c.slug === slug);
 }
 
-export function getFeaturedCourses(count: number = 3) {
+export function getFeaturedCourses(count: number = 3): Course[] {
   return courses.slice(0, count);
 }
