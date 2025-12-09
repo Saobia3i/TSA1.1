@@ -189,7 +189,7 @@ export default function Navbar() {
             }}
           >
             <Image
-              src="/logofinal.webp"
+              src="/logofinal.gif"
               alt="Tensor Security Academy Logo"
               width={45}
               height={45}
