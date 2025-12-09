@@ -1,5 +1,6 @@
 // components/backgrounds/CSSAuroraBackground.tsx
 import { ReactNode } from 'react';
+import { memo } from 'react';
 
 interface CSSAuroraProps {
   children: ReactNode;
