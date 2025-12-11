@@ -1,23 +1,9 @@
-// app/(marketing)/about/page.tsx
-'use client';
-
-// app/(marketing)/about/page.tsx
 'use client';
 
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic'; // ✅ Add this
-
-// ✅ Lazy load heavy components
-const CSSAuroraBackground = dynamic(
-  () => import('@/components/backgrounds/CSSAuroraBackground'),
-  { ssr: false }
-);
-
-// ✅ Lazy load icons
 import { 
-  MapIcon, 
   UserGroupIcon,
   HandRaisedIcon,
   AcademicCapIcon,
@@ -28,10 +14,7 @@ import {
 
 import styles from './page.module.css';
 
-// Rest of your code...
-
-
-const problems = [
+const PROBLEMS = [
   {
     title: 'Guidance Gap',
     description: 'Endless YouTube tutorials and generic blog posts created noise, not clarity. Aspiring professionals were drowning in surface-level content with no roadmap, no structure, and no one to turn to when they hit a wall.',
@@ -46,7 +29,7 @@ const problems = [
   },
 ];
 
-const differences = [
+const DIFFERENCES = [
   {
     title: 'A Mentor-Led Journey',
     description: 'Forget the isolation of solo learning. Imagine having seasoned cybersecurity professionals in your corner. Experts who\'ve walked the path you\'re on, who answer your questions in real-time, and who guide you past the pitfalls that derail most beginners.',
@@ -71,13 +54,13 @@ const differences = [
 
 export default function AboutPage() {
   return (
-    <CSSAuroraBackground intensity="low">
+    <div className={styles.pageBackground}>
       <div className={styles.pageWrapper}>
-        {/* BACK + NAVIGATION */}
+        {/* BACK BUTTON */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.3 }}
           className={styles.backButtonContainer}
         >
           <Link href="/">
@@ -86,7 +69,7 @@ export default function AboutPage() {
               whileTap={{ scale: 0.95 }}
               className={styles.backButton}
             >
-              <ArrowLeft style={{ width: '18px', height: '18px' }} />
+              <ArrowLeft className={styles.backButtonIcon} />
               Back to Home
             </motion.button>
           </Link>
@@ -96,13 +79,13 @@ export default function AboutPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.3}}
+          transition={{ duration: 0.5 }}
           className={styles.heroSection}
         >
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             className={styles.heroTitle}
           >
             About Our Journey
@@ -110,7 +93,7 @@ export default function AboutPage() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className={styles.heroSubtitle}
           >
             Democratizing cybersecurity education globally. Bridging exceptional talent with world-class training.
@@ -120,7 +103,7 @@ export default function AboutPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             className={styles.quickNavContainer}
           >
             <Link href="/about/team">
@@ -129,7 +112,7 @@ export default function AboutPage() {
                 whileTap={{ scale: 0.95 }}
                 className={styles.quickNavButton}
               >
-                <UserGroupIcon style={{ width: '20px', height: '20px' }} />
+                <UserGroupIcon className={styles.navIcon} />
                 Our Team
               </motion.button>
             </Link>
@@ -139,19 +122,19 @@ export default function AboutPage() {
                 whileTap={{ scale: 0.95 }}
                 className={`${styles.quickNavButton} ${styles.quickNavButtonAlt}`}
               >
-                <HandRaisedIcon style={{ width: '20px', height: '20px' }} />
+                <HandRaisedIcon className={styles.navIcon} />
                 Join Us
               </motion.button>
             </Link>
           </motion.div>
         </motion.div>
 
-        {/* PROBLEMS */}
+        {/* PROBLEMS SECTION */}
         <motion.section
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
           className={styles.section}
         >
           <div className={styles.sectionHeader}>
@@ -163,31 +146,20 @@ export default function AboutPage() {
 
           <div className={styles.roadmapContainer}>
             <div className={styles.roadmapLine} />
-            {problems.map((problem, index) => (
+            {PROBLEMS.map((problem, index) => (
               <motion.div
-                key={index}
+                key={problem.title}
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.15 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className={styles.roadmapItem}
               >
-                <motion.div
-                  animate={{
-                    boxShadow: [
-                      '0 0 10px rgba(0, 212, 255, 0.4)',
-                      '0 0 30px rgba(124, 58, 237, 0.6)',
-                      '0 0 10px rgba(0, 212, 255, 0.4)',
-                    ],
-                  }}
-                  transition={{ duration: 2.5, repeat: Infinity }}
-                  className={styles.roadmapDot}
-                />
+                <div className={styles.roadmapDot} />
                 <motion.div
                   whileHover={{ y: -8 }}
                   className={styles.card}
                 >
-                  <div className={styles.cardOverlay} />
                   <h3 className={styles.cardTitle}>"{problem.title}"</h3>
                   <p className={styles.cardDescription}>{problem.description}</p>
                 </motion.div>
@@ -199,6 +171,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
             className={styles.conclusionCard}
           >
             <p className={styles.conclusionText}>
@@ -207,11 +180,12 @@ export default function AboutPage() {
           </motion.div>
         </motion.section>
 
-        {/* DIFFERENCES */}
+        {/* DIFFERENCES SECTION */}
         <motion.section
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
           className={styles.sectionLarge}
         >
           <div className={styles.sectionHeader}>
@@ -220,32 +194,27 @@ export default function AboutPage() {
           </div>
 
           <div className={styles.premiumRoadmapContainer}>
-            <motion.div
-              animate={{ opacity: [0.4, 0.8, 0.4] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className={`${styles.centralLine} desktop-only-line`}
-            />
+            <div className={`${styles.centralLine} desktop-only-line`} />
 
-            {differences.map((diff, index) => {
+            {DIFFERENCES.map((diff, index) => {
               const isLeft = index % 2 === 0;
               const IconComponent = diff.icon;
               
               return (
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: isLeft ? -100 : 100 }}
+                  key={diff.title}
+                  initial={{ opacity: 0, x: isLeft ? -80 : 80 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.15 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   className={`${styles.roadmapItemWrapper} ${isLeft ? styles.roadmapItemLeft : styles.roadmapItemRight}`}
                 >
-                  <motion.div
-                    className={`${styles.centralDot} desktop-only-dot`}
-                    animate={{ rotate: [0, 360], scale: [1, 1.2, 1] }}
-                    transition={{ duration: 4, repeat: Infinity }}
-                  />
+                  <div className={`${styles.centralDot} desktop-only-dot`} />
 
-                  <motion.div whileHover={{ scale: 1.05, y: -10 }} className={styles.premiumCard}>
+                  <motion.div 
+                    whileHover={{ scale: 1.03, y: -8 }}
+                    className={styles.premiumCard}
+                  >
                     <div className={`${styles.compactIconBadge} ${isLeft ? styles.compactIconBadgeLeft : styles.compactIconBadgeRight}`}>
                       <IconComponent className={styles.compactHeroIcon} />
                     </div>
@@ -259,69 +228,33 @@ export default function AboutPage() {
 
           {/* CLOSING STATEMENT */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.8 }}
+            transition={{ duration: 0.5 }}
             className={styles.closingStatement}
           >
-            <motion.div
-              animate={{ opacity: [0.2, 0.5, 0.2], scale: [1, 1.3, 1] }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '400px',
-                height: '400px',
-                background: 'radial-gradient(circle, rgba(124, 58, 237, 0.3), transparent)',
-                borderRadius: '50%',
-                filter: 'blur(100px)',
-              }}
-            />
-
-            <p
-              style={{
-                fontSize: 'clamp(15px, 3vw, 18px)',
-                color: '#ffffff',
-                fontWeight: 700,
-                lineHeight: '1.9',
-                position: 'relative',
-                zIndex: 1,
-                maxWidth: '850px',
-                margin: '0 auto',
-              }}
-            >
+            <p className={styles.closingStatementText}>
               This approach works. The model was validated. The impact was undeniable. What began as Abrar's vision in Bangladesh has now expanded to{' '}
-              <span
-                style={{
-                  background: 'linear-gradient(135deg, #00d4ff, #7c3aed)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  fontWeight: 900,
-                }}
-              >
+              <span className={styles.highlightGradient}>
                 United States of America
-              </span>
-              , where TSA is actively training students and career shifters across America, equipping them with the hands-on skills and mentorship needed to launch successful cybersecurity careers. With ambitious plans to bring this transformative approach to the UK, Australia, Canada, and other English-speaking countries. This isn't just growth—it's a mission to democratize cybersecurity education on a global scale.
+              </span>, where TSA is actively training students and career shifters across America, equipping them with the hands-on skills and mentorship needed to launch successful cybersecurity careers. With ambitious plans to bring this transformative approach to the UK, Australia, Canada, and other English-speaking countries. This isn't just growth—it's a mission to democratize cybersecurity education on a global scale.
             </p>
           </motion.div>
         </motion.section>
 
-        {/* WHY TSA */}
+        {/* WHY TSA SECTION */}
         <motion.section
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5 }}
           className={styles.section}
         >
-          <div className={styles.whyTsaCard}>
-            <motion.div
-              animate={{ opacity: [0.15, 0.35, 0.15] }}
-              transition={{ duration: 5, repeat: Infinity }}
-              className={styles.whyTsaGlow}
-            />
+          <motion.div 
+            whileHover={{ scale: 1.01 }}
+            className={styles.whyTsaCard}
+          >
             <h2 className={styles.whyTsaTitle}>Why TSA Is More Than an Academy</h2>
             <p className={styles.whyTsaText}>
               TSA decentralizes knowledge. We're the bridge that elevates Bangladesh and South Asia's extraordinary, untapped tech talent onto the international stage at scale with the Western world's need for affordable, expert-led training. For too long, world-class cybersecurity and tech knowledge has been locked behind six-figure tuitions and geographic barriers. <span className={styles.whyTsaHighlight}>We're shattering those walls.</span>
@@ -332,9 +265,9 @@ export default function AboutPage() {
             <p className={styles.whyTsaTextAlt}>
               This is more than a platform. This is how we prove that genius knows no geography. Your breakthrough becomes our shared legacy. Your excellence becomes our collective proof to the world, where Bangladesh's tech excellence becomes impossible to ignore.
             </p>
-          </div>
+          </motion.div>
         </motion.section>
       </div>
-    </CSSAuroraBackground>
+    </div>
   );
 }

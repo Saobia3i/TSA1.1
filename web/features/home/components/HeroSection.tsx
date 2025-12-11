@@ -5,12 +5,31 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Users, Zap, CheckCircle, Shield } from 'lucide-react';
 import Link from 'next/link';
 
-const heroSlides = [
+const HERO_SLIDES = [
   'FORGE YOUR FUTURE IN TECH SECURITY',
   'MASTER CYBERSECURITY WITH LIVE TRAINING',
   'TRANSFORM YOUR CAREER IN 90 DAYS',
   'JOIN THE NEXT GENERATION OF HACKERS',
 ];
+
+const FEATURES = [
+  { icon: Users, text: '1-on-1 Mentorship', color: '#22d3ee' },
+  { icon: Zap, text: 'Live Training', color: '#a855f7' },
+  { icon: CheckCircle, text: 'Career Guidance', color: '#ec4899' },
+  { icon: Shield, text: 'Certification Support', color: '#06b6d4' },
+];
+
+const VIDEO_URL = 'https://res.cloudinary.com/dojh4b9sb/video/upload/v1765449734/hero-background_kwhnz8.mp4';
+const SLIDE_INTERVAL = 4000;
+const STAR_BURST_DURATION = 1500;
+const STAR_COUNT = 16;
+const SPARKLE_COUNT = 8;
+
+interface ClickEffect {
+  id: number;
+  x: number;
+  y: number;
+}
 
 interface Particle {
   x: number;
@@ -21,12 +40,6 @@ interface Particle {
   life: number;
 }
 
-interface ClickEffect {
-  id: number;
-  x: number;
-  y: number;
-}
-
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -34,40 +47,46 @@ export default function HeroSection() {
   const [videoLoaded, setVideoLoaded] = useState(false);
   
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
-const animationFrameRef = useRef<number | null>(null); 
+  const animationFrameRef = useRef<number | null>(null);
   const mouseXRef = useRef(0);
   const mouseYRef = useRef(0);
 
+  // Auto-slide effect
   useEffect(() => {
     setMounted(true);
 
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 4000);
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, SLIDE_INTERVAL);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Ensure video plays smoothly
+  // Video autoplay handler
   useEffect(() => {
-    if (videoRef.current && mounted) {
-      videoRef.current.play().catch((error) => {
-        console.log('Video autoplay blocked:', error);
-        // Retry on user interaction
+    if (!videoRef.current || !mounted) return;
+
+    const playVideo = async () => {
+      try {
+        await videoRef.current?.play();
+      } catch (error) {
+        console.log('Video autoplay blocked, waiting for user interaction');
+        
         const playOnInteraction = () => {
-          if (videoRef.current) {
-            videoRef.current.play();
-          }
+          videoRef.current?.play();
           document.removeEventListener('click', playOnInteraction);
           document.removeEventListener('touchstart', playOnInteraction);
         };
+        
         document.addEventListener('click', playOnInteraction);
         document.addEventListener('touchstart', playOnInteraction);
-      });
-    }
+      }
+    };
+
+    playVideo();
   }, [mounted]);
 
   // Canvas mouse trail effect
@@ -180,39 +199,43 @@ const animationFrameRef = useRef<number | null>(null);
     };
   }, [mounted]);
 
-  // Handle click to create star burst
+  // Click/Touch star burst effect handler
   const handleInteraction = (clientX: number, clientY: number) => {
     if (!containerRef.current) return;
+
     const rect = containerRef.current.getBoundingClientRect();
     const x = ((clientX - rect.left) / rect.width) * 100;
     const y = ((clientY - rect.top) / rect.height) * 100;
 
-    const effect = { id: Date.now() + Math.random(), x, y };
+    const effect: ClickEffect = { 
+      id: Date.now() + Math.random(), 
+      x, 
+      y 
+    };
+
     setClickEffects(prev => [...prev, effect]);
 
     setTimeout(() => {
       setClickEffects(prev => prev.filter(ef => ef.id !== effect.id));
-    }, 1500);
+    }, STAR_BURST_DURATION);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if ((e.target as HTMLElement).tagName !== 'BUTTON' && 
-        (e.target as HTMLElement).tagName !== 'A') {
+    const target = e.target as HTMLElement;
+    if (target.tagName !== 'BUTTON' && target.tagName !== 'A') {
       handleInteraction(e.clientX, e.clientY);
     }
   };
 
   const handleTouch = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (e.touches[0] && (e.target as HTMLElement).tagName !== 'BUTTON' && 
-        (e.target as HTMLElement).tagName !== 'A') {
+    const target = e.target as HTMLElement;
+    if (e.touches[0] && target.tagName !== 'BUTTON' && target.tagName !== 'A') {
       handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
     }
   };
 
   if (!mounted) {
-    return (
-      <div style={{ position: 'relative', width: '100%', minHeight: '100vh', background: '#000' }} />
-    );
+    return <div style={{ minHeight: '100vh', background: '#000' }} />;
   }
 
   return (
@@ -227,65 +250,13 @@ const animationFrameRef = useRef<number | null>(null);
         overflow: 'hidden',
       }}
     >
-      {/* VIDEO Background - Smooth Autoplay */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 0,
-          backgroundColor: '#000',
-        }}
-      >
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          onLoadedData={() => setVideoLoaded(true)}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'center',
-            opacity: videoLoaded ? 1 : 0,
-            transition: 'opacity 0.5s ease-in-out',
-          }}
-        >
-          <source src="/hero-background.mp4" type="video/mp4" />
-          <source src="/hero-background.webm" type="video/webm" />
-          Your browser does not support the video tag.
-        </video>
-
-        {/* Fallback poster/loading state */}
-        {!videoLoaded && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              background: 'linear-gradient(135deg, #000000 0%, #001a33 50%, #000000 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <motion.div
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              style={{ color: '#22d3ee', fontSize: '18px', fontWeight: 600 }}
-            >
-              Loading...
-            </motion.div>
-          </div>
-        )}
-      </div>
+      {/* Video Background */}
+      <VideoBackground 
+        videoRef={videoRef}
+        videoUrl={VIDEO_URL}
+        videoLoaded={videoLoaded}
+        onLoadedData={() => setVideoLoaded(true)}
+      />
 
       {/* Canvas for mouse trail */}
       <canvas
@@ -301,8 +272,143 @@ const animationFrameRef = useRef<number | null>(null);
         }}
       />
 
-      {/* Click/Touch Cyan Star Burst Effects */}
-      {clickEffects.map(effect => (
+      {/* Star Burst Click Effects */}
+      <StarBurstEffects effects={clickEffects} />
+
+      {/* Main Content */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          width: '100%',
+          maxWidth: '1100px',
+          margin: '0 auto',
+          padding: '140px 24px 80px',
+          display: 'flex',
+          alignItems: 'center',
+          minHeight: '100vh',
+          pointerEvents: 'none',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            gap: '32px',
+            width: '100%',
+          }}
+        >
+          {/* Badge */}
+          <Badge />
+
+          {/* Animated Headline */}
+          <HeadlineSlider currentSlide={currentSlide} slides={HERO_SLIDES} />
+
+          {/* Subtitle */}
+          <Subtitle />
+
+          {/* CTA Button */}
+          <CTAButton />
+
+          {/* Feature Grid */}
+          <FeatureGrid features={FEATURES} />
+
+          {/* Slide Indicators */}
+          <SlideIndicators 
+            slides={HERO_SLIDES} 
+            currentSlide={currentSlide} 
+            onSlideChange={setCurrentSlide} 
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============= SUB-COMPONENTS =============
+
+function VideoBackground({ 
+  videoRef, 
+  videoUrl, 
+  videoLoaded, 
+  onLoadedData 
+}: { 
+  videoRef: React.RefObject<HTMLVideoElement>;
+  videoUrl: string;
+  videoLoaded: boolean;
+  onLoadedData: () => void;
+}) {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 0,
+        backgroundColor: '#000',
+      }}
+    >
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        onLoadedData={onLoadedData}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center',
+          opacity: videoLoaded ? 1 : 0,
+          transition: 'opacity 0.5s ease-in-out',
+        }}
+      >
+        <source src={videoUrl} type="video/mp4" />
+      </video>
+
+      {/* Loading State */}
+      {!videoLoaded && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'linear-gradient(135deg, #000000 0%, #001a33 50%, #000000 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <motion.div
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            style={{ 
+              color: '#22d3ee', 
+              fontSize: '18px', 
+              fontWeight: 600,
+              fontFamily: 'var(--font-nunito)',
+            }}
+          >
+            Loading...
+          </motion.div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function StarBurstEffects({ effects }: { effects: ClickEffect[] }) {
+  return (
+    <>
+      {effects.map(effect => (
         <div 
           key={effect.id} 
           style={{ 
@@ -311,9 +417,9 @@ const animationFrameRef = useRef<number | null>(null);
             top: `${effect.y}%`, 
             pointerEvents: 'none', 
             zIndex: 20,
-            willChange: 'transform, opacity',
           }}
         >
+          {/* Central Glow */}
           <motion.div
             initial={{ scale: 0, opacity: 1 }}
             animate={{ scale: 3, opacity: 0 }}
@@ -329,8 +435,9 @@ const animationFrameRef = useRef<number | null>(null);
             }}
           />
 
-          {Array.from({ length: 16 }).map((_, i) => {
-            const angle = (i * 360) / 16;
+          {/* Stars */}
+          {Array.from({ length: STAR_COUNT }).map((_, i) => {
+            const angle = (i * 360) / STAR_COUNT;
             const distance = 70;
             const size = Math.random() * 4 + 3;
             
@@ -381,8 +488,9 @@ const animationFrameRef = useRef<number | null>(null);
             );
           })}
 
-          {Array.from({ length: 8 }).map((_, i) => {
-            const angle = (i * 360) / 8 + 22.5;
+          {/* Sparkles */}
+          {Array.from({ length: SPARKLE_COUNT }).map((_, i) => {
+            const angle = (i * 360) / SPARKLE_COUNT + 22.5;
             const distance = 45;
             
             return (
@@ -410,250 +518,259 @@ const animationFrameRef = useRef<number | null>(null);
           })}
         </div>
       ))}
+    </>
+  );
+}
 
-      {/* Content */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 10,
-          width: '100%',
-          maxWidth: '1100px',
-          margin: '0 auto',
-          padding: '140px 24px 80px',
-          display: 'flex',
-          alignItems: 'center',
-          minHeight: '100vh',
-          pointerEvents: 'none',
-        }}
-      >
-        <div
+function Badge() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      style={{
+        padding: '8px 24px',
+        background: 'linear-gradient(to right, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.2))',
+        border: '2px solid rgba(234, 150, 8, 0.6)',
+        borderRadius: '50px',
+        fontSize: '13px',
+        fontWeight: 700,
+        color: '#e5de00',
+        textTransform: 'uppercase',
+        letterSpacing: '2px',
+        fontFamily: 'var(--font-nunito)',
+        boxShadow: '0 0 30px rgba(234, 150, 108, 0.4)',
+        pointerEvents: 'auto',
+        backdropFilter: 'blur(10px)',
+      }}
+    >
+      A Globally Trusted Edtech
+    </motion.div>
+  );
+}
+
+function HeadlineSlider({ currentSlide, slides }: { currentSlide: number; slides: string[] }) {
+  return (
+    <div style={{ 
+      width: '100%', 
+      minHeight: '160px', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center' 
+    }}>
+      <AnimatePresence mode="wait">
+        <motion.h1
+          key={currentSlide}
+          initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, y: -30, filter: 'blur(10px)' }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            fontSize: 'clamp(28px, 6vw, 56px)',
+            fontWeight: 500,
+            color: '#ffffff',
+            lineHeight: 1.3,
+            textShadow: '0 0 50px rgba(255, 255, 255, 0.4), 0 4px 30px rgba(0, 0, 0, 0.8)',
+            letterSpacing: '8px',
+            fontFamily: 'var(--font-nunito)',
+            textTransform: 'uppercase',
+          }}
+        >
+          {slides[currentSlide]}
+        </motion.h1>
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function Subtitle() {
+  return (
+    <motion.p
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.3, duration: 0.8 }}
+      style={{
+        fontSize: 'clamp(15px, 2.5vw, 18px)',
+        color: '#ffffff',
+        maxWidth: '750px',
+        lineHeight: 1.8,
+        fontWeight: 500,
+        textShadow: '0 2px 15px rgba(0, 0, 0, 0.9)',
+        fontFamily: 'var(--font-nunito)',
+      }}
+    >
+      Go from curious to career-ready with{' '}
+      <span style={{ color: '#22d3ee', fontWeight: 700 }}>elite mentorship</span>, 
+      hands-on training, and real-world projects.
+    </motion.p>
+  );
+}
+
+function CTAButton() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5, duration: 0.8 }}
+      style={{ 
+        marginTop: '12px', 
+        pointerEvents: 'auto' 
+      }}
+    >
+      <Link href="/courses" style={{ textDecoration: 'none' }}>
+        <motion.div
+          animate={{
+            boxShadow: [
+              '0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(236, 72, 153, 0.4)',
+              '0 0 40px rgba(168, 85, 247, 0.9), 0 0 80px rgba(236, 72, 153, 0.7)',
+              '0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(236, 72, 153, 0.4)',
+            ],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+          style={{
+            borderRadius: '50px',
+            padding: '3px',
+            background: 'linear-gradient(135deg, #a855f7, #ec4899)',
+            display: 'inline-block',
+          }}
+        >
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              padding: '16px 32px',
+              fontSize: '16px',
+              fontWeight: 800,
+              borderRadius: '50px',
+              border: 'none',
+              background: 'rgba(0, 0, 0, 0.8)',
+              color: '#ffffff',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              fontFamily: 'var(--font-nunito)',
+              letterSpacing: '1px',
+              backdropFilter: 'blur(10px)',
+              transition: 'all 0.3s ease',
+            }}
+          >
+            Explore Courses
+            <ArrowRight style={{ width: '20px', height: '20px' }} />
+          </motion.button>
+        </motion.div>
+      </Link>
+    </motion.div>
+  );
+}
+
+function FeatureGrid({ features }: { features: typeof FEATURES }) {
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+        gap: '20px',
+        width: '100%',
+        maxWidth: '900px',
+        marginTop: '40px',
+        pointerEvents: 'auto',
+      }}
+    >
+      {features.map((feature, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: i * 0.15 }}
+          whileHover={{
+            scale: 1.05,
+            y: -8,
+            borderColor: feature.color,
+            boxShadow: `0 10px 40px ${feature.color}60`,
+          }}
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            textAlign: 'center',
-            gap: '32px',
-            width: '100%',
+            gap: '14px',
+            padding: '24px 18px',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            borderRadius: '16px',
+            border: `2px solid ${feature.color}40`,
+            transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
+            backdropFilter: 'blur(10px)',
           }}
         >
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            style={{
-              padding: '8px 24px',
-              background: 'linear-gradient(to right, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.2))',
-              border: '2px solid rgba(234, 150, 8, 0.6)',
-              borderRadius: '50px',
-              fontSize: '13px',
-              fontWeight: 700,
-              color: '#e5de00',
-              textTransform: 'uppercase',
-              letterSpacing: '2px',
-              fontFamily: 'var(--font-nunito)',
-              boxShadow: '0 0 30px rgba(234, 150, 108, 0.4)',
-              pointerEvents: 'auto',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
-            A Globally Trusted Edtech
-          </motion.div>
-
-          {/* Headline */}
-          <div style={{ width: '100%', minHeight: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <AnimatePresence mode="wait">
-              <motion.h1
-                key={currentSlide}
-                initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, y: -30, filter: 'blur(10px)' }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                style={{
-                  fontSize: 'clamp(28px, 6vw, 56px)',
-                  fontWeight: 500,
-                  color: '#ffffff',
-                  lineHeight: 1.3,
-                  textShadow: '0 0 50px rgba(255, 255, 255, 0.4), 0 4px 30px rgba(0, 0, 0, 0.8)',
-                  letterSpacing: '8px',
-                  fontFamily: 'var(--font-nunito)',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {heroSlides[currentSlide]}
-              </motion.h1>
-            </AnimatePresence>
-          </div>
-
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            style={{
-              fontSize: 'clamp(15px, 2.5vw, 18px)',
-              color: '#ffffff',
-              maxWidth: '750px',
-              lineHeight: 1.8,
-              fontWeight: 500,
-              textShadow: '0 2px 15px rgba(0, 0, 0, 0.9)',
-              fontFamily: 'var(--font-nunito)',
-            }}
-          >
-            Go from curious to career-ready with <span style={{ color: '#22d3ee', fontWeight: 700 }}>elite mentorship</span>, hands-on training, and real-world projects.
-          </motion.p>
-
-          {/* CTA Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '12px', pointerEvents: 'auto' }}
-          >
-            <Link href="/courses" style={{ textDecoration: 'none' }}>
-              <motion.div
-                animate={{
-                  boxShadow: [
-                    '0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(236, 72, 153, 0.4)',
-                    '0 0 40px rgba(168, 85, 247, 0.9), 0 0 80px rgba(236, 72, 153, 0.7)',
-                    '0 0 20px rgba(168, 85, 247, 0.6), 0 0 40px rgba(236, 72, 153, 0.4)',
-                  ],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-                style={{
-                  borderRadius: '50px',
-                  padding: '3px',
-                  background: 'linear-gradient(135deg, #a855f7, #ec4899)',
-                  display: 'inline-block',
-                }}
-              >
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  style={{
-                    padding: '16px 32px',
-                    fontSize: '16px',
-                    fontWeight: 800,
-                    borderRadius: '50px',
-                    border: 'none',
-                    background: 'rgba(0, 0, 0, 0.8)',
-                    color: '#ffffff',
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    fontFamily: 'var(--font-nunito)',
-                    letterSpacing: '1px',
-                    backdropFilter: 'blur(10px)',
-                    transition: 'all 0.3s ease',
-                    width: '100%',
-                  }}
-                >
-                  Explore Courses
-                  <ArrowRight style={{ width: '16px', height: '20px' }} />
-                </motion.button>
-              </motion.div>
-            </Link>
-          </motion.div>
-
-          {/* Feature Grid */}
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: '20px',
-              width: '100%',
-              maxWidth: '900px',
-              marginTop: '40px',
-              pointerEvents: 'auto',
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              background: `radial-gradient(circle, ${feature.color}40, transparent)`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            {[
-              { icon: Users, text: '1-on-1 Mentorship', color: '#22d3ee' },
-              { icon: Zap, text: 'Live Training', color: '#a855f7' },
-              { icon: CheckCircle, text: 'Career Guidance', color: '#ec4899' },
-              { icon: Shield, text: 'Certification Support', color: '#06b6d4' },
-            ].map((feature, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.0 + i * 0.15 }}
-                whileHover={{
-                  scale: 1.05,
-                  y: -8,
-                  borderColor: feature.color,
-                  boxShadow: `0 10px 40px ${feature.color}60`,
-                }}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '14px',
-                  padding: '24px 18px',
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  borderRadius: '16px',
-                  border: `2px solid ${feature.color}40`,
-                  transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
-                  backdropFilter: 'blur(10px)',
-                }}
-              >
-                <div
-                  style={{
-                    width: '50px',
-                    height: '50px',
-                    borderRadius: '50%',
-                    background: `radial-gradient(circle, ${feature.color}40, transparent)`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <feature.icon style={{ width: '28px', height: '28px', color: feature.color }} />
-                </div>
-                <p
-                  style={{
-                    fontSize: '14px',
-                    color: '#ffffff',
-                    fontWeight: 600,
-                    textAlign: 'center',
-                    fontFamily: 'var(--font-nunito)',
-                    letterSpacing: '0.8px',
-                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)',
-                  }}
-                >
-                  {feature.text}
-                </p>
-              </motion.div>
-            ))}
+            <feature.icon style={{ width: '28px', height: '28px', color: feature.color }} />
           </div>
+          <p
+            style={{
+              fontSize: '14px',
+              color: '#ffffff',
+              fontWeight: 600,
+              textAlign: 'center',
+              fontFamily: 'var(--font-nunito)',
+              letterSpacing: '0.8px',
+              textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)',
+            }}
+          >
+            {feature.text}
+          </p>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
-          {/* Slide Indicators */}
-          <div style={{ display: 'flex', gap: '10px', marginTop: '20px', pointerEvents: 'auto' }}>
-            {heroSlides.map((_, index) => (
-              <motion.div
-                key={index}
-                animate={{
-                  width: index === currentSlide ? '40px' : '10px',
-                  backgroundColor: index === currentSlide ? '#22d3ee' : '#6b7280',
-                }}
-                transition={{ duration: 0.3 }}
-                style={{
-                  height: '4px',
-                  borderRadius: '2px',
-                  cursor: 'pointer',
-                  boxShadow: index === currentSlide ? '0 0 10px #22d3ee' : 'none',
-                }}
-                onClick={() => setCurrentSlide(index)}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+function SlideIndicators({ 
+  slides, 
+  currentSlide, 
+  onSlideChange 
+}: { 
+  slides: string[]; 
+  currentSlide: number; 
+  onSlideChange: (index: number) => void;
+}) {
+  return (
+    <div style={{ 
+      display: 'flex', 
+      gap: '10px', 
+      marginTop: '20px', 
+      pointerEvents: 'auto' 
+    }}>
+      {slides.map((_, index) => (
+        <motion.div
+          key={index}
+          animate={{
+            width: index === currentSlide ? '40px' : '10px',
+            backgroundColor: index === currentSlide ? '#22d3ee' : '#6b7280',
+          }}
+          transition={{ duration: 0.3 }}
+          style={{
+            height: '4px',
+            borderRadius: '2px',
+            cursor: 'pointer',
+            boxShadow: index === currentSlide ? '0 0 10px #22d3ee' : 'none',
+          }}
+          onClick={() => onSlideChange(index)}
+        />
+      ))}
     </div>
   );
 }

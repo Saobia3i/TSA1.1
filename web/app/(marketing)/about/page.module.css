@@ -183,7 +183,7 @@
 /* Card Styles */
 .card {
   padding: clamp(20px, 4vw, 32px);
-  background: rgba(255, 255, 255, 0.05);
+  background: #07384f;
   backdrop-filter: blur(20px);
   border: 2px solid #ffffff;
   border-radius: 16px;
@@ -302,7 +302,7 @@
   width: 100%;
   max-width: clamp(280px, 42vw, 480px);
   padding: clamp(28px, 5vw, 42px);
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(105, 13, 170, 0.221);
   backdrop-filter: blur(30px);
   border: 2px solid #ffffff;
   border-radius: 20px;
@@ -424,7 +424,7 @@
 .conclusionCard {
   margin-top: clamp(60px, 10vw, 100px);
   padding: clamp(24px, 5vw, 40px);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(4, 43, 59, 0.69);
   backdrop-filter: blur(20px);
   border: 1.5px solid #ffffff;
   border-radius: 16px;
@@ -446,7 +446,7 @@
 }
 
 .highlightCyan {
-  color: #00d4ff;
+  color: #3ba9be;
   font-weight: 800;
 }
 
@@ -1003,3 +1003,72 @@
   color: #ffffff;
   stroke-width: 2;
 }
+
+/* Page Background - DARK THEME */
+.pageBackground {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(6, 182, 212, 0.08), #000000);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Icon Styles */
+.backButtonIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.navIcon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Closing Statement Text */
+.closingStatementText {
+  font-size: clamp(15px, 3vw, 18px);
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1.9;
+  position: relative;
+  z-index: 1;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.highlightGradient {
+  background: linear-gradient(135deg, #22d3ee, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900;
+}
+
+/* Simple Dark Navy Blue Background */
+.pageBackground {
+  background: #0a1929; /* Dark navy blue - clean & simple */
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Remove/Update these if they exist - make them simpler */
+.card:hover {
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.6);
+  border-color: rgba(6, 182, 212, 0.6);
+  transform: translateY(-8px);
+}
+
+.premiumCard:hover {
+  box-shadow: 0 0 40px rgba(6, 182, 212, 0.7);
+  border-color: rgba(6, 182, 212, 0.7);
+}
+
+.quickNavButton:hover {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+  border-color: rgba(6, 182, 212, 0.6);
+}
+
+.whyTsaCard:hover {
+  box-shadow: 0 0 50px rgba(6, 182, 212, 0.5);
+  border-color: rgba(6, 182, 212, 0.6);
+}
+
+
