@@ -124,7 +124,7 @@ export default function ToolsPage() {
               letterSpacing: '2px',
             }}
           >
-            Our Custom Tools
+            Welcome to TSA Labs
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0 }}
