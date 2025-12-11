@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Github, ChevronDown, ChevronUp, Book, Code, FlaskConical } from 'lucide-react';
+import { ArrowLeft, Github, ChevronDown, ChevronUp, Book, Code, FlaskConical, ExternalLink, MessageCircle, Lock } from 'lucide-react';
 import Link from 'next/link';
 
 const customTools = [
@@ -58,11 +58,12 @@ const customTools = [
 
 export default function ToolsPage() {
   const [isOslintOpen, setIsOslintOpen] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   return (
     <div 
       style={{ 
-        backgroundColor: '#000', 
+        backgroundColor: '#0a1929', 
         minHeight: '100vh', 
         paddingTop: '90px', 
         overflowX: 'hidden',
@@ -81,12 +82,12 @@ export default function ToolsPage() {
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              background: 'rgba(17, 24, 39, 0.4)',
+              background: 'rgba(17, 24, 39, 0.8)',
               backdropFilter: 'blur(20px)',
               border: '2px solid rgba(34, 211, 238, 0.4)',
               borderRadius: '12px',
               padding: '12px 24px',
-              color: 'white',
+              color: '#22d3ee',
               fontSize: '14px',
               fontWeight: 700,
               cursor: 'pointer',
@@ -149,7 +150,7 @@ export default function ToolsPage() {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))',
             gap: '32px',
-            marginBottom: '120px',
+            marginBottom: '80px',
           }}
         >
           {customTools.map((tool, index) => (
@@ -167,7 +168,7 @@ export default function ToolsPage() {
               }}
               style={{
                 padding: '32px',
-                background: 'rgba(17, 24, 39, 0.5)',
+                background: 'rgba(17, 24, 39, 0.8)',
                 backdropFilter: 'blur(30px)',
                 borderRadius: '20px',
                 border: `2px solid ${tool.color}40`,
@@ -236,7 +237,309 @@ export default function ToolsPage() {
               </a>
             </motion.div>
           ))}
+
+          {/* ✅ EXPLORE MORE TOOLS CARD - Inside Grid */}
+          <div
+            onMouseEnter={() => setHoveredCard('explore')}
+            onMouseLeave={() => setHoveredCard(null)}
+            style={{
+              padding: '32px',
+              background: 'rgba(17, 24, 39, 0.8)',
+              backdropFilter: 'blur(30px)',
+              borderRadius: '20px',
+              border: `2px solid ${hoveredCard === 'explore' ? '#22d3ee' : 'rgba(34, 211, 238, 0.4)'}`,
+              boxShadow: hoveredCard === 'explore' 
+                ? '0 0 60px rgba(34, 211, 238, 0.6)' 
+                : '0 10px 40px rgba(34, 211, 238, 0.2)',
+              transition: 'all 0.4s ease',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              minHeight: '300px',
+            }}
+          >
+            <ExternalLink 
+              style={{ 
+                width: '60px', 
+                height: '60px', 
+                color: '#22d3ee',
+                marginBottom: '20px',
+                filter: hoveredCard === 'explore' ? 'drop-shadow(0 0 20px rgba(34, 211, 238, 0.8))' : 'none',
+                transition: 'all 0.3s ease',
+              }} 
+            />
+            <h3 style={{ 
+              fontSize: '28px', 
+              fontWeight: 800, 
+              color: '#ffffff', 
+              marginBottom: '16px',
+              fontFamily: 'var(--font-nunito)',
+            }}>
+              Explore More Tools
+            </h3>
+            <p style={{ 
+              fontSize: '15px', 
+              color: '#9ca3af', 
+              marginBottom: '24px',
+              fontFamily: 'var(--font-nunito)',
+              lineHeight: 1.7,
+            }}>
+              Discover additional security tools and utilities
+            </p>
+            <a
+              href="https://github.com/tools-tensorsecurityacademy"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: 'none', width: '100%' }}
+            >
+              <button
+                style={{
+                  width: '100%',
+                  padding: '14px 24px',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  borderRadius: '12px',
+                  border: '2px solid rgba(34, 211, 238, 0.6)',
+                  background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(34, 211, 238, 0.1))',
+                  color: '#22d3ee',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-nunito)',
+                  transition: 'all 0.3s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 211, 238, 0.3), rgba(34, 211, 238, 0.2))';
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(34, 211, 238, 0.5)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(34, 211, 238, 0.1))';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                View All Tools
+              </button>
+            </a>
+          </div>
         </div>
+
+        {/* ✅ COMMUNITY & ACCESS SECTION - SEPARATE, CENTERED, WIDER */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          style={{ 
+            textAlign: 'center', 
+            marginBottom: '80px',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: 'clamp(32px, 5vw, 48px)',
+              fontWeight: 800,
+              color: '#ffffff',
+              marginBottom: '50px',
+              fontFamily: 'var(--font-nunito)',
+              letterSpacing: '1px',
+            }}
+          >
+            Join Our Community
+          </h2>
+
+          {/* Cards Container - Centered, Max Width */}
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '32px',
+            maxWidth: '900px',
+            margin: '0 auto',
+          }}>
+            
+            {/* ✅ OPEN SOURCE CONTRIBUTION CARD - About Us Style */}
+            <div
+              onMouseEnter={() => setHoveredCard('contribute')}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{
+                padding: 'clamp(32px, 5vw, 48px)',
+                background: 'rgba(17, 24, 39, 0.8)',
+                backdropFilter: 'blur(20px)',
+                border: `2px solid ${hoveredCard === 'contribute' ? '#10b981' : 'rgba(16, 185, 129, 0.4)'}`,
+                borderRadius: '20px',
+                textAlign: 'center',
+                position: 'relative',
+                overflow: 'hidden',
+                boxShadow: hoveredCard === 'contribute' 
+                  ? '0 0 50px rgba(16, 185, 129, 0.5)' 
+                  : '0 0 25px rgba(16, 185, 129, 0.3)',
+                transition: 'all 0.4s ease',
+              }}
+            >
+              <Github 
+                style={{ 
+                  width: 'clamp(50px, 8vw, 70px)', 
+                  height: 'clamp(50px, 8vw, 70px)', 
+                  color: '#10b981',
+                  margin: '0 auto 24px',
+                  filter: hoveredCard === 'contribute' ? 'drop-shadow(0 0 20px rgba(16, 185, 129, 0.8))' : 'none',
+                  transition: 'all 0.3s ease',
+                }} 
+              />
+              
+              <h3 style={{ 
+                fontSize: 'clamp(24px, 4vw, 32px)', 
+                fontWeight: 800, 
+                color: '#ffffff', 
+                marginBottom: '16px',
+                fontFamily: 'var(--font-nunito)',
+              }}>
+                Open Source Contribution
+              </h3>
+              
+              <p style={{ 
+                fontSize: 'clamp(14px, 2.5vw, 16px)', 
+                color: '#d1d5db', 
+                maxWidth: '700px', 
+                margin: '0 auto 32px',
+                lineHeight: 1.8,
+                fontFamily: 'var(--font-nunito)',
+                fontWeight: 500,
+              }}>
+                Join our community of security researchers and contribute to open-source tools. Whether you're fixing bugs, adding features, or improving documentation—every contribution makes a difference.
+              </p>
+              
+              <a
+                href="https://github.com/tools-tensorsecurityacademy"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none', display: 'inline-block' }}
+              >
+                <button
+                  style={{
+                    padding: '16px 40px',
+                    fontSize: 'clamp(14px, 2.5vw, 16px)',
+                    fontWeight: 700,
+                    borderRadius: '12px',
+                    border: '2px solid rgba(16, 185, 129, 0.6)',
+                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1))',
+                    color: '#10b981',
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-nunito)',
+                    transition: 'all 0.3s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.2))';
+                    e.currentTarget.style.boxShadow = '0 0 30px rgba(16, 185, 129, 0.5)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1))';
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <Github style={{ width: '20px', height: '20px' }} />
+                  Contribute on GitHub
+                </button>
+              </a>
+            </div>
+
+            {/* ✅ PRIVATE ACCESS CARD - About Us Style */}
+            <div
+              onMouseEnter={() => setHoveredCard('private')}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{
+                padding: 'clamp(32px, 5vw, 48px)',
+                background: 'rgba(17, 24, 39, 0.8)',
+                backdropFilter: 'blur(20px)',
+                border: `2px solid ${hoveredCard === 'private' ? '#ec4899' : 'rgba(236, 72, 153, 0.4)'}`,
+                borderRadius: '20px',
+                textAlign: 'center',
+                position: 'relative',
+                overflow: 'hidden',
+                boxShadow: hoveredCard === 'private' 
+                  ? '0 0 50px rgba(236, 72, 153, 0.5)' 
+                  : '0 0 25px rgba(236, 72, 153, 0.3)',
+                transition: 'all 0.4s ease',
+              }}
+            >
+              <Lock 
+                style={{ 
+                  width: 'clamp(50px, 8vw, 70px)', 
+                  height: 'clamp(50px, 8vw, 70px)', 
+                  color: '#ec4899',
+                  margin: '0 auto 24px',
+                  filter: hoveredCard === 'private' ? 'drop-shadow(0 0 20px rgba(236, 72, 153, 0.8))' : 'none',
+                  transition: 'all 0.3s ease',
+                }} 
+              />
+              
+              <h3 style={{ 
+                fontSize: 'clamp(24px, 4vw, 32px)', 
+                fontWeight: 800, 
+                color: '#ffffff', 
+                marginBottom: '16px',
+                fontFamily: 'var(--font-nunito)',
+                lineHeight: '1.3',
+              }}>
+                Access Our Private Custom Frameworks & Exploits
+              </h3>
+              
+              <p style={{ 
+                fontSize: 'clamp(14px, 2.5vw, 16px)', 
+                color: '#d1d5db', 
+                maxWidth: '700px', 
+                margin: '0 auto 32px',
+                lineHeight: 1.8,
+                fontFamily: 'var(--font-nunito)',
+                fontWeight: 500,
+              }}>
+                Get exclusive access to advanced penetration testing frameworks, custom exploits, and private security tools reserved for TSA members. Elevate your security arsenal with our premium resources.
+              </p>
+              
+              <a
+                href="https://wa.me/1234567890"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none', display: 'inline-block' }}
+              >
+                <button
+                  style={{
+                    padding: '16px 40px',
+                    fontSize: 'clamp(14px, 2.5vw, 16px)',
+                    fontWeight: 700,
+                    borderRadius: '12px',
+                    border: '2px solid rgba(236, 72, 153, 0.6)',
+                    background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1))',
+                    color: '#ec4899',
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-nunito)',
+                    transition: 'all 0.3s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(236, 72, 153, 0.2))';
+                    e.currentTarget.style.boxShadow = '0 0 30px rgba(236, 72, 153, 0.5)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1))';
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <MessageCircle style={{ width: '20px', height: '20px' }} />
+                  Request Access
+                </button>
+              </a>
+            </div>
+          </div>
+        </motion.div>
 
         {/* TSA Library Section */}
         <motion.div
@@ -248,7 +551,7 @@ export default function ToolsPage() {
             textAlign: 'center', 
             marginBottom: '60px',
             padding: '60px 40px',
-            background: 'rgba(17, 24, 39, 0.5)',
+            background: 'rgba(17, 24, 39, 0.8)',
             backdropFilter: 'blur(30px)',
             border: '2px solid rgba(34, 211, 238, 0.4)',
             borderRadius: '24px',
@@ -331,7 +634,6 @@ export default function ToolsPage() {
               <div style={{ padding: '0 32px 32px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   
-                  {/* Framework */}
                   <motion.a
                     href="#"
                     whileHover={{ scale: 1.03, x: 8 }}
@@ -358,7 +660,6 @@ export default function ToolsPage() {
                     Framework
                   </motion.a>
 
-                  {/* Resources */}
                   <motion.a
                     href="#"
                     whileHover={{ scale: 1.03, x: 8 }}
@@ -385,7 +686,6 @@ export default function ToolsPage() {
                     Resources
                   </motion.a>
 
-                  {/* Practice Labs */}
                   <motion.a
                     href="#"
                     whileHover={{ scale: 1.03, x: 8 }}
