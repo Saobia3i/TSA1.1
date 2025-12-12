@@ -17,6 +17,12 @@ const nextConfig: NextConfig = {
     // Disable optimization for GIFs (they're animated)
     unoptimized: false, // Keep optimization on for other images
   },
+
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
+  },
   
   // Dev origin configuration for cross-origin requests
 
