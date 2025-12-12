@@ -10,7 +10,7 @@ export async function login(formData: FormData): Promise<void> {
   const password = formData.get('password') as string;
 
   if (!email || !password) {
-    redirect('/login?error=Missing credentials');
+    redirect('/login?error=please enter email and password');
   }
 
   try {
