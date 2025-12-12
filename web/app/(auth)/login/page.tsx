@@ -1,16 +1,63 @@
 // app/(auth)/login/page.tsx
-import { login } from '@/app/actions/auth';
-import Link from 'next/link';
-import { Mail, Lock, LogIn } from 'lucide-react';
+'use client'
 
-export default function LoginPage({
-  searchParams,
-}: {
-  searchParams: { error?: string; success?: string };
-}) {
+import { signIn } from 'next-auth/react'
+import { useState, Suspense } from 'react'
+import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Mail, Lock, LogIn, AlertCircle, CheckCircle } from 'lucide-react'
+
+function safeDecodeURIComponent(str: string): string {
+  try {
+    return decodeURIComponent(str)
+  } catch {
+    return str
+  }
+}
+
+function LoginForm() {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const urlError = searchParams.get('error')
+  const urlSuccess = searchParams.get('success')
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    const formData = new FormData(e.currentTarget)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        setError('Invalid email or password')
+      } else if (result?.ok) {
+        router.push('/dashboard')
+        router.refresh()
+      }
+    } catch (err) {
+      console.error('Login error:', err)
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <>
       <style>{`
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         .login-container {
           min-height: 100vh;
           display: flex;
@@ -18,7 +65,7 @@ export default function LoginPage({
           justify-content: center;
           background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #0a0a0a 100%);
           padding: 20px;
-          font-family: var(--font-nunito), sans-serif;
+          font-family: 'Nunito Sans', -apple-system, sans-serif;
         }
 
         .login-card {
@@ -26,7 +73,6 @@ export default function LoginPage({
           max-width: 440px;
           background: rgba(0, 0, 0, 0.85);
           backdrop-filter: blur(30px);
-          -webkit-backdrop-filter: blur(30px);
           border: 1px solid rgba(0, 212, 255, 0.3);
           border-radius: 24px;
           padding: 48px 40px;
@@ -44,9 +90,7 @@ export default function LoginPage({
           background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          background-clip: text;
           margin-bottom: 8px;
-          letter-spacing: -0.5px;
         }
 
         .login-subtitle {
@@ -61,6 +105,9 @@ export default function LoginPage({
           margin-bottom: 24px;
           font-size: 14px;
           font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 10px;
           animation: slideIn 0.3s ease-out;
         }
 
@@ -86,7 +133,6 @@ export default function LoginPage({
           font-size: 14px;
           font-weight: 700;
           margin-bottom: 10px;
-          letter-spacing: 0.5px;
         }
 
         .input-wrapper {
@@ -111,9 +157,9 @@ export default function LoginPage({
           color: white;
           font-size: 15px;
           font-weight: 600;
-          font-family: var(--font-nunito), sans-serif;
           transition: all 0.3s ease;
           outline: none;
+          font-family: inherit;
         }
 
         .form-input:focus {
@@ -124,24 +170,12 @@ export default function LoginPage({
 
         .form-input::placeholder {
           color: #6b7280;
+          font-weight: 500;
         }
 
-        .forgot-password {
-          text-align: right;
-          margin-top: 8px;
-        }
-
-        .forgot-link {
-          color: #a855f7;
-          font-size: 13px;
-          font-weight: 600;
-          text-decoration: none;
-          transition: all 0.3s ease;
-        }
-
-        .forgot-link:hover {
-          color: #c084fc;
-          text-decoration: underline;
+        .form-input:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
         }
 
         .submit-button {
@@ -153,25 +187,29 @@ export default function LoginPage({
           color: white;
           font-size: 16px;
           font-weight: 800;
-          font-family: var(--font-nunito), sans-serif;
           cursor: pointer;
           transition: all 0.3s ease;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 10px;
-          letter-spacing: 0.5px;
           box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
           margin-top: 32px;
+          font-family: inherit;
         }
 
-        .submit-button:hover {
+        .submit-button:hover:not(:disabled) {
           transform: translateY(-2px);
           box-shadow: 0 8px 30px rgba(0, 212, 255, 0.5);
         }
 
-        .submit-button:active {
+        .submit-button:active:not(:disabled) {
           transform: translateY(0);
+        }
+
+        .submit-button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
         }
 
         .divider {
@@ -234,43 +272,43 @@ export default function LoginPage({
           .login-card {
             padding: 36px 24px;
           }
-
           .login-title {
             font-size: 28px;
+          }
+          .form-input {
+            font-size: 16px;
           }
         }
       `}</style>
 
       <div className="login-container">
         <div className="login-card">
-          {/* Header */}
           <div className="login-header">
             <h1 className="login-title">Welcome Back</h1>
             <p className="login-subtitle">Login to continue your journey</p>
           </div>
 
-          {/* Error/Success Messages */}
-          {searchParams.error && (
+          {(error || urlError) && (
             <div className="alert alert-error">
-              {searchParams.error}
+              <AlertCircle size={20} />
+              <span>{error || (urlError ? safeDecodeURIComponent(urlError) : '')}</span>
             </div>
           )}
 
-          {searchParams.success && (
+          {urlSuccess && (
             <div className="alert alert-success">
-              {searchParams.success}
+              <CheckCircle size={20} />
+              <span>{safeDecodeURIComponent(urlSuccess)}</span>
             </div>
           )}
 
-          {/* Form */}
-          <form action={login}>
-            {/* Email Field */}
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="email" className="form-label">
-                Email Address
+                EMAIL ADDRESS
               </label>
               <div className="input-wrapper">
-                <Mail className="input-icon" size={20} strokeWidth={2} />
+                <Mail className="input-icon" size={20} />
                 <input
                   id="email"
                   name="email"
@@ -279,49 +317,44 @@ export default function LoginPage({
                   required
                   className="form-input"
                   autoComplete="email"
+                  disabled={loading}
+                  autoFocus
                 />
               </div>
             </div>
 
-            {/* Password Field */}
             <div className="form-group">
               <label htmlFor="password" className="form-label">
-                Password
+                PASSWORD
               </label>
               <div className="input-wrapper">
-                <Lock className="input-icon" size={20} strokeWidth={2} />
+                <Lock className="input-icon" size={20} />
                 <input
                   id="password"
                   name="password"
                   type="password"
                   placeholder="Enter your password"
                   required
+                  minLength={8}
                   className="form-input"
                   autoComplete="current-password"
+                  disabled={loading}
                 />
-              </div>
-              <div className="forgot-password">
-                <Link href="/forgot-password" className="forgot-link">
-                  Forgot password?
-                </Link>
               </div>
             </div>
 
-            {/* Submit Button */}
-            <button type="submit" className="submit-button">
-              <LogIn size={20} strokeWidth={2.5} />
-              Login to Account
+            <button type="submit" className="submit-button" disabled={loading}>
+              <LogIn size={20} />
+              {loading ? 'Logging in...' : 'Login to Account'}
             </button>
           </form>
 
-          {/* Divider */}
           <div className="divider">
             <span className="divider-text">OR</span>
           </div>
 
-          {/* Signup Link */}
           <p className="signup-text">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/signup" className="signup-link">
               Sign up
             </Link>
@@ -329,5 +362,13 @@ export default function LoginPage({
         </div>
       </div>
     </>
-  );
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #0a0a0a 100%)' }} />}>
+      <LoginForm />
+    </Suspense>
+  )
 }

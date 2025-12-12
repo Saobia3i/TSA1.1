@@ -1,16 +1,45 @@
 // app/(auth)/signup/page.tsx
-import { signup } from '@/app/actions/auth';
-import Link from 'next/link';
-import { Mail, Lock, User as UserIcon, UserPlus } from 'lucide-react';
+'use client'
 
-export default function SignupPage({
-  searchParams,
-}: {
-  searchParams: { error?: string; success?: string };
-}) {
+import { signup } from '@/app/actions/auth'
+import { useState, useTransition, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import { Mail, Lock, User as UserIcon, UserPlus, AlertCircle, Phone } from 'lucide-react'
+
+function SignupForm() {
+  const [error, setError] = useState('')
+  const [isPending, startTransition] = useTransition()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const urlError = searchParams.get('error')
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setError('')
+    
+    const formData = new FormData(e.currentTarget)
+    
+    startTransition(async () => {
+      const result = await signup(formData)
+      
+      if (result.error) {
+        setError(result.error)
+      } else if (result.success) {
+        router.push('/login?success=Account created successfully! Please login.')
+      }
+    })
+  }
+
   return (
     <>
       <style>{`
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+          font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
         .signup-container {
           min-height: 100vh;
           display: flex;
@@ -18,7 +47,6 @@ export default function SignupPage({
           justify-content: center;
           background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #0a0a0a 100%);
           padding: 20px;
-          font-family: var(--font-nunito), sans-serif;
         }
 
         .signup-card {
@@ -61,6 +89,9 @@ export default function SignupPage({
           margin-bottom: 24px;
           font-size: 14px;
           font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 10px;
           animation: slideIn 0.3s ease-out;
         }
 
@@ -68,12 +99,6 @@ export default function SignupPage({
           background: rgba(239, 68, 68, 0.1);
           border: 1px solid rgba(239, 68, 68, 0.3);
           color: #ef4444;
-        }
-
-        .alert-success {
-          background: rgba(34, 197, 94, 0.1);
-          border: 1px solid rgba(34, 197, 94, 0.3);
-          color: #22c55e;
         }
 
         .form-group {
@@ -86,7 +111,7 @@ export default function SignupPage({
           font-size: 14px;
           font-weight: 700;
           margin-bottom: 10px;
-          letter-spacing: 0.5px;
+          letter-spacing: 0.3px;
         }
 
         .input-wrapper {
@@ -100,6 +125,7 @@ export default function SignupPage({
           transform: translateY(-50%);
           color: #6b7280;
           pointer-events: none;
+          z-index: 1;
         }
 
         .form-input {
@@ -111,9 +137,9 @@ export default function SignupPage({
           color: white;
           font-size: 15px;
           font-weight: 600;
-          font-family: var(--font-nunito), sans-serif;
           transition: all 0.3s ease;
           outline: none;
+          font-family: inherit;
         }
 
         .form-input:focus {
@@ -124,6 +150,12 @@ export default function SignupPage({
 
         .form-input::placeholder {
           color: #6b7280;
+          font-weight: 500;
+        }
+
+        .form-input:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
         }
 
         .submit-button {
@@ -135,25 +167,31 @@ export default function SignupPage({
           color: white;
           font-size: 16px;
           font-weight: 800;
-          font-family: var(--font-nunito), sans-serif;
           cursor: pointer;
           transition: all 0.3s ease;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 10px;
-          letter-spacing: 0.5px;
           box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
           margin-top: 32px;
+          letter-spacing: 0.3px;
+          font-family: inherit;
         }
 
-        .submit-button:hover {
+        .submit-button:hover:not(:disabled) {
           transform: translateY(-2px);
           box-shadow: 0 8px 30px rgba(236, 72, 153, 0.5);
         }
 
-        .submit-button:active {
+        .submit-button:active:not(:disabled) {
           transform: translateY(0);
+        }
+
+        .submit-button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
         }
 
         .divider {
@@ -179,7 +217,8 @@ export default function SignupPage({
           background: rgba(0, 0, 0, 0.85);
           color: #6b7280;
           font-size: 13px;
-          font-weight: 600;
+          font-weight: 700;
+          letter-spacing: 0.5px;
         }
 
         .login-text {
@@ -216,40 +255,35 @@ export default function SignupPage({
           .signup-card {
             padding: 36px 24px;
           }
-
+          
           .signup-title {
             font-size: 28px;
+          }
+
+          .form-input {
+            font-size: 16px;
           }
         }
       `}</style>
 
       <div className="signup-container">
         <div className="signup-card">
-          {/* Header */}
           <div className="signup-header">
             <h1 className="signup-title">Create Account</h1>
             <p className="signup-subtitle">Start your cybersecurity journey</p>
           </div>
 
-          {/* Error/Success Messages */}
-          {searchParams.error && (
+          {(error || urlError) && (
             <div className="alert alert-error">
-              {searchParams.error}
+              <AlertCircle size={20} strokeWidth={2.5} />
+              <span>{error || urlError}</span>
             </div>
           )}
 
-          {searchParams.success && (
-            <div className="alert alert-success">
-              {searchParams.success}
-            </div>
-          )}
-
-          {/* Form */}
-          <form action={signup}>
-            {/* Name Field */}
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="name" className="form-label">
-                Full Name
+                FULL NAME
               </label>
               <div className="input-wrapper">
                 <UserIcon className="input-icon" size={20} strokeWidth={2} />
@@ -259,16 +293,19 @@ export default function SignupPage({
                   type="text"
                   placeholder="John Doe"
                   required
+                  minLength={2}
+                  maxLength={50}
                   className="form-input"
                   autoComplete="name"
+                  disabled={isPending}
+                  autoFocus
                 />
               </div>
             </div>
 
-            {/* Email Field */}
             <div className="form-group">
               <label htmlFor="email" className="form-label">
-                Email Address
+                EMAIL ADDRESS
               </label>
               <div className="input-wrapper">
                 <Mail className="input-icon" size={20} strokeWidth={2} />
@@ -280,14 +317,32 @@ export default function SignupPage({
                   required
                   className="form-input"
                   autoComplete="email"
+                  disabled={isPending}
                 />
               </div>
             </div>
 
-            {/* Password Field */}
+            <div className="form-group">
+              <label htmlFor="contact" className="form-label">
+                CONTACT NUMBER (Optional)
+              </label>
+              <div className="input-wrapper">
+                <Phone className="input-icon" size={20} strokeWidth={2} />
+                <input
+                  id="contact"
+                  name="contact"
+                  type="tel"
+                  placeholder="01XXXXXXXXX"
+                  className="form-input"
+                  autoComplete="tel"
+                  disabled={isPending}
+                />
+              </div>
+            </div>
+
             <div className="form-group">
               <label htmlFor="password" className="form-label">
-                Password
+                PASSWORD
               </label>
               <div className="input-wrapper">
                 <Lock className="input-icon" size={20} strokeWidth={2} />
@@ -295,19 +350,20 @@ export default function SignupPage({
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Create a strong password"
+                  placeholder="Min 8 chars, 1 uppercase, 1 number, 1 special"
                   required
                   minLength={8}
+                  maxLength={128}
                   className="form-input"
                   autoComplete="new-password"
+                  disabled={isPending}
                 />
               </div>
             </div>
 
-            {/* Confirm Password Field */}
             <div className="form-group">
               <label htmlFor="confirmPassword" className="form-label">
-                Confirm Password
+                CONFIRM PASSWORD
               </label>
               <div className="input-wrapper">
                 <Lock className="input-icon" size={20} strokeWidth={2} />
@@ -318,25 +374,24 @@ export default function SignupPage({
                   placeholder="Confirm your password"
                   required
                   minLength={8}
+                  maxLength={128}
                   className="form-input"
                   autoComplete="new-password"
+                  disabled={isPending}
                 />
               </div>
             </div>
 
-            {/* Submit Button */}
-            <button type="submit" className="submit-button">
+            <button type="submit" className="submit-button" disabled={isPending}>
               <UserPlus size={20} strokeWidth={2.5} />
-              Create Account
+              {isPending ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 
-          {/* Divider */}
           <div className="divider">
             <span className="divider-text">OR</span>
           </div>
 
-          {/* Login Link */}
           <p className="login-text">
             Already have an account?{' '}
             <Link href="/login" className="login-link">
@@ -346,5 +401,13 @@ export default function SignupPage({
         </div>
       </div>
     </>
-  );
+  )
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #0a0a0a 100%)' }} />}>
+      <SignupForm />
+    </Suspense>
+  )
 }

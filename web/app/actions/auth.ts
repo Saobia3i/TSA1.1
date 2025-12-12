@@ -1,58 +1,151 @@
 // app/actions/auth.ts
-'use server';
+'use server'
 
-import { signIn, signOut } from '@/lib/auth';
-import { AuthError } from 'next-auth';
-import { redirect } from 'next/navigation';
+import { prisma } from '@/lib/prisma'
+import bcrypt from 'bcryptjs'
+import { redirect } from 'next/navigation'
+import {
+  validateContact,
+  sanitizeContact,
+  validatePassword,
+  validateEmail,
+} from '@/lib/validators'
 
-export async function login(formData: FormData): Promise<void> {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
+export async function login(formData: FormData) {
+  const email = formData.get('email')
+  const password = formData.get('password')
 
   if (!email || !password) {
-    redirect('/login?error=please enter email and password');
+    return { error: 'Email and password required' }
+  }
+
+  const trimmedEmail = (email as string).toLowerCase().trim()
+
+  if (!validateEmail(trimmedEmail)) {
+    return { error: 'Invalid email format' }
   }
 
   try {
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-    });
+    const user = await prisma.user.findUnique({
+      where: { email: trimmedEmail },
+      select: {
+        id: true,
+        password: true,
+      },
+    })
 
-    if (result?.error) {
-      redirect('/login?error=Invalid credentials');
+    if (!user || !user.password) {
+      return { error: 'Invalid email or password' }
     }
 
-    // Success
-    redirect('/dashboard');
+    const passwordMatch = await bcrypt.compare(
+      password as string,
+      user.password
+    )
+
+    if (!passwordMatch) {
+      return { error: 'Invalid email or password' }
+    }
+
+    return { success: true, email: trimmedEmail }
   } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          redirect('/login?error=Invalid credentials');
-        default:
-          redirect('/login?error=Something went wrong');
+    console.error('Login error:', error)
+    return { error: 'Invalid email or password' }
+  }
+}
+
+export async function signup(formData: FormData) {
+  const name = formData.get('name')
+  const email = formData.get('email')
+  const contact = formData.get('contact')
+  const password = formData.get('password')
+  const confirmPassword = formData.get('confirmPassword')
+
+  if (!name || !email || !password || !confirmPassword) {
+    return { error: 'All fields required except contact' }
+  }
+
+  const trimmedName = (name as string).trim()
+  const trimmedEmail = (email as string).toLowerCase().trim()
+  const sanitizedContact = contact ? sanitizeContact(contact as string) : null
+
+  if (trimmedName.length < 2) {
+    return { error: 'Name must be 2 characters' }
+  }
+
+  if (trimmedName.length > 50) {
+    return { error: 'Name too long' }
+  }
+
+  if (!validateEmail(trimmedEmail)) {
+    return { error: 'Invalid email format' }
+  }
+
+  if (sanitizedContact && !validateContact(sanitizedContact)) {
+    return { error: 'Invalid contact format' }
+  }
+
+  const passwordValidation = validatePassword(password as string)
+  if (!passwordValidation.isValid) {
+    return { error: passwordValidation.errors[0] }
+  }
+
+  if (password !== confirmPassword) {
+    return { error: 'Passwords do not match' }
+  }
+
+  try {
+    const existingEmail = await prisma.user.findUnique({
+      where: { email: trimmedEmail },
+    })
+
+    if (existingEmail) {
+      return { error: 'Email already registered' }
+    }
+
+    if (sanitizedContact) {
+      const existingContact = await prisma.user.findUnique({
+        where: { contact: sanitizedContact },
+      })
+
+      if (existingContact) {
+        return { error: 'Contact already registered' }
       }
     }
-    throw error;
+
+    const hashedPassword = await bcrypt.hash(password as string, 12)
+
+    await prisma.user.create({
+      data: {
+        name: trimmedName,
+        email: trimmedEmail,
+        contact: sanitizedContact,
+        password: hashedPassword,
+        role: 'STUDENT',
+      },
+    })
+
+    return { success: true }
+  } catch (error) {
+    console.error('Signup error:', error)
+
+    if (error instanceof Error) {
+      const errorMessage = error.message
+      if (errorMessage.includes('Unique constraint failed')) {
+        if (errorMessage.includes('email')) {
+          return { error: 'Email already registered' }
+        }
+        if (errorMessage.includes('contact')) {
+          return { error: 'Contact already registered' }
+        }
+      }
+    }
+
+    return { error: 'Failed to create account' }
   }
 }
 
+// ✅ Fixed logout - returns void and redirects
 export async function logout(): Promise<void> {
-  await signOut({ redirectTo: '/' });
-}
-
-export async function signup(formData: FormData): Promise<void> {
-  const name = formData.get('name') as string;
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-
-  if (!name || !email || !password) {
-    redirect('/signup?error=All fields are required');
-  }
-
-  // Your signup logic here
-  // After successful signup:
-  redirect('/login?success=Account created successfully');
+  redirect('/api/auth/signout')
 }

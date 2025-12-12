@@ -1,8 +1,9 @@
+// app/dashboard/DashboardContent.tsx
 'use client';
 
 import { motion } from 'framer-motion';
 import { BookOpen, TrendingUp, Award } from 'lucide-react';
-import Navbar from '@/features/layout/components/Navbar'; // ✅ Same navbar
+import Navbar from '@/features/layout/components/Navbar';
 
 interface DashboardContentProps {
   user: {
@@ -10,6 +11,7 @@ interface DashboardContentProps {
     email: string;
     id: string;
     role: string;
+    contact?: string 
   };
 }
 
@@ -22,10 +24,8 @@ export default function DashboardContent({ user }: DashboardContentProps) {
         fontFamily: 'var(--font-nunito)',
       }}
     >
-      {/* ✅ Pass user to same Navbar */}
       <Navbar user={{ name: user.name, email: user.email }} />
 
-      {/* Main Content */}
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '120px 32px 60px' }}>
         
         {/* Welcome Card */}
@@ -53,6 +53,9 @@ export default function DashboardContent({ user }: DashboardContentProps) {
           </h2>
           <p style={{ fontSize: '16px', color: '#9ca3af' }}>
             Ready to continue your cybersecurity journey?
+          </p>
+          <p style={{ fontSize: '14px', color: '#00d4ff', marginTop: '8px', fontWeight: 600 }}>
+            Role: {user.role.toUpperCase()}
           </p>
         </motion.div>
 

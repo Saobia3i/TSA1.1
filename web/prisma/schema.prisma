@@ -8,17 +8,22 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      String   @default("STUDENT")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  password      String
+  contact       String?    @unique
+  role          String    @default("STUDENT")
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   
-  accounts    Account[]
-  sessions    Session[]
-  enrollments Enrollment[]
+  accounts      Account[]
+  sessions      Session[]
+  enrollments   Enrollment[]
+
+  @@index([email])
+  @@index([contact])
 }
 
 model Account {

@@ -1,26 +1,24 @@
-import Navbar from '@/features/layout/components/Navbar';
-import Footer from '@/features/layout/components/Footer';
-import { auth } from '@/lib/auth';
+// app/(marketing)/layout.tsx
+import Navbar from '@/features/layout/components/Navbar'
+import Footer from '@/features/layout/components/Footer'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 export default async function MarketingLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
-  const session = await auth();
+  const session = await getServerSession(authOptions)
   const user = session?.user 
     ? { name: session.user.name || 'User', email: session.user.email || '' } 
-    : null;
+    : null
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
-      {/* ✅ Navbar overlay - content এর উপরে থাকবে */}
       <Navbar user={user} />
-      
-      {/* ✅ No padding - content navbar এর নিচে থেকে শুরু হবে */}
       <main>{children}</main>
-      
       <Footer />
     </div>
-  );
+  )
 }
