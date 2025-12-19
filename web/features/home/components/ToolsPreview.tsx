@@ -47,7 +47,7 @@ export default function ToolsPreview() {
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.3, ease: [0.3, 1, 0.3, 1] }}
         style={{ textAlign: 'center', marginBottom: 'clamp(40px, 6vw, 60px)' }}
       >
         <h2
@@ -77,7 +77,8 @@ export default function ToolsPreview() {
           maxWidth: '1400px',
           margin: '0 auto',
           overflowX: 'auto',
-          paddingBottom: '10px',
+          paddingBottom: '40px',
+          paddingTop: '20px',
           scrollbarWidth: 'thin',
           scrollbarColor: 'rgba(34, 211, 238, 0.3) rgba(17, 24, 39, 0.2)',
         }}
@@ -89,12 +90,13 @@ export default function ToolsPreview() {
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: index * 0.1, duration: 0.6, type: 'spring' }}
+            transition={{ delay: index * 0.1, duration: 0.3, type: 'spring' }}
             onHoverStart={() => setHoveredIndex(index)}
             onHoverEnd={() => setHoveredIndex(null)}
             whileHover={{
               y: -8,
               scale: 1.02,
+              transformOrigin: 'center bottom',
             }}
             style={{
               minWidth: 'clamp(220px, 22vw, 240px)', // ✅ SMALLER WIDTH
@@ -108,7 +110,7 @@ export default function ToolsPreview() {
               boxShadow: hoveredIndex === index 
                 ? `0 0 40px ${tool.color}60` 
                 : `0 8px 25px ${tool.color}20`,
-              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
@@ -169,7 +171,7 @@ export default function ToolsPreview() {
                   gap: '6px',
                   fontFamily: 'var(--font-nunito)',
                   boxShadow: `0 0 15px ${tool.color}30`,
-                  transition: 'all 0.3s ease',
+                  
                 }}
               >
                 <Github style={{ width: '16px', height: '16px' }} />
