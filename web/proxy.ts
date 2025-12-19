@@ -15,8 +15,8 @@ export async function proxy(req: NextRequest) {
 
   const isProtectedRoute =
     nextUrl.pathname.startsWith('/dashboard') ||
-    nextUrl.pathname.startsWith('/profile') ||
-    nextUrl.pathname.startsWith('/courses')
+    nextUrl.pathname.startsWith('/profile') 
+    // nextUrl.pathname.startsWith('/courses')
 
   if (isAuthPage && isLoggedIn) {
     return NextResponse.redirect(new URL('/dashboard', nextUrl))

@@ -197,7 +197,7 @@ export default function Navbar({ user = null }: NavbarProps) {
             }}
           >
             <Image
-              src="/logofinal.webp"
+              src="https://ik.imagekit.io/ekb0d0it0/logofinal1.webp"
               alt="Tensor Security Academy Logo"
               width={45}
               height={45}

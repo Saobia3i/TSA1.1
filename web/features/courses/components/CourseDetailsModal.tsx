@@ -91,30 +91,16 @@ export default memo(function CourseDetailsModal({
 
         {/* Scrollable Content - FIXED SCROLLBAR */}
         <div
-          style={{
-            padding: 40,
-            overflowY: 'auto',
-            paddingBottom: 140,
-            // ✅ PERFECT CUSTOM SCROLLBAR (Webkit browsers)
-            scrollbarWidth: 'thin',
-            scrollbarColor: 'rgba(34, 197, 94, 0.5) transparent',
-            WebkitScrollbar: {
-              width: '8px',
-            },
-            WebkitScrollbarTrack: {
-              background: 'transparent',
-            },
-            WebkitScrollbarThumb: {
-              background: `${course.color}40`,
-              borderRadius: '4px',
-            },
-            WebkitScrollbarThumbHover: {
-              background: `${course.color}60`,
-            },
-            // ✅ Firefox scrollbar
-            msOverflowStyle: 'none', // IE and Edge
-          }}
-        >
+            className="scrollContainer"
+  style={{
+    padding: 40,
+    overflowY: 'auto',
+    paddingBottom: 140,
+    scrollbarWidth: 'thin', // Firefox
+    scrollbarColor: 'rgba(34, 197, 94, 0.5) transparent', // Firefox
+    msOverflowStyle: 'none', // IE/Edge
+  }}
+>
           <AnimatePresence mode="wait">
             {!showCurriculum ? (
               <motion.div
