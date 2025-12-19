@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, ArrowLeft, ChevronLeft, ChevronRight , FileText , Download } from 'lucide-react';
 import Link from 'next/link';
 import { getAllCourses, type Course } from '@/features/courses/data/courses';
 import CourseCard from '@/features/courses/components/CourseCard';
@@ -32,6 +32,7 @@ export default function CoursesPage() {
       <div style={{ backgroundColor: '#000', minHeight: '100vh', paddingTop: '90px', overflowX: 'hidden' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '60px 24px' }}>
           
+
           {/* Back Button */}
           <Link href="/" style={{ textDecoration: 'none' }}>
             <motion.button
@@ -76,6 +77,36 @@ export default function CoursesPage() {
             <p style={{ fontSize: '16px', color: '#9ca3af', maxWidth: '700px', margin: '0 auto', fontFamily: 'var(--font-nunito)' }}>
               Master cybersecurity with expert-led live training programs
             </p>
+          </div>
+
+<div style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <motion.a
+              href="/path-to-your-whitepaper.pdf" // Replace with your PDF path
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05, x: 5 }}
+              whileTap={{ scale: 0.95 }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'rgba(17, 24, 39, 0.7)',
+                border: '2px solid rgba(255, 255, 255, 0.6)',
+                borderRadius: '10px',
+                padding: '12px 24px',
+                color: 'white',
+                fontSize: '14px',
+                fontWeight: 500,
+                boxShadow: '0 0 20px rgba(34, 211, 238, 0.6), 0 0 40px rgba(34, 211, 238, 0.4), inset 0 0 10px rgba(34, 211, 238, 0.1)',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                fontFamily: 'var(--font-nunito)',
+              }}
+            >
+              <FileText style={{ width: '18px', height: '18px' }} />
+              TSA  Whitepaper
+              <Download style={{ width: '18px', height: '18px' }} />
+            </motion.a>
           </div>
 
           {/* Search Bar */}

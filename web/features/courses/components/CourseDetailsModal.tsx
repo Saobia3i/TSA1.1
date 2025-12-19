@@ -1,7 +1,17 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { X, Clock, BarChart, CheckCircle, Star, Users } from 'lucide-react';
+import { useState, memo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  X,
+  Clock,
+  BarChart,
+  CheckCircle,
+  Circle,
+  Star,
+  Users,
+  BookOpen,
+} from 'lucide-react';
 import type { Course } from '../data/courses';
 
 interface CourseDetailsModalProps {
@@ -9,28 +19,32 @@ interface CourseDetailsModalProps {
   onClose: () => void;
 }
 
-export default function CourseDetailsModal({ course, onClose }: CourseDetailsModalProps) {
+export default memo(function CourseDetailsModal({
+  course,
+  onClose,
+}: CourseDetailsModalProps) {
   const Icon = course.icon;
+  const [showCurriculum, setShowCurriculum] = useState(false);
 
   return (
     <motion.div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="course-title"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
       style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        inset: 0,
+        backgroundColor: 'rgba(0,0,0,0.9)',
         backdropFilter: 'blur(10px)',
-        zIndex: 1000,
+        zIndex: 9999,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '20px',
+        padding: 20,
       }}
     >
       <motion.div
@@ -38,37 +52,33 @@ export default function CourseDetailsModal({ course, onClose }: CourseDetailsMod
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 50 }}
         onClick={(e) => e.stopPropagation()}
-        onWheel={(e) => e.stopPropagation()}
-        className="modal-scroll-container"
         style={{
-          maxWidth: '900px',
+          maxWidth: 900,
           width: '100%',
           maxHeight: '90vh',
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          backgroundColor: 'rgba(17, 24, 39, 0.95)',
-          backdropFilter: 'blur(30px)',
-          borderRadius: '24px',
+          backgroundColor: 'rgba(17,24,39,0.95)',
+          color: 'white',
+          borderRadius: 24,
           border: `2px solid ${course.color}60`,
           boxShadow: `0 0 80px ${course.color}60`,
-          padding: '40px',
           position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        {/* Close Button */}
+        {/* Close */}
         <motion.button
           onClick={onClose}
           whileHover={{ scale: 1.1, rotate: 90 }}
-          whileTap={{ scale: 0.9 }}
           style={{
             position: 'absolute',
-            top: '20px',
-            right: '20px',
+            top: 20,
+            right: 20,
             background: `${course.color}30`,
             border: `2px solid ${course.color}60`,
             borderRadius: '50%',
-            width: '40px',
-            height: '40px',
+            width: 40,
+            height: 40,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -76,198 +86,206 @@ export default function CourseDetailsModal({ course, onClose }: CourseDetailsMod
             color: course.color,
           }}
         >
-          <X style={{ width: '24px', height: '24px' }} />
+          <X />
         </motion.button>
 
-        {/* Icon */}
+        {/* Scrollable Content - FIXED SCROLLBAR */}
         <div
           style={{
-            width: '70px',
-            height: '70px',
-            borderRadius: '16px',
-            background: `linear-gradient(to bottom right, ${course.color}40, ${course.color}20)`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: '24px',
+            padding: 40,
+            overflowY: 'auto',
+            paddingBottom: 140,
+            // ✅ PERFECT CUSTOM SCROLLBAR (Webkit browsers)
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'rgba(34, 197, 94, 0.5) transparent',
+            WebkitScrollbar: {
+              width: '8px',
+            },
+            WebkitScrollbarTrack: {
+              background: 'transparent',
+            },
+            WebkitScrollbarThumb: {
+              background: `${course.color}40`,
+              borderRadius: '4px',
+            },
+            WebkitScrollbarThumbHover: {
+              background: `${course.color}60`,
+            },
+            // ✅ Firefox scrollbar
+            msOverflowStyle: 'none', // IE and Edge
           }}
         >
-          <Icon style={{ width: '36px', height: '36px', color: course.color }} />
-        </div>
-
-        {/* Badge */}
-        {course.badge && (
-          <span
-            style={{
-              display: 'inline-block',
-              padding: '6px 16px',
-              background: `${course.color}30`,
-              border: `1px solid ${course.color}60`,
-              borderRadius: '20px',
-              fontSize: '12px',
-              color: course.color,
-              fontWeight: 700,
-              marginBottom: '16px',
-              fontFamily: 'var(--font-nunito)',
-            }}
-          >
-            {course.badge}
-          </span>
-        )}
-
-        {/* Title */}
-        <h2
-          style={{
-            fontSize: 'clamp(24px, 4vw, 36px)',
-            fontWeight: 800,
-            color: 'white',
-            marginBottom: '16px',
-            fontFamily: 'var(--font-nunito)',
-          }}
-        >
-          {course.title}
-        </h2>
-
-        {/* Stats Row */}
-        {(course.rating || course.students || course.instructor) && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
-            {course.rating && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Star style={{ width: '18px', height: '18px', color: '#fbbf24', fill: '#fbbf24' }} />
-                <span style={{ fontSize: '14px', color: '#d1d5db', fontWeight: 600, fontFamily: 'var(--font-nunito)' }}>
-                  {course.rating} Rating
-                </span>
-              </div>
-            )}
-            {course.students && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Users style={{ width: '18px', height: '18px', color: course.color }} />
-                <span style={{ fontSize: '14px', color: '#d1d5db', fontFamily: 'var(--font-nunito)' }}>
-                  {course.students.toLocaleString()} Students
-                </span>
-              </div>
-            )}
-            {course.instructor && (
-              <span style={{ fontSize: '14px', color: '#9ca3af', fontFamily: 'var(--font-nunito)' }}>
-                👨‍🏫 {course.instructor}
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Description */}
-        <p
-          style={{
-            fontSize: '17px',
-            color: '#d1d5db',
-            lineHeight: 1.8,
-            marginBottom: '24px',
-            fontFamily: 'var(--font-nunito)',
-          }}
-        >
-          {course.description}
-        </p>
-
-        {/* Meta Info */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginBottom: '32px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Clock style={{ width: '20px', height: '20px', color: course.color }} />
-            <span style={{ fontSize: '15px', color: '#9ca3af', fontFamily: 'var(--font-nunito)' }}>
-              {course.duration}
-            </span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <BarChart style={{ width: '20px', height: '20px', color: course.color }} />
-            <span style={{ fontSize: '15px', color: '#9ca3af', fontFamily: 'var(--font-nunito)' }}>
-              {course.level}
-            </span>
-          </div>
-          {course.price && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '20px', fontWeight: 700, color: course.color, fontFamily: 'var(--font-nunito)' }}>
-                {course.price}
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Tags */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '32px' }}>
-          {course.tags.map((tag) => (
-            <span
-              key={tag}
-              style={{
-                padding: '6px 16px',
-                background: `${course.color}20`,
-                border: `1px solid ${course.color}60`,
-                borderRadius: '8px',
-                fontSize: '13px',
-                color: course.color,
-                fontWeight: 600,
-              }}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* Topics */}
-        <div style={{ marginBottom: '32px' }}>
-          <h3
-            style={{
-              fontSize: '22px',
-              fontWeight: 700,
-              color: 'white',
-              marginBottom: '20px',
-              fontFamily: 'var(--font-nunito)',
-            }}
-          >
-            What You&apos;ll Learn
-          </h3>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {course.topics.map((topic, idx) => (
-              <motion.li
-                key={idx}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.05 }}
-                style={{
-                  fontSize: '15px',
-                  color: '#d1d5db',
-                  marginBottom: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  fontFamily: 'var(--font-nunito)',
-                }}
+          <AnimatePresence mode="wait">
+            {!showCurriculum ? (
+              <motion.div
+                key="details"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
               >
-                <CheckCircle style={{ width: '20px', height: '20px', color: course.color, flexShrink: 0 }} />
-                {topic}
-              </motion.li>
-            ))}
-          </ul>
+                {/* Icon */}
+                <div
+                  style={{
+                    width: 70,
+                    height: 70,
+                    borderRadius: 16,
+                    background: `linear-gradient(${course.color}40, ${course.color}20)`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 24,
+                  }}
+                >
+                  <Icon size={36} color={course.color} />
+                </div>
+
+                {/* Badge */}
+                {course.badge && (
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      padding: '6px 16px',
+                      background: `${course.color}30`,
+                      border: `1px solid ${course.color}60`,
+                      borderRadius: 20,
+                      fontSize: 12,
+                      color: course.color,
+                      fontWeight: 700,
+                      marginBottom: 16,
+                      fontFamily: 'var(--font-nunito)',
+                    }}
+                  >
+                    {course.badge}
+                  </span>
+                )}
+
+                {/* Title */}
+                <h2
+                  id="course-title"
+                  style={{
+                    fontSize: 'clamp(24px, 4vw, 36px)',
+                    fontWeight: 800,
+                    color: 'white',
+                    marginBottom: 16,
+                    fontFamily: 'var(--font-nunito)',
+                  }}
+                >
+                  {course.title}
+                </h2>
+
+                {/* Stats */}
+                <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginBottom: 20 }}>
+                  {course.rating && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <Star size={18} color="#fbbf24" fill="#fbbf24" />
+                      <span style={{ color: '#d1d5db' }}>{course.rating} Rating</span>
+                    </div>
+                  )}
+                  {course.students && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <Users size={18} color={course.color} />
+                      <span style={{ color: '#d1d5db' }}>
+                        {course.students.toLocaleString()} Students
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Description */}
+                <p style={{ color: '#d1d5db', lineHeight: 1.8, marginBottom: 24 }}>
+                  {course.description}
+                </p>
+
+                {/* Meta */}
+                <div style={{ display: 'flex', gap: 20, marginBottom: 32 }}>
+                  <Clock size={20} color={course.color} />
+                  <span>{course.duration}</span>
+                  <BarChart size={20} color={course.color} />
+                  <span>{course.level}</span>
+                </div>
+
+                {/* Topics */}
+                <h3 style={{ color: 'white', marginBottom: 20 }}>What You'll Learn</h3>
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                  {course.topics.map((topic, i) => (
+                    <li key={i} style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
+                      <CheckCircle size={20} color={course.color} />
+                      <span>{topic}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="curriculum"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <h3 style={{ fontSize: 24, marginBottom: 24, color: 'white' }}>
+                  Full Curriculum
+                </h3>
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                  {course.curriculum.map((item, i) => (  // ✅ FIXED: course.curriculum
+                    <li key={i} style={{  paddingLeft: 28, marginBottom: 14 }}>
+                      {/* <CheckCircle size={18} color={course.color} /> */}
+                      <span style={{ color: '#d1d5db' }}>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Enroll Button */}
-        <motion.button
-          whileHover={{ scale: 1.03, boxShadow: `0 0 50px ${course.color}80` }}
-          whileTap={{ scale: 0.97 }}
+        {/* Fixed Bottom Bar */}
+        <div
           style={{
-            width: '100%',
-            padding: '18px 40px',
-            fontSize: '16px',
-            fontWeight: 700,
-            borderRadius: '12px',
-            border: `2px solid ${course.color}80`,
-            background: `linear-gradient(to right, ${course.color}50, ${course.color}30)`,
-            color: 'white',
-            cursor: 'pointer',
-            fontFamily: 'var(--font-nunito)',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            padding: '20px 40px',
+            display: 'flex',
+            gap: 16,
+            background:
+              'linear-gradient(to top, rgba(17,24,39,0.98), transparent)',
           }}
         >
-          Enroll Now {course.price && `• ${course.price}`}
-        </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            onClick={() => setShowCurriculum((v) => !v)}
+            style={{
+              flex: 1,
+              padding: 16,
+              borderRadius: 12,
+              border: `2px solid ${course.color}90`,
+              background: `linear-gradient(${course.color}60, ${course.color}30)`,
+              color: 'white',
+              fontWeight: 700,
+              fontFamily: 'var(--font-nunito)',
+            }}
+          >
+            <BookOpen size={18} /> {showCurriculum ? 'What You\'ll Learn' : 'View Curriculum'}
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            style={{
+              flex: 1,
+              padding: 16,
+              borderRadius: 12,
+              border: `2px solid ${course.color}80`,
+              background: `linear-gradient(${course.color}, ${course.color}50)`,
+              color: 'white',
+              fontWeight: 700,
+              fontFamily: 'var(--font-nunito)',
+            }}
+          >
+            Enroll Now {course.price && `• ${course.price}`}
+          </motion.button>
+        </div>
       </motion.div>
     </motion.div>
   );
-}
+});
