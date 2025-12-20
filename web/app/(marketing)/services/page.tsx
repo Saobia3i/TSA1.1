@@ -1,9 +1,11 @@
+// app/marketing/services/page.tsx - FIXED WITH SERVICE CARD & LEARN MORE BUTTONS
 'use client';
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { ServiceCard } from '@/features/services/components/ServiceCard';
 import { getAllServices } from '@/features/services/data/services';
 
 const ITEMS_PER_PAGE = 6;
@@ -15,7 +17,7 @@ export default function ServicesPage() {
 
   const filteredServices = allServices.filter((service) =>
     service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    service.description.toLowerCase().includes(searchQuery.toLowerCase())
+    service.shortDescription.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredServices.length / ITEMS_PER_PAGE);
@@ -123,82 +125,20 @@ export default function ServicesPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                gap: '24px',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+                gap: '28px',
                 marginBottom: '50px',
               }}
             >
-              {displayedServices.map((service, index) => {
-                const Icon = service.icon;
-                return (
-                  <motion.div
-                    key={service.slug}
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ y: -8, borderColor: 'rgba(34, 211, 238, 0.8)' }}
-                    style={{
-                      padding: '24px',
-                      backgroundColor: 'rgba(17, 24, 39, 0.7)',
-                      borderRadius: '16px',
-                      border: '2px solid rgba(255, 255, 255, 0.3)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      transition: 'all 0.3s',
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: '50px',
-                        height: '50px',
-                        borderRadius: '12px',
-                        background: 'linear-gradient(to bottom right, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.2))',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '16px',
-                      }}
-                    >
-                      <Icon style={{ width: '28px', height: '28px', color: '#06b6d4' }} />
-                    </div>
-
-                    <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'white', marginBottom: '12px' }}>
-                      {service.title}
-                    </h3>
-
-                    <p style={{ fontSize: '14px', color: '#9ca3af', lineHeight: 1.6, marginBottom: '16px', flexGrow: 1 }}>
-                      {service.description}
-                    </p>
-
-                    {service.features && service.features.length > 0 && (
-                      <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 16px 0' }}>
-                        {service.features.slice(0, 3).map((feature, idx) => (
-                          <li
-                            key={idx}
-                            style={{
-                              fontSize: '13px',
-                              color: '#9ca3af',
-                              marginBottom: '6px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '8px',
-                            }}
-                          >
-                            <span style={{ color: '#22d3ee' }}>✓</span>
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-
-                    {service.pricing && (
-                      <p style={{ fontSize: '14px', color: '#22d3ee', fontWeight: 600, marginTop: 'auto' }}>
-                        {service.pricing}
-                      </p>
-                    )}
-                  </motion.div>
-                );
-              })}
+              {displayedServices.map((service, index) => (
+                <ServiceCard
+                  key={service.slug}
+                  title={service.title}
+                  shortDescription={service.shortDescription}
+                  icon={service.icon}
+                  slug={service.slug}
+                />
+              ))}
             </div>
 
             {totalPages > 1 && (

@@ -123,7 +123,7 @@ export default function ServicesPreview() {
                   fontFamily: 'var(--font-nunito)',
                   maxWidth: '700px',
                 }}>
-                  {currentService.description}
+                  {currentService.shortDescription}
                 </p>
 
                 <Link href={`/services/${currentService.slug}`} style={{ textDecoration: 'none' }}>
