@@ -70,10 +70,10 @@ export default function ServiceDetailsPage({ service }: Props) {
             {service.title}
           </h1>
           
-          <p
+          {/* <p
             style={{
               fontSize: '18px',
-              color: '#9ca3af',
+              color: '#fff',
               maxWidth: '800px',
               margin: '0 auto 40px',
               lineHeight: 1.7,
@@ -81,20 +81,71 @@ export default function ServiceDetailsPage({ service }: Props) {
             }}
           >
             {service.shortDescription}
-          </p>
+          </p> */}
           
-          <p
+          <div
             style={{
-              fontSize: '16px',
-              color: '#d1d5db',
-              maxWidth: '700px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '2px solid rgba(34, 211, 238, 0.8)',
+              borderRadius: '16px',
+              padding: '24px',
+              maxWidth: '1200px',
               margin: '0 auto',
-              lineHeight: 1.8,
-              fontFamily: 'var(--font-space-mono)'
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer',
+              textAlign: 'center'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 20px rgba(34, 211, 238, 0.4)';
+              e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.6)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.3)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+            onTouchStart={(e) => {
+              e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 20px rgba(34, 211, 238, 0.4)';
+              e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.6)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onTouchEnd={(e) => {
+              e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.3)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              
             }}
           >
-            {service.longDescription}
-          </p>
+            <p
+              style={{
+                fontSize: '18px',
+                color: '#fff',
+                lineHeight: 1.7,
+                fontFamily: 'var(--font-space-mono)',
+                margin: '20px 0',
+                fontWeight: 600,
+                textAlign: 'center'
+              }}
+            >
+              {service.shortDescription}
+            </p>
+            <p
+              style={{
+                fontSize: '16px',
+                color: '#fff',
+                lineHeight: 1.8,
+                fontFamily: 'var(--font-space-mono)',
+                margin: '20px 0',
+                textAlign: 'center'
+              }}
+            >
+              {service.longDescription}
+            </p>
+          </div>
         </div>
 
         {/* Packages Section */}
@@ -122,7 +173,8 @@ export default function ServiceDetailsPage({ service }: Props) {
               alignItems: 'center',
               gap: '14px',
               padding: '20px 48px',
-              background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.9) 0%, rgba(168, 85, 247, 0.8) 100%)',
+              background: 'transparent',
+              border: '2px solid rgba(34, 211, 238, 0.5)',
               borderRadius: '16px',
               color: 'white',
               fontSize: '16px',
@@ -130,13 +182,31 @@ export default function ServiceDetailsPage({ service }: Props) {
               textDecoration: 'none',
               cursor: 'pointer',
               fontFamily: 'var(--font-nunito-sans)',
-              boxShadow: '0 20px 40px rgba(34, 211, 238, 0.4)',
+              boxShadow: '0 0 20px rgba(34, 211, 238, 0.3)',
               transition: 'all 0.3s ease',
-              border: '3px solid rgba(255, 255, 255, 0.3)',
-              backdropFilter: 'blur(20px)',
-              
+              backdropFilter: 'blur(10px)',
               position: 'relative',
               zIndex: 1
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = '0 0 30px rgba(34, 211, 238, 0.6), 0 0 40px rgba(34, 211, 238, 0.4)';
+              e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.8)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(34, 211, 238, 0.3)';
+              e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.5)';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+            onTouchStart={(e) => {
+              e.currentTarget.style.boxShadow = '0 0 30px rgba(34, 211, 238, 0.6), 0 0 40px rgba(34, 211, 238, 0.4)';
+              e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.8)';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onTouchEnd={(e) => {
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(34, 211, 238, 0.3)';
+              e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.5)';
+              e.currentTarget.style.transform = 'translateY(0)';
             }}
           >
             <DollarSign style={{ width: '22px', height: '22px' }} />
