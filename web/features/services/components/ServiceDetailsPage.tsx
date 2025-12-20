@@ -3,7 +3,7 @@
 
 import { PackageCard } from '../components/PackageCard';
 import Link from 'next/link';
-import { ArrowLeft, DollarSign } from 'lucide-react';
+import { ArrowLeft, Calendar  } from 'lucide-react';
 import type { Service } from '../data/services';
 
 interface ServiceData {
@@ -209,7 +209,7 @@ export default function ServiceDetailsPage({ service }: Props) {
               e.currentTarget.style.transform = 'translateY(0)';
             }}
           >
-            <DollarSign style={{ width: '22px', height: '22px' }} />
+            <Calendar style={{ width: '22px', height: '22px' }} /> 
             Book an appointment
           </a>
         </div>

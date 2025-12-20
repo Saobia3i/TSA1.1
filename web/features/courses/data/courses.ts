@@ -1,7 +1,7 @@
 // courses.ts - Complete production-ready file with PDF data
 // Senior Developer Standards: TypeScript strict, exhaustive data, curriculum toggle ready
 
-import { Shield, Target, Bug, Brain, Zap, Code } from 'lucide-react';
+import { Shield, Target, Bug, Brain, Zap, Code, BarChart,Clock } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Course {
@@ -368,66 +368,7 @@ export const courses: Course[] = [
     ],
   },
 
-  // Course 7: Mastering MLSecOps
-  {
-    id: '7',
-    slug: 'Mastering MLSecOps: Securing AI & Machine Learning Systems',
-    title: 'Mastering MLSecOps: Securing AI & Machine Learning Systems',
-    shortDescription: 'A comprehensive training program designed to equip security engineers, ML practitioners, and DevOps professionals with the skills to secure machine learning systems. Learn how to integrate security into the ML lifecycle—from data and model development to deployment and monitoring. This course covers MLSecOps fundamentals, adversarial defense, supply chain security, model provenance, compliance, and trusted AI, with hands-on labs and real-world attack simulations.',
-    description: 'A comprehensive training program designed to equip security engineers, ML practitioners, and DevOps professionals with the skills to secure machine learning systems. Learn how to integrate security into the ML lifecycle—from data and model development to deployment and monitoring. This course covers MLSecOps fundamentals, adversarial defense, supply chain security, model provenance, compliance, and trusted AI, with hands-on labs and real-world attack simulations.',
-    icon: Shield,
-    duration: '16 Weeks',
-    badge: 'Intermediate to Advanced',
-  level: 'Intermediate to Advanced',
-  color: '#22d3ee',
-  instructor: 'Tensor Security Academy',
-  students: 1250,
-  rating: 4.9,
-  price: '$299/month',
-  tags: ['MLSecOps', 'MLOps', 'AI Security', 'Adversarial ML', 'Model Governance', 'Supply Chain Security', 'Trusted AI', 'Live Training'],
-  topics: [
-    'MLSecOps Fundamentals & Principles',
-    'Differences Between MLSecOps, MLOps, and DevSecOps',
-    'Machine Learning Supply Chain Security',
-    'Model Provenance & Traceability',
-    'AI Governance, Risk, and Compliance (GRC)',
-    'Trusted AI: Bias, Fairness, Explainability (XAI)',
-    'Adversarial Machine Learning Attacks & Defenses',
-    'Security Tooling for ML (MLflow, Seldon, Protect AI Platform)',
-    'Implementing Security in CI/CD for ML',
-    'Monitoring & Auditing ML Systems in Production',
-  ],
-  curriculum: [
-    'Phase 1: Foundations of MLSecOps (Weeks 1-4)',
-    '• Introduction to MLSecOps: Core concepts, lifecycle, and security integration.',
-    '• MLOps vs. MLSecOps vs. DevSecOps: Understanding the differences and overlaps.',
-    '• ML Supply Chain Security: Identifying vulnerabilities in data, code, and dependencies.',
-    '• Hands-On Lab: Conducting an ML supply chain vulnerability assessment using open-source tools.',
-    'Phase 2: Model Governance & Provenance (Weeks 5-7)',
-    '• Model Provenance & Metadata Tracking: Implementing lineage tracking with MLflow.',
-    '• AI Governance & Compliance: GDPR, HIPAA, and emerging AI regulations.',
-    '• Machine Learning Bill of Materials (MLBOM): Creating and maintaining a secure ML component inventory.',
-    '• Hands-On Lab: Building a model registry with full provenance tracking.',
-    'Phase 3: Trusted AI & Ethical Security (Weeks 8-10)',
-    '• Bias & Fairness Detection: Tools and techniques for identifying bias in datasets and models.',
-    '• Explainable AI (XAI): Methods for interpreting model decisions (LIME, SHAP).',
-    '• Fairness-Aware Model Training: Mitigating bias during model development.',
-    '• Hands-On Lab: Auditing a model for fairness and generating explainability reports.',
-    'Phase 4: Adversarial Machine Learning (Weeks 11-13)',
-    '• Threat Modeling for ML Systems: Identifying attack surfaces (evasion, poisoning, extraction).',
-    '• Adversarial Attacks: Crafting and detecting adversarial examples.',
-    '• Defensive Techniques: Adversarial training, robust models, and detection systems.',
-    '• Hands-On Lab: Simulating and defending against model evasion attacks.',
-    'Phase 5: MLSecOps in Production (Weeks 14-16)',
-    '• Securing ML Pipelines: Integrating security scans, secret management, and policy-as-code.',
-    '• Monitoring & Incident Response for ML Systems: Detecting drift, anomalies, and attacks.',
-    '• Capstone Project: Building a secure, compliant, and monitored ML pipeline from data to deployment.',
-    '• Certification Prep: Aligning with AI security certifications and industry frameworks.',
-  ],
-},
-
-// Course 2: Professional Smart Contract Development
-{
+ {
   id: '8',
   slug: 'Professional Smart Contract Development',
   title: 'Ethereum Smart Contract Engineering',

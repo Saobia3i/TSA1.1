@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import type { Course } from '../data/courses';
+import { BarChart, Clock } from 'lucide-react';
 
 interface CourseCardProps {
   course: Course;
@@ -105,8 +106,8 @@ export default function CourseCard({ course, index, onClick }: CourseCardProps) 
           fontFamily: 'var(--font-nunito)',
         }}
       >
-        <span>⏱️ {course.duration}</span>
-        <span>📊 {course.level}</span>
+        <span><Clock style={{ width: '14px', height: '14px', marginRight: '4px' }} /> {course.duration}</span>
+        <span><BarChart style={{ width: '14px', height: '14px', marginRight: '4px' }} /> {course.level}</span>
       </div>
 
       {/* Tags */}
