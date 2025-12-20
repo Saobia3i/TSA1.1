@@ -103,7 +103,7 @@ export default function CoursesPage() {
                 fontFamily: 'var(--font-nunito)',
               }}
             >
-              <FileText style={{ width: '18px', height: '18px' }} />
+              {/* <FileText style={{ width: '18px', height: '18px' }} /> */}
               TSA  Whitepaper
               <Download style={{ width: '18px', height: '18px' }} />
             </motion.a>

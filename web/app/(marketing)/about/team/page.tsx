@@ -16,7 +16,7 @@ const teamMembers = [
   {
     name: 'Abrar Jahin',
     role: 'Founder and CEO, Security Researcher',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+    image: 'https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%208.59.29%20PM.jpeg?updatedAt=1766169177691',
     quote: 'TSA was born from a simple belief: exceptional talent shouldn\'t be limited by geography or financial barriers. Every student who breaks through represents our collective victory against an outdated system.',
     socials: {
       linkedin: 'https://linkedin.com/in/abrar-jahin',
@@ -29,7 +29,7 @@ const teamMembers = [
   {
     name: 'Nuren Tasnim',
     role: 'Director of Business Development',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop',
+    image: 'https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%208.59.51%20PM.jpeg?updatedAt=1766169177597',
     quote: 'Watching our students transform from uncertain beginners to confident professionals is why I do this. TSA isn\'t just teaching skills—we\'re changing lives and rewriting futures.',
     socials: {
       linkedin: 'https://linkedin.com/in/nuren',
@@ -41,7 +41,7 @@ const teamMembers = [
   {
     name: 'Abid Hossain Ove',
     role: 'Managing Director (Academics)',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop',
+    image: 'https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%209.00.49%20PM%20-%20Copy.jpeg?updatedAt=1766169177646',
     quote: 'Education should empower, not overwhelm. At TSA, we break down complex cybersecurity concepts into actionable knowledge that students can apply from day one.',
     socials: {
       linkedin: 'https://linkedin.com/in/abid',
@@ -52,8 +52,8 @@ const teamMembers = [
   },
   {
     name: 'Saobia Tinni',
-    role: 'Principal Web Engineer',
-    image: 'https://ik.imagekit.io/ekb0d0it0/Saobia%20Islam.png?updatedAt=1764317906408',
+    role: 'Principal Web Developer',
+    image: 'https://ik.imagekit.io/ekb0d0it0/Untitled%20design.png?updatedAt=1764315898570',
     quote: 'Technology is the great equalizer. Through TSA, we\'re building bridges that connect passionate learners with opportunities that were once out of reach.',
     socials: {
       linkedin: 'https://linkedin.com/in/saobia',
@@ -65,7 +65,7 @@ const teamMembers = [
   {
     name: 'Iftekhar Salehin',
     role: 'Managing Director (Operations)',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+    image: 'https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%209.00.48%20PM.jpeg?updatedAt=1766169177695',
     quote: 'Behind every success story is a system that works seamlessly. I\'m proud to ensure TSA operates with excellence so our students can focus on what matters—learning and growing.',
     socials: {
       linkedin: 'https://linkedin.com/in/iftekhar',
@@ -77,7 +77,7 @@ const teamMembers = [
   {
     name: 'Mubtasim Fuad',
     role: 'Director of TSA Labs, Red Team Analyst',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop',
+    image: '',
     quote: 'Real-world cybersecurity isn\'t learned from books alone. TSA Labs gives students hands-on experience with the actual challenges they\'ll face in their careers.',
     socials: {
       linkedin: 'https://linkedin.com/in/mubtasim',
@@ -89,7 +89,7 @@ const teamMembers = [
   {
     name: 'Prottoy Rudro',
     role: 'Faculty Member, Cyber Security Expert',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop',
+    image: 'https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%209.00.47%20PM.jpeg?updatedAt=1766169177691',
     quote: 'Teaching at TSA means preparing students for tomorrow\'s threats, not yesterday\'s textbook examples. Our curriculum evolves as fast as the cybersecurity landscape itself.',
     socials: {
       linkedin: 'https://linkedin.com/in/prottoy',

@@ -1,12 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MessageCircle, Quote } from "lucide-react";
+import { MessageCircle, Quote, Handshake } from "lucide-react";
 import { useRef } from "react";
 import { useScroll } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { HandRaisedIcon } from "@heroicons/react/24/outline";
 import HeroSection from "@/features/home/components/HeroSection";
 import CoursesPreview from "@/features/home/components/CoursesPreview";
 import ServicesPreview from "@/features/home/components/ServicesPreview";
@@ -460,8 +459,8 @@ export default function HomePage() {
                 e.currentTarget.style.borderColor = "rgba(34, 211, 238, 0.4)";
               }}
             >
-              <HandRaisedIcon style={{ width: "20px", height: "20px" }} />
-              Join Us
+              <Handshake style={{ width: "20px", height: "20px" }} />
+              Become a partner
             </motion.button>
           </Link>
         </div>

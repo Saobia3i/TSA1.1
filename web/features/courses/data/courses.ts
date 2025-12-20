@@ -86,7 +86,7 @@ export const courses: Course[] = [
     badge: 'Trending',
     level: 'Beginner to Intermediate',
     color: '#ec4899',
-    instructor: 'Tensor Security Academy',
+   
     students: 2100,
     rating: 4.9,
     price: '$129/month',
@@ -148,7 +148,7 @@ export const courses: Course[] = [
     duration: '15 Weeks',
     level: 'Beginner to Advanced',
     color: '#a855f7',
-    instructor: 'Tensor Security Academy',
+    
     students: 1800,
     rating: 4.8,
     price: '$99/month',
@@ -194,7 +194,7 @@ export const courses: Course[] = [
     badge: 'Coming Soon',
     level: 'Beginner to Intermediate',
     color: '#10b981',
-    instructor: 'Tensor Security Academy',
+    
     students: 950,
     rating: 4.9,
     price: '$99/month',
@@ -236,7 +236,7 @@ export const courses: Course[] = [
     duration: '18 Weeks',
     level: 'Intermediate to Advanced',
     color: '#f59e0b',
-    instructor: 'Tensor Security Academy',
+    
     students: 1400,
     rating: 4.8,
     price: '$199/month',
@@ -280,7 +280,7 @@ export const courses: Course[] = [
     duration: '17 Weeks',
     level: 'Beginner to Advanced',
     color: '#8b5cf6',
-    instructor: 'Tensor Security Academy',
+    
     students: 3200,
     rating: 4.8,
     price: '$149/month',
