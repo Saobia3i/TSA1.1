@@ -25,7 +25,7 @@ export default function ServicesPage() {
   const displayedServices = filteredServices.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
-    <div style={{ backgroundColor: '#000', minHeight: '100vh', paddingTop: '90px', overflowX: 'hidden' }}>
+    <div style={{ minHeight: '100vh', paddingTop: '90px', overflowX: 'hidden' }}>
       <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '60px 24px' }}>
         
         <Link href="/" style={{ textDecoration: 'none' }}>

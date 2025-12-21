@@ -68,13 +68,11 @@ export default function CoursesPreview() {
           </p>
         </motion.div>
 
-        {/* 3D Card Carousel */}
+        {/* 3D Card Carousel - FIX: removed overflow hidden, added padding */}
         <div style={{ 
-          width: '100vw', 
-          marginLeft: 'calc(-50vw + 50%)',
+          width: '100%',
           paddingBottom: '80px', 
           perspective: '1000px',
-          overflow: 'hidden',
         }}>
           <div style={{
             position: 'relative',
@@ -83,6 +81,8 @@ export default function CoursesPreview() {
             justifyContent: 'center',
             paddingLeft: 'clamp(16px, 5vw, 60px)',
             paddingRight: 'clamp(16px, 5vw, 60px)',
+            paddingTop: '40px',
+            paddingBottom: '40px',
             minHeight: 'clamp(420px, 70vh, 560px)',
           }}>
             <div style={{
@@ -118,170 +118,180 @@ export default function CoursesPreview() {
                       filter: isCenter ? 'drop-shadow(0 40px 120px rgba(34, 211, 238, 0.3))' : 'drop-shadow(0 8px 20px rgba(0, 0, 0, 0.2))',
                     }}
                   >
-                    <GlowingCard glowColor="#22d3ee">
-                      <div style={{
-                        padding: 'clamp(20px, 4vw, 28px)',
-                        backgroundColor: 'rgba(17, 24, 39, 0.95)',
-                        borderRadius: '20px',
-                        minHeight: 'clamp(350px, 55vh, 400px)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        position: 'relative',
-                        overflow: 'hidden',
-                        border: '2px solid rgba(34, 211, 238, 0.1)',
-                      }}>
-                        <motion.div
-                          animate={{
-                            opacity: [0.3, 0.6, 0.3],
-                            scale: [1, 1.1, 1],
-                          }}
-                          transition={{
-                            duration: 4,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
-                          }}
-                          style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            background: 'radial-gradient(circle at 30% 20%, rgba(34, 211, 238, 0.15), transparent 50%)',
-                            pointerEvents: 'none',
-                          }}
-                        />
-
-                        {badgeText && (
+                    <motion.div
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => isCenter && setSelectedCourse(course)}
+                    >
+                      <GlowingCard glowColor="#22d3ee">
+                        <div style={{
+                          padding: 'clamp(20px, 4vw, 28px)',
+                          backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                          borderRadius: '20px',
+                          minHeight: 'clamp(350px, 55vh, 400px)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          position: 'relative',
+                          overflow: 'hidden',
+                          border: '2px solid rgba(34, 211, 238, 0.1)',
+                        }}>
                           <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
+                            animate={{
+                              opacity: [0.3, 0.6, 0.3],
+                              scale: [1, 1.1, 1],
+                            }}
+                            transition={{
+                              duration: 4,
+                              repeat: Infinity,
+                              ease: 'easeInOut',
+                            }}
                             style={{
                               position: 'absolute',
-                              top: '20px',
-                              right: '20px',
-                              padding: '8px 16px',
-                              background: badgeText === 'Trending' 
-                                ? 'linear-gradient(135deg, #ec4899, #f97316)' 
-                                : badgeText === 'Coming Soon'
-                                ? 'linear-gradient(135deg, #8b5cf6, #6366f1)'
-                                : 'linear-gradient(135deg, #06b6d4, #a855f7)',
-                              borderRadius: '12px',
-                              fontSize: '12px',
-                              fontWeight: 700,
-                              color: 'white',
-                              textTransform: 'uppercase' as const,
-                              fontFamily: 'var(--font-nunito)',
-                              letterSpacing: '0.5px',
-                              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
-                              zIndex: 10,
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              background: 'radial-gradient(circle at 30% 20%, rgba(34, 211, 238, 0.15), transparent 50%)',
+                              pointerEvents: 'none',
                             }}
-                          >
-                            {badgeText === 'Trending' && '🔥 '}{badgeText}
-                          </motion.div>
-                        )}
+                          />
 
-                        <motion.div
-                          animate={{ y: [0, -10, 0] }}
-                          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                          style={{
-                            width: '68px',
-                            height: '68px',
-                            borderRadius: '16px',
-                            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(168, 85, 247, 0.3))',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginBottom: '18px',
-                            border: '2px solid rgba(34, 211, 238, 0.3)',
-                            position: 'relative',
-                            zIndex: 5,
-                          }}
-                        >
-                          <Icon style={{ width: '36px', height: '36px', color: '#22d3ee' }} />
-                        </motion.div>
-
-                        <h3 style={{ 
-                          fontSize: 'clamp(20px, 4vw, 24px)', 
-                          fontWeight: 700, 
-                          color: 'white', 
-                          marginBottom: '10px', 
-                          fontFamily: 'var(--font-nunito)',
-                          lineHeight: 1.25,
-                          position: 'relative',
-                          zIndex: 5,
-                        }}>
-                          {course.title}
-                        </h3>
-
-                        <p style={{ 
-                          fontSize: 'clamp(12px, 2vw, 13px)', 
-                          color: '#d1d5db', 
-                          lineHeight: 1.5, 
-                          marginBottom: '16px', 
-                          fontFamily: 'var(--font-nunito)', 
-                          flex: 1,
-                          position: 'relative',
-                          zIndex: 5,
-                        }}>
-                          {course.shortDescription}
-                        </p>
-
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px', position: 'relative', zIndex: 5 }}>
-                          {course.tags.slice(0, 2).map((tag) => (
-                            <motion.span
-                              key={tag}
-                              whileHover={{ scale: 1.1 }}
+                          {badgeText && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              whileInView={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.2 }}
                               style={{
-                                padding: '4px 10px',
-                                background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(34, 211, 238, 0.1))',
-                                border: '1px solid rgba(34, 211, 238, 0.4)',
-                                borderRadius: '6px',
-                                fontSize: '10px',
-                                color: '#22d3ee',
-                                fontWeight: 600,
+                                position: 'absolute',
+                                top: '20px',
+                                right: '20px',
+                                padding: '8px 16px',
+                                background: badgeText === 'Trending' 
+                                  ? 'linear-gradient(135deg, #ec4899, #f97316)' 
+                                  : badgeText === 'Coming Soon'
+                                  ? 'linear-gradient(135deg, #8b5cf6, #6366f1)'
+                                  : 'linear-gradient(135deg, #06b6d4, #a855f7)',
+                                borderRadius: '12px',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                color: 'white',
+                                textTransform: 'uppercase' as const,
                                 fontFamily: 'var(--font-nunito)',
-                                backdropFilter: 'blur(10px)',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s ease',
+                                letterSpacing: '0.5px',
+                                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
+                                zIndex: 10,
                               }}
                             >
-                              {tag}
-                            </motion.span>
-                          ))}
-                        </div>
+                              {badgeText === 'Trending' && '🔥 '}{badgeText}
+                            </motion.div>
+                          )}
 
-                        <motion.button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedCourse(course);
-                          }}
-                          whileHover={{ 
-                            scale: 1.05,
-                            boxShadow: '0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(168, 85, 247, 0.4)',
-                          }}
-                          whileTap={{ scale: 0.95 }}
-                          style={{
-                            width: '100%',
-                            padding: '12px',
-                            fontSize: 'clamp(12px, 2vw, 13px)',
-                            fontWeight: 600,
-                            borderRadius: '10px',
-                            border: '2px solid rgba(34, 211, 238, 0.6)',
-                            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
-                            color: '#22d3ee',
-                            cursor: 'pointer',
+                          <motion.div
+                            animate={{ y: [0, -10, 0] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                            style={{
+                              width: '68px',
+                              height: '68px',
+                              borderRadius: '16px',
+                              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(168, 85, 247, 0.3))',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              marginBottom: '18px',
+                              border: '2px solid rgba(34, 211, 238, 0.3)',
+                              position: 'relative',
+                              zIndex: 5,
+                            }}
+                          >
+                            <Icon style={{ width: '36px', height: '36px', color: '#22d3ee' }} />
+                          </motion.div>
+
+                          <h3 style={{ 
+                            fontSize: 'clamp(20px, 4vw, 24px)', 
+                            fontWeight: 700, 
+                            color: 'white', 
+                            marginBottom: '10px', 
                             fontFamily: 'var(--font-nunito)',
-                            transition: 'all 0.3s ease',
-                            boxShadow: '0 0 15px rgba(34, 211, 238, 0.3)',
+                            lineHeight: 1.25,
                             position: 'relative',
                             zIndex: 5,
-                          }}
-                        >
-                          Learn More →
-                        </motion.button>
-                      </div>
-                    </GlowingCard>
+                          }}>
+                            {course.title}
+                          </h3>
+
+                          <p style={{ 
+                            fontSize: 'clamp(12px, 2vw, 13px)', 
+                            color: '#d1d5db', 
+                            lineHeight: 1.5, 
+                            marginBottom: '16px', 
+                            fontFamily: 'var(--font-nunito)', 
+                            flex: 1,
+                            position: 'relative',
+                            zIndex: 5,
+                          }}>
+                            {course.shortDescription}
+                          </p>
+
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px', position: 'relative', zIndex: 5 }}>
+                            {course.tags.slice(0, 2).map((tag) => (
+                              <motion.span
+                                key={tag}
+                                whileHover={{ scale: 1.1 }}
+                                style={{
+                                  padding: '4px 10px',
+                                  background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(34, 211, 238, 0.1))',
+                                  border: '1px solid rgba(34, 211, 238, 0.4)',
+                                  borderRadius: '6px',
+                                  fontSize: '10px',
+                                  color: '#22d3ee',
+                                  fontWeight: 600,
+                                  fontFamily: 'var(--font-nunito)',
+                                  backdropFilter: 'blur(10px)',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.3s ease',
+                                }}
+                              >
+                                {tag}
+                              </motion.span>
+                            ))}
+                          </div>
+
+                          <motion.button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setSelectedCourse(course);
+                            }}
+                            whileHover={{ 
+                              scale: 1.05,
+                              boxShadow: '0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(168, 85, 247, 0.4)',
+                            }}
+                            whileTap={{ scale: 0.95 }}
+                            style={{
+                              width: '100%',
+                              padding: '12px',
+                              fontSize: 'clamp(12px, 2vw, 13px)',
+                              fontWeight: 600,
+                              borderRadius: '10px',
+                              border: '2px solid rgba(34, 211, 238, 0.6)',
+                              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
+                              color: '#22d3ee',
+                              cursor: 'pointer',
+                              fontFamily: 'var(--font-nunito)',
+                              transition: 'all 0.3s ease',
+                              boxShadow: '0 0 15px rgba(34, 211, 238, 0.3)',
+                              position: 'relative',
+                              zIndex: 5,
+                            }}
+                          >
+                            Learn More →
+                          </motion.button>
+                        </div>
+                      </GlowingCard>
+                    </motion.div>
                   </motion.div>
                 );
               })}

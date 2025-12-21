@@ -22,7 +22,7 @@ export default function ServiceDetailsPage({ service }: Props) {
 
   return (
     <div style={{ 
-      background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%)', 
+      // background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%)', 
       minHeight: '100vh', 
       paddingTop: '90px',
       overflowX: 'hidden'
