@@ -9,9 +9,9 @@ generator client {
 
 model User {
   id            String    @id @default(cuid())
-  name          String
+  name          String?
   email         String    @unique
-  password      String
+  password      String?
   contact       String?    @unique
   role          String    @default("STUDENT")
   emailVerified DateTime?
