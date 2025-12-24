@@ -58,11 +58,11 @@ function CountUp5({ big }: { big?: boolean }) {
       transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 1.2 }}
       style={{
         fontSize: big ? '38px' : '32px', // ✅ bigger
-        fontWeight: 850,
+        fontWeight: 750,
         color: '#f97316',
         letterSpacing: '1px',
         lineHeight: 1,
-        gap: '10px',
+        gap: '5px',
         textShadow: '0px 0px 50px rgba(249,115,22,0.75)',
         willChange: 'transform',
       }}
@@ -88,7 +88,7 @@ const TOP_FEATURES: FeatureItem[] = [
   { icon: <CheckCircle size={28} />, text: 'Career Guidance', color: '#ec4899' },
   { icon: <Shield size={28} />, text: 'Certification Support', color: '#06b6d4' },
 ];
-function USFlagIcon({ size = 50 }: { size?: number }) {
+function USFlagIcon({ size = 80 }: { size?: number }) {
   return (
     <svg
       width={size}
@@ -98,7 +98,6 @@ function USFlagIcon({ size = 50 }: { size?: number }) {
       aria-label="United States flag"
       style={{ display: 'block' }}
     >
-
       <defs>
         <clipPath id="r">
           <circle cx="32" cy="32" r="30" />
@@ -106,7 +105,6 @@ function USFlagIcon({ size = 50 }: { size?: number }) {
       </defs>
 
       <g clipPath="url(#r)">
-       
         <rect width="64" height="64" fill="#ffffff" />
 
         {Array.from({ length: 7 }).map((_, i) => (
@@ -126,7 +124,13 @@ function USFlagIcon({ size = 50 }: { size?: number }) {
           const cols = 6;
           const x = 4 + (i % cols) * 4;
           const y = 4 + Math.floor(i / cols) * 4;
-          return <circle key={i} cx={x} cy={y} r="0.9" fill="#ffffff" />;
+          return (
+            <path
+              key={i}
+              d={`M${x},${y - 1} L${x + 0.3},${y - 0.3} L${x + 1},${y - 0.3} L${x + 0.4},${y + 0.2} L${x + 0.6},${y + 0.9} L${x},${y + 0.5} L${x - 0.6},${y + 0.9} L${x - 0.4},${y + 0.2} L${x - 1},${y - 0.3} L${x - 0.3},${y - 0.3} Z`}
+              fill="#ffffff"
+            />
+          );
         })}
       </g>
       <circle cx="32" cy="32" r="30" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="2" />
@@ -163,7 +167,7 @@ function buildBottomFeatures(isMobile: boolean): FeatureItem[] {
     
     
   {
-  icon: <USFlagIcon size={50} />,
+  icon: <USFlagIcon size={80} />,
   color: '#22c55e',
   text: (
     <div
@@ -248,8 +252,8 @@ function FeatureCard({
       {icon && (
         <div
           style={{
-            width: isMobile ? '56px' : '62px',
-            height: isMobile ? '52px' : '60px',
+            width: isMobile ? '58px' : '64px',
+            height: isMobile ? '54px' : '60px',
             borderRadius: '50%',
             background: `radial-gradient(circle, ${color}55, transparent)`,
             display: 'flex',
