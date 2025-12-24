@@ -20,7 +20,7 @@ export default function HomePage() {
   });
 
   return (
-    <div style={{ backgroundColor: "#000", overflowX: "hidden" }}>
+    <div style={{ paddingTop: 0, marginTop: 0, overflowX: "hidden" }}>
       {/* Hero Section */}
       <HeroSection />
 

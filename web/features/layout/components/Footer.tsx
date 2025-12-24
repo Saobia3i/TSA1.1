@@ -11,10 +11,10 @@ import Image from 'next/image';
 const LOGO_URL = 'https://res.cloudinary.com/dojh4b9sb/image/upload/v1765462630/logo1_cyoiop.jpg';
 
 const socialLinks = [
-  { name: 'LinkedIn', icon: Linkedin, url: 'https://linkedin.com/company/tensor-security', color: '#0A66C2' },
-  { name: 'Instagram', icon: Instagram, url: 'https://instagram.com/tensorsecurity', color: '#E4405F' },
+  { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/tensorsecurityacademy/', color: '#0A66C2' },
+  { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/tensor_security_academy/', color: '#E4405F' },
   { name: 'Facebook', icon: Facebook, url: 'https://facebook.com/tensorsecurity', color: '#1877F2' },
-  { name: 'X', icon: XIcon, url: 'https://x.com/tensorsecurity', color: '#000000' },
+  { name: 'X', icon: XIcon, url: 'https://x.com/Tensor_Security', color: '#000000' },
 ];
 
 const quickLinks = [
@@ -141,7 +141,7 @@ export default function Footer() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                 <Mail style={{ width: '18px', height: '18px', color: '#22d3ee', flexShrink: 0 }} />
                 <a
-                  href="mailto:info@tensorsecurity.com"
+                  href="mailto:contact@tensorsecurityacademy.com"
                   style={{ 
                     fontSize: 'clamp(12px, 2.3vw, 14px)', 
                     color: '#9ca3af', 

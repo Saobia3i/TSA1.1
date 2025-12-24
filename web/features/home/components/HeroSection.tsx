@@ -6,10 +6,13 @@ import { ArrowRight, Users, Zap, CheckCircle, Shield } from 'lucide-react';
 import Link from 'next/link';
 
 const HERO_SLIDES = [
-  'FORGE YOUR FUTURE IN TECH SECURITY',
+  'Forge your future in Cybersecurity, AI and Web3',
   'MASTER CYBERSECURITY WITH LIVE TRAINING',
-  'TRANSFORM YOUR CAREER IN 90 DAYS',
+  'Become Indispensable in the Future of Tech',
+  'Your Path from Learning to Leading',
   'JOIN THE NEXT GENERATION OF HACKERS',
+  'Join the Next Generation of Tech Leaders',
+  'Build More Than a Career',
 ];
 
 const FEATURES = [

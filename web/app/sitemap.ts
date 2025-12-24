@@ -2,6 +2,15 @@ import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
+//     https://www.instagram.com/tensor_security_academy/
+
+// https://www.linkedin.com/company/tensorsecurityacademy/
+
+// https://x.com/Tensor_Security
+
+
+// contact@tensorsecurityacademy.com
+
     {
       url: 'https://www.tensorsecurityacademy.com',
       lastModified: new Date(),

@@ -88,12 +88,38 @@
   --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Navbar */
-  --navbar-height: 70px;
+  /* --navbar-height: 70px; */
 
   /* Focus */
   --focus-ring: 0 0 0 3px rgba(34, 117, 195, 0.4);
   --focus-outline: 2px solid var(--color-primary);
 }
+.nav-link {
+  position: relative;
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #00d4ff;
+  text-shadow: 0 0 15px rgba(0, 212, 255, 0.8);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00d4ff, #a855f7);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
 
 /* ============================================
    CYBERSECURITY ANIMATED BACKGROUND - OPTIMIZED
@@ -148,10 +174,11 @@ body::after {
   pointer-events: none;
   will-change: transform;
   backface-visibility: hidden;
-  filter: blur(80px);
-  opacity: 0.5;
+  filter: blur(60px);
+  opacity: 0.35;
   animation: cyberGlow 20s ease-in-out infinite;
 }
+
 
 /* FIX #3: Optimized animation (less blur, better performance) */
 @keyframes cyberGlow {
@@ -406,10 +433,15 @@ html {
    ============================================ */
 
 .page-with-navbar {
-  padding-top: calc(var(--navbar-height) + 20px);
+  /* padding-top: 90px; Just padding for content, no background */
   min-height: 100vh;
+  background: transparent !important;
 }
-
+main {
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+}
 /* ============================================
    ACCESSIBILITY & PERFORMANCE
    ============================================ */

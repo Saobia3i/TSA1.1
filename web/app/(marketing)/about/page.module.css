@@ -12,7 +12,7 @@
 .pageWrapper {
   background-color: transparent;
   min-height: 100vh;
-  padding-top: 90px;
+  /* padding-top: 90px; */
   overflow-x: hidden;
   font-family: "Nunito Sans", -apple-system, BlinkMacSystemFont, sans-serif;
   will-change: scroll-position;
