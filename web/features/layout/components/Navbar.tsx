@@ -207,8 +207,8 @@ export default function Navbar({ user = null }: NavbarProps) {
             />
             <span 
               style={{ 
-                fontSize: 'clamp(11px, 2vw, 14px)', 
-                fontWeight: 900, 
+                fontSize: 'clamp(14px, 16px)', 
+                fontWeight: 800, 
                 color: 'white',
                 letterSpacing: '2px',
                 fontFamily: '"Nunito Sans", sans-serif',
