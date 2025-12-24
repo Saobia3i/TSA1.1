@@ -11,10 +11,10 @@ import Image from 'next/image';
 const LOGO_URL = 'https://res.cloudinary.com/dojh4b9sb/image/upload/v1765462630/logo1_cyoiop.jpg';
 
 const socialLinks = [
-  { name: 'LinkedIn', icon: Linkedin, url: 'https://linkedin.com/company/tensor-security', color: '#0A66C2' },
-  { name: 'Instagram', icon: Instagram, url: 'https://instagram.com/tensorsecurity', color: '#E4405F' },
-  { name: 'Facebook', icon: Facebook, url: 'https://facebook.com/tensorsecurity', color: '#1877F2' },
-  { name: 'X', icon: XIcon, url: 'https://x.com/tensorsecurity', color: '#000000' },
+  { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/company/tensorsecurityacademy', color: '#0A66C2' },
+  { name: 'Instagram', icon: Instagram, url: 'https://www.instagram.com/tensor_security_academy', color: '#E4405F' },
+  { name: 'Facebook', icon: Facebook, url: 'https://facebook.com/tensorsecurityacademy', color: '#1877F2' },
+  { name: 'X', icon: XIcon, url: 'https://x.com/Tensor_Security', color: '#000000' },
 ];
 
 const quickLinks = [
@@ -22,7 +22,7 @@ const quickLinks = [
   { href: '/courses', label: 'Courses' },
   { href: '/services', label: 'Services' },
   { href: '/tools', label: 'Tools' },
-  { href: '/about', label: 'About Us' },
+  { href: '/about', label: 'About' },
 ];
 
 export default function Footer() {
@@ -33,6 +33,7 @@ export default function Footer() {
         borderTop: '2px solid rgba(34, 211, 238, 0.3)',
         padding: 'clamp(40px, 8vw, 60px) clamp(16px, 4vw, 24px)',
         overflowX: 'hidden',
+        justifyContent: 'center',
       }}
     >
       <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
@@ -53,6 +54,7 @@ export default function Footer() {
                 gap: '12px', 
                 marginBottom: '16px',
                 flexWrap: 'wrap',
+                
               }}
             >
               <Image 
@@ -99,6 +101,8 @@ export default function Footer() {
                 color: '#22d3ee', 
                 marginBottom: '16px', 
                 fontFamily: 'var(--font-space-mono)',
+                justifyContent: 'center',
+                alignContent: 'center',
               }}
             >
               Quick Links
@@ -114,6 +118,8 @@ export default function Footer() {
                     textDecoration: 'none',
                     transition: 'color 0.3s ease',
                     width: 'fit-content',
+                     alignContent: 'center',
+                    
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#22d3ee')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
@@ -137,7 +143,7 @@ export default function Footer() {
             >
               Contact
             </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex',  alignContent: 'center',flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                 <Mail style={{ width: '18px', height: '18px', color: '#22d3ee', flexShrink: 0 }} />
                 <a
@@ -151,7 +157,7 @@ export default function Footer() {
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#22d3ee')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
                 >
-                  info@tensorsecurity.com
+                  contact@tensorsecurityacademy.com
                 </a>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

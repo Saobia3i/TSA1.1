@@ -1,19 +1,19 @@
 // app/(marketing)/about/join/page.tsx
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
-import { 
-  AcademicCapIcon, 
+import { motion } from "framer-motion";
+import { ArrowLeft, CheckCircle } from "lucide-react";
+import Link from "next/link";
+import {
+  AcademicCapIcon,
   UserGroupIcon,
   SparklesIcon,
   RocketLaunchIcon,
   TrophyIcon,
-  BoltIcon
-} from '@heroicons/react/24/solid';
-import CSSAuroraBackground from '@/components/backgrounds/CSSAuroraBackground';
-import styles from '../page.module.css';
+  BoltIcon,
+} from "@heroicons/react/24/solid";
+import CSSAuroraBackground from "@/components/backgrounds/CSSAuroraBackground";
+import styles from "../page.module.css";
 
 export default function JoinPage() {
   return (
@@ -32,7 +32,7 @@ export default function JoinPage() {
               whileTap={{ scale: 0.95 }}
               className={styles.backButton}
             >
-              <ArrowLeft style={{ width: '18px', height: '18px' }} />
+              <ArrowLeft style={{ width: "18px", height: "18px" }} />
               Back to About
             </motion.button>
           </Link>
@@ -48,7 +48,9 @@ export default function JoinPage() {
           <div className={styles.joinMovementHeader}>
             <h1 className={styles.joinMovementTitle}>Join the Movement</h1>
             <p className={styles.joinMovementDescription}>
-              Be more than a participant. Become a catalyst for change. Help us bridge exceptional tech talent to the global stage while building your own success.
+              Be more than a participant. Become a catalyst for change. Help us
+              bridge exceptional tech talent to the global stage while building
+              your own success.
             </p>
           </div>
 
@@ -68,42 +70,64 @@ export default function JoinPage() {
               />
 
               <div className={styles.opportunityContent}>
-                <div className={`${styles.opportunityIcon} ${styles.opportunityIconCyan}`}>
-                  <AcademicCapIcon style={{ width: '44px', height: '44px', color: '#00d4ff' }} />
+                <div
+                  className={`${styles.opportunityIcon} ${styles.opportunityIconCyan}`}
+                >
+                  <AcademicCapIcon
+                    style={{ width: "44px", height: "44px", color: "#00d4ff" }}
+                  />
                 </div>
 
                 <h2 className={styles.opportunityTitle}>Campus Ambassador</h2>
-                <p className={`${styles.opportunitySubtitle} ${styles.opportunitySubtitleCyan}`}>
+                <p
+                  className={`${styles.opportunitySubtitle} ${styles.opportunitySubtitleCyan}`}
+                >
                   Lead the Revolution on Your Campus
                 </p>
 
                 <p className={styles.opportunityDescription}>
-                  Transform your campus into a launchpad for global tech careers. As a TSA Campus Ambassador, you're not just promoting a program—you're opening doors that will change lives.
+                  Transform your campus into a launchpad for global tech
+                  careers. As a TSA Campus Ambassador, you're not just promoting
+                  a program you're opening doors that will change lives.
                 </p>
 
-                <h3 className={styles.opportunityBenefitsTitle}>What You Gain:</h3>
+                <h3 className={styles.opportunityBenefitsTitle}>
+                  What You Gain:
+                </h3>
                 <ul className={styles.opportunityList}>
                   <li className={styles.opportunityListItem}>
-                    <SparklesIcon className={styles.opportunityBulletCyan} />
+                    <CheckCircle className={styles.opportunityBulletCyan} />
                     Earn competitive commissions for every enrollment
                   </li>
                   <li className={styles.opportunityListItem}>
-                    <RocketLaunchIcon className={styles.opportunityBulletCyan} />
+                    <CheckCircle className={styles.opportunityBulletCyan} />
                     Free access to premium TSA courses and resources
                   </li>
                   <li className={styles.opportunityListItem}>
-                    <TrophyIcon className={styles.opportunityBulletCyan} />
+                    <CheckCircle className={styles.opportunityBulletCyan} />
                     Build leadership and marketing skills that set you apart
                   </li>
                   <li className={styles.opportunityListItem}>
-                    <BoltIcon className={styles.opportunityBulletCyan} />
+                    <CheckCircle className={styles.opportunityBulletCyan} />
                     Direct mentorship from TSA leadership
+                  </li>
+                  <li className={styles.opportunityListItem}>
+                    <CheckCircle className={styles.opportunityBulletCyan} />
+                    Recognition, bonuses, and long-term career opportunities
+                  </li>
+                  <li className={styles.opportunityListItem}>
+                    <CheckCircle className={styles.opportunityBulletCyan} />
+                    Be the voice that inspires real transformation on your
+                    campus
                   </li>
                 </ul>
 
                 <Link href="#">
                   <motion.button
-                    whileHover={{ scale: 1.05, boxShadow: '0 15px 40px rgba(0, 212, 255, 0.4)' }}
+                    whileHover={{
+                      scale: 1.05,
+                      boxShadow: "0 15px 40px rgba(0, 212, 255, 0.4)",
+                    }}
                     whileTap={{ scale: 0.95 }}
                     className={`${styles.opportunityButton} ${styles.opportunityButtonCyan}`}
                   >
@@ -128,42 +152,64 @@ export default function JoinPage() {
               />
 
               <div className={styles.opportunityContent}>
-                <div className={`${styles.opportunityIcon} ${styles.opportunityIconPurple}`}>
-                  <UserGroupIcon style={{ width: '44px', height: '44px', color: '#7c3aed' }} />
+                <div
+                  className={`${styles.opportunityIcon} ${styles.opportunityIconPurple}`}
+                >
+                  <UserGroupIcon
+                    style={{ width: "44px", height: "44px", color: "#7c3aed" }}
+                  />
                 </div>
 
                 <h2 className={styles.opportunityTitle}>Affiliate Partner</h2>
-                <p className={`${styles.opportunitySubtitle} ${styles.opportunitySubtitlePurple}`}>
+                <p
+                  className={`${styles.opportunitySubtitle} ${styles.opportunitySubtitlePurple}`}
+                >
                   Turn Your Influence Into Impact
                 </p>
 
                 <p className={styles.opportunityDescription}>
-                  Have an audience? A platform? A community that values growth? Partner with TSA and earn while empowering others to break barriers and reach their potential.
+                  Have an audience? A platform? A community that values growth?
+                  Partner with TSA and earn while empowering others to break
+                  barriers and reach their potential.
                 </p>
 
-                <h3 className={styles.opportunityBenefitsTitle}>What You Gain:</h3>
+                <h3 className={styles.opportunityBenefitsTitle}>
+                  What You Gain:
+                </h3>
+                
                 <ul className={styles.opportunityList}>
                   <li className={styles.opportunityListItem}>
-                    <SparklesIcon className={styles.opportunityBulletPurple} />
+                    <CheckCircle className={styles.opportunityBulletPurple} />
                     Lucrative commissions with recurring revenue potential
                   </li>
                   <li className={styles.opportunityListItem}>
-                    <RocketLaunchIcon className={styles.opportunityBulletPurple} />
+                    <CheckCircle className={styles.opportunityBulletPurple} />
                     Professional marketing materials ready to use
                   </li>
                   <li className={styles.opportunityListItem}>
-                    <TrophyIcon className={styles.opportunityBulletPurple} />
+                    <CheckCircle className={styles.opportunityBulletPurple} />
                     Real-time dashboard to track your success
                   </li>
                   <li className={styles.opportunityListItem}>
-                    <BoltIcon className={styles.opportunityBulletPurple} />
+                    <CheckCircle className={styles.opportunityBulletPurple} />
                     Dedicated support team invested in your growth
+                  </li>
+                  <li className={styles.opportunityListItem}>
+                    <CheckCircle className={styles.opportunityBulletPurple} />
+                    Promote education that genuinely transforms lives
+                  </li>
+                  <li className={styles.opportunityListItem}>
+                    <CheckCircle className={styles.opportunityBulletPurple} />
+                    Be part of democratizing elite tech education worldwide
                   </li>
                 </ul>
 
                 <Link href="#">
                   <motion.button
-                    whileHover={{ scale: 1.05, boxShadow: '0 15px 40px rgba(124, 58, 237, 0.4)' }}
+                    whileHover={{
+                      scale: 1.05,
+                      boxShadow: "0 15px 40px rgba(124, 58, 237, 0.4)",
+                    }}
                     whileTap={{ scale: 0.95 }}
                     className={`${styles.opportunityButton} ${styles.opportunityButtonPurple}`}
                   >

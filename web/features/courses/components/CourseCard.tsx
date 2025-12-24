@@ -24,7 +24,7 @@ export default function CourseCard({ course, index, onClick }: CourseCardProps) 
         padding: '24px',
         backgroundColor: 'rgba(17, 24, 39, 0.7)',
         borderRadius: '16px',
-        border: '2px solid rgba(255, 255, 255, 0.3)',
+        border: '2px solid rgba(255, 255, 255, 0.6)',
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.3s',

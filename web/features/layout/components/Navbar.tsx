@@ -161,7 +161,7 @@ export default function Navbar({ user = null }: NavbarProps) {
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 9999,
+          zIndex: 1000,
           backgroundColor: scrolled ? 'rgba(0, 0, 0, 0.85)' : 'rgba(0, 0, 0, 0.5)',
           backdropFilter: 'blur(25px)',
           WebkitBackdropFilter: 'blur(25px)',
@@ -193,7 +193,7 @@ export default function Navbar({ user = null }: NavbarProps) {
               alignItems: 'center', 
               gap: '12px', 
               textDecoration: 'none', 
-              zIndex: 10000 
+              zIndex: 1000
             }}
           >
             <Image
@@ -316,7 +316,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                     padding: '8px',
                     minWidth: '240px',
                     boxShadow: '0 20px 60px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.05)',
-                    zIndex: 10001,
+                    zIndex: 1000,
                   }}
                 >
                   {aboutDropdownLinks.map((link) => {
@@ -380,29 +380,56 @@ export default function Navbar({ user = null }: NavbarProps) {
             {/* SOCIALS DROPDOWN - DESKTOP */}
             <div ref={socialsRef} style={{ position: 'relative' }}>
               <button
-                onClick={() => setSocialsOpen(!socialsOpen)}
-                aria-label="Social media links"
-                aria-expanded={socialsOpen}
-                style={{
-                  background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.15))',
-                  border: '1px solid rgba(0, 212, 255, 0.3)',
-                  color: 'white',
-                  fontSize: '14px',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  fontWeight: 600,
-                  fontFamily: '"Nunito Sans", sans-serif',
-                  letterSpacing: '0.5px',
-                  padding: '10px 20px',
-                  borderRadius: '12px',
-                  backdropFilter: 'blur(10px)',
-                  WebkitBackdropFilter: 'blur(10px)',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: '0 4px 15px rgba(0, 212, 255, 0.2)',
-                }}
-                onMouseEnter={(e) => {
+  onClick={() => setSocialsOpen(!socialsOpen)}
+  aria-label="Social media links"
+  aria-expanded={socialsOpen}
+  style={{
+    background: 'transparent',           // remove gradient background
+    border: 'none',                      // remove border
+    color: 'white',
+    fontSize: '15px',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    fontWeight: 600,
+    fontFamily: '"Nunito Sans", sans-serif',
+    letterSpacing: '0.5px',
+    padding: 0,                          // no padding pill
+    transition: 'all 0.3s ease',
+    textShadow:  'none',
+    boxShadow: 'none',                   // ensure no glow box
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.color = '#00d4ff';
+    e.currentTarget.style.textShadow = '0 0 15px rgba(0, 212, 255, 0.8)';
+    e.currentTarget.style.boxShadow = 'none';        // keep flat
+    e.currentTarget.style.background = 'transparent';
+    e.currentTarget.style.borderColor = 'transparent';
+  }}
+  onMouseLeave={(e) => {
+    
+      e.currentTarget.style.color = 'white';
+      e.currentTarget.style.textShadow = 'none';
+    
+    e.currentTarget.style.boxShadow = 'none';
+    e.currentTarget.style.background = 'transparent';
+    e.currentTarget.style.borderColor = 'transparent';
+  }}
+>
+  <ShareIcon style={{ width: 18, height: 18, strokeWidth: 2 }} />
+  Socials
+  <ChevronDown
+    style={{
+      width: 16,
+      height: 16,
+      transform: socialsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      transition: 'transform 0.3s ease',
+    }}
+  />
+</button>
+
+                {/* onMouseEnter={(e) => {
                   e.currentTarget.style.boxShadow = '0 0 25px rgba(0, 212, 255, 0.5), 0 0 50px rgba(124, 58, 237, 0.3)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
                   e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(124, 58, 237, 0.25))';
@@ -425,7 +452,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                     transition: 'transform 0.3s ease',
                   }}
                 />
-              </button>
+              </button> */}
 
               {socialsOpen && (
                 <div
@@ -443,7 +470,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                     padding: '8px',
                     minWidth: '220px',
                     boxShadow: '0 20px 60px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.05)',
-                    zIndex: 10001,
+                    zIndex: 1000,
                   }}
                 >
                   {socialLinks.map((social) => {
@@ -635,7 +662,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                       padding: '8px',
                       minWidth: '260px',
                       boxShadow: '0 20px 60px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.05)',
-                      zIndex: 10001,
+                      zIndex: 1000,
                     }}
                   >
                     <div style={{ padding: '14px 18px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', marginBottom: '8px' }}>
@@ -789,7 +816,7 @@ export default function Navbar({ user = null }: NavbarProps) {
               color: '#00d4ff',
               cursor: 'pointer',
               padding: '10px',
-              zIndex: 10000,
+              zIndex: 1000,
               boxShadow: '0 4px 15px rgba(0, 212, 255, 0.3)',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
@@ -983,7 +1010,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                               alignItems: 'center',
                               gap: '12px',
                               padding: '14px 18px 14px 32px',
-                              borderRadius: '12px',
+                              // borderRadius: '12px',
                               textDecoration: 'none',
                               color: 'white',
                               fontSize: '15px',

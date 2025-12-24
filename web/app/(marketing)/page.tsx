@@ -60,7 +60,7 @@ export default function HomePage() {
           style={{ width: "28px", height: "28px", color: "white" }}
         />
       </motion.a>
-
+      {/* <Feature /> */}
       {/* Founder Message Section */}
       <motion.section
         ref={founderRef}
@@ -152,42 +152,65 @@ export default function HomePage() {
             }}
           >
             <motion.div
-              whileHover={{ scale: 1.05, rotate: 2 }}
-              transition={{ duration: 0.3, type: "spring" }}
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.35, type: "spring" }}
               style={{
                 width: "140px",
                 height: "140px",
-                borderRadius: "20px",
-                background: "linear-gradient(135deg, #06b6d4, #a855f7)",
-                padding: "4px",
-                flexShrink: 0,
+                borderRadius: "5px",
+                padding: "3px",
+                position: "relative",
+                background: "linear-gradient(135deg, #269f9a, #22d3ee)",
               }}
             >
+              {/* Glow layer */}
+              <motion.div
+                aria-hidden
+                animate={{ opacity: [0.4, 0.85, 0.4], scale: [1, 1.04, 1] }}
+                transition={{
+                  duration: 2.4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                style={{
+                  position: "absolute",
+                  inset: "1px",
+                  borderRadius: "1px",
+                  background:
+                    "linear-gradient(135deg, rgb(38,159,154), rgb(38,159,154) 25%)",
+                  filter: "blur(18px)",
+                  zIndex: 0,
+                  pointerEvents: "none",
+                }}
+              />
+
+              {/* Image container */}
               <div
                 style={{
                   width: "100%",
                   height: "100%",
-                  borderRadius: "18px",
+                  borderRadius: "10px",
                   backgroundColor: "#111827",
+                  overflow: "hidden",
+                  position: "relative",
+                  zIndex: 1,
+                  border: "1px solid rgba(255,255,255,0.08)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  overflow: "hidden",
-                  position: "relative",
                 }}
               >
-                <div
+                <Image
+                  src="https://ik.imagekit.io/ekb0d0it0/ab.2.png"
+                  alt="Founder – Abrar Jahin"
+                  fill
+                  sizes="140px"
+                  priority
                   style={{
-                    fontSize: "48px",
-                    fontWeight: 700,
-                    background: "linear-gradient(135deg, #22d3ee, #a855f7)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    fontFamily: "var(--font-nunito)",
+                    objectFit: "cover",
+                    objectPosition: "center",
                   }}
-                >
-                  AJ
-                </div>
+                />
               </div>
             </motion.div>
 
@@ -206,14 +229,25 @@ export default function HomePage() {
                   fontStyle: "italic" as const,
                 }}
               >
-                At Tensor Security Academy, we believe in direct, personalized
-                guidance. Every program is built around{" "}
-                <span style={{ color: "#22d3ee", fontWeight: 600 }}>
-                  one-on-one live training with expert mentors
+                Let’s be brutally honest for a moment. AI is changing
+                everything. It’s erasing career paths overnight and leaving
+                professionals with two choices: Adapt or Expire. At the same
+                time you’re stuck in the endless{" "}
+                {/* <span style={{ color: "#22d3ee", fontWeight: 600, gap: "4px" }}>
+                 
+                </span> */}
+                Tutorial Loop jumping from one outdated video to the next,
+                piecing together fragments of information with no map, no
+                mentor, and no measurable progress. Endless content, but no true
+                guide. That’s the Trial and Error loop that keeps you stagnant.
+                <span style={{ color: "#22d3ee", fontWeight: 600, gap: "4px" }}>
+                  <br />
+                  <br/>
+                  We break the cycle. We give you what no tutorial can, a
+                  structured, Mentor-led journey with Live interactive training
+                  & real industry insight.
                 </span>
-                .
               </motion.p>
-
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -228,10 +262,14 @@ export default function HomePage() {
                   fontStyle: "italic" as const,
                 }}
               >
-                Our mentors provide real-time feedback and career advice. Your
-                success is our mission.
+                This isn’t just learning, it’s a career transformation, built
+                for the AI era.
               </motion.p>
-
+              <span style={{ color: "#22d3ee", fontWeight: 600, gap: "4px" }}>
+                <br />
+                Your future won’t wait. Secure your spot, before the world moves
+                on without you.
+              </span>
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -263,7 +301,7 @@ export default function HomePage() {
                       marginBottom: "2px",
                     }}
                   >
-                    Abrar Jahin Sachcha
+                    Abrar Jahin
                   </p>
                   <p
                     style={{
@@ -272,7 +310,7 @@ export default function HomePage() {
                       fontFamily: "var(--font-nunito)",
                     }}
                   >
-                    Founder & Lead Mentor
+                    Founder,Tensor Security Academy
                   </p>
                 </div>
               </motion.div>

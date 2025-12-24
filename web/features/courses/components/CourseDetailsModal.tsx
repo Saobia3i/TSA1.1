@@ -40,7 +40,7 @@ export default memo(function CourseDetailsModal({
         inset: 0,
         backgroundColor: 'rgba(0,0,0,0.9)',
         backdropFilter: 'blur(10px)',
-        zIndex: 9999,
+        zIndex: 99999,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -72,13 +72,13 @@ export default memo(function CourseDetailsModal({
           whileHover={{ scale: 1.1, rotate: 90 }}
           style={{
             position: 'absolute',
-            top: 20,
+            top: 40,
             right: 20,
             background: `${course.color}30`,
             border: `2px solid ${course.color}60`,
             borderRadius: '50%',
-            width: 40,
-            height: 40,
+            width: 60,
+            height: 60,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -215,7 +215,7 @@ export default memo(function CourseDetailsModal({
                   {course.curriculum.map((item, i) => (  // ✅ FIXED: course.curriculum
                     <li key={i} style={{  paddingLeft: 28, marginBottom: 14 }}>
                       {/* <CheckCircle size={18} color={course.color} /> */}
-                      <span style={{ color: '#d1d5db' }}>{item}</span>
+                      <span style={{ color: '#ffff' }}>{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -250,7 +250,7 @@ export default memo(function CourseDetailsModal({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: `black`,
+              background: `black 50%`,
               color: 'white',
               fontWeight: 700,
               fontFamily: 'var(--font-nunito)',

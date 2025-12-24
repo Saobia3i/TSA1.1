@@ -4,20 +4,22 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Users, Zap, CheckCircle, Shield } from 'lucide-react';
 import Link from 'next/link';
-
+import Feature from '@/features/home/components/Feature';
 const HERO_SLIDES = [
-  'FORGE YOUR FUTURE IN TECH SECURITY',
-  'MASTER CYBERSECURITY WITH LIVE TRAINING',
-  'TRANSFORM YOUR CAREER IN 90 DAYS',
-  'JOIN THE NEXT GENERATION OF HACKERS',
+  ' Forge your future in Cybersecurity, AI and Web3',
+  'Become Indispensable in the Future of Tech',
+  'Live Guidance from Industry Experts',
+  'Your Path from Learning to Leading',
+  'Join the Next Generation of Tech Leaders.',
+  'Build More Than a Career',
 ];
 
-const FEATURES = [
-  { icon: Users, text: '1-on-1 Mentorship', color: '#22d3ee' },
-  { icon: Zap, text: 'Live Training', color: '#a855f7' },
-  { icon: CheckCircle, text: 'Career Guidance', color: '#ec4899' },
-  { icon: Shield, text: 'Certification Support', color: '#06b6d4' },
-];
+// const FEATURES = [
+//   { icon: Users, text: '1-on-1 Mentorship', color: '#22d3ee' },
+//   { icon: Zap, text: 'Live Training', color: '#a855f7' },
+//   { icon: CheckCircle, text: 'Career Guidance', color: '#ec4899' },
+//   { icon: Shield, text: 'Certification Support', color: '#06b6d4' },
+// ];
 
 const VIDEO_URL = 'https://res.cloudinary.com/dojh4b9sb/video/upload/v1765449734/hero-background_kwhnz8.mp4';
 const SLIDE_INTERVAL = 4000;
@@ -313,7 +315,9 @@ export default function HeroSection() {
           <CTAButton />
 
           {/* Feature Grid */}
-          <FeatureGrid features={FEATURES} />
+        <div style={{ pointerEvents: 'auto', marginTop: '40px', width: '100%' }}>
+  <Feature />
+</div>
 
           {/* Slide Indicators */}
           <SlideIndicators 
@@ -549,6 +553,7 @@ function Badge() {
   );
 }
 
+
 function HeadlineSlider({ currentSlide, slides }: { currentSlide: number; slides: string[] }) {
   return (
     <div style={{ 
@@ -668,75 +673,6 @@ function CTAButton() {
   );
 }
 
-function FeatureGrid({ features }: { features: typeof FEATURES }) {
-  return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-        gap: '20px',
-        width: '100%',
-        maxWidth: '900px',
-        marginTop: '40px',
-        pointerEvents: 'auto',
-      }}
-    >
-      {features.map((feature, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: i * 0.15 }}
-          whileHover={{
-            scale: 1.05,
-            y: -8,
-            borderColor: feature.color,
-            boxShadow: `0 10px 40px ${feature.color}60`,
-          }}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '14px',
-            padding: '24px 18px',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            borderRadius: '16px',
-            border: `2px solid ${feature.color}40`,
-            transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
-            backdropFilter: 'blur(10px)',
-          }}
-        >
-          <div
-            style={{
-              width: '50px',
-              height: '50px',
-              borderRadius: '50%',
-              background: `radial-gradient(circle, ${feature.color}40, transparent)`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <feature.icon style={{ width: '28px', height: '28px', color: feature.color }} />
-          </div>
-          <p
-            style={{
-              fontSize: '14px',
-              color: '#ffffff',
-              fontWeight: 600,
-              textAlign: 'center',
-              fontFamily: 'var(--font-nunito)',
-              letterSpacing: '0.8px',
-              textShadow: '0 2px 8px rgba(0, 0, 0, 0.8)',
-            }}
-          >
-            {feature.text}
-          </p>
-        </motion.div>
-      ))}
-    </div>
-  );
-}
 
 function SlideIndicators({ 
   slides, 

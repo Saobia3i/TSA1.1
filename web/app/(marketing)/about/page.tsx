@@ -1,11 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft,Handshake } from 'lucide-react';
 import Link from 'next/link';
 import { 
   UserGroupIcon,
-  HandRaisedIcon,
+  
   AcademicCapIcon,
   BoltIcon,
   RocketLaunchIcon,
@@ -120,9 +120,10 @@ export default function AboutPage() {
               <motion.button
                 whileHover={{ scale: 1.05, y: -3 }}
                 whileTap={{ scale: 0.95 }}
+                
                 className={`${styles.quickNavButton} ${styles.quickNavButtonAlt}`}
               >
-                <HandRaisedIcon className={styles.navIcon} />
+                <Handshake className={styles.navIcon} />
                 Join Us
               </motion.button>
             </Link>
