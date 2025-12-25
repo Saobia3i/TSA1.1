@@ -71,7 +71,7 @@ export default function CoursesPreview() {
         {/* 3D Card Carousel - FIX: removed overflow hidden, added padding */}
         <div style={{ 
           width: '100%',
-          paddingBottom: '80px', 
+          paddingBottom: '20px', 
           perspective: '1000px',
         }}>
           <div style={{
