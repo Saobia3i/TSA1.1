@@ -103,7 +103,7 @@ export default function CoursesPage() {
 
           <div style={{ textAlign: "center", marginBottom: "30px" }}>
             <motion.a
-              href="/path-to-your-whitepaper.pdf" // Replace with your PDF path
+              href="/https://drive.google.com/file/d/1-0_F78lIVtdHOJfKU18fzZEUAXFFVdth/view?usp=sharing" // Replace with your PDF path
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(168, 85, 247, 0.4)' }}

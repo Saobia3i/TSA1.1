@@ -116,7 +116,7 @@ export default function HomePage() {
 
         {/* WhatsApp Button */}
         <motion.a
-          href="https://wa.me/8801331759287"
+          href="https://wa.me/8801871719419"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat on WhatsApp"
@@ -293,7 +293,7 @@ export default function HomePage() {
                 }}
               >
                 <Image
-                  src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%208.59.29%20PM.jpeg?updatedAt=1766169177691"
+                  src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-25%20at%207.49.50%20PM.jpeg"
                   alt="Founder – Abrar Jahin"
                   fill
                   sizes="140px"

@@ -6,7 +6,7 @@ import { ArrowLeft, MessageSquare, Quote, Sparkles, Mail } from "lucide-react";
 import Link from "next/link";
 import Linkedin from "@mui/icons-material/LinkedIn";
 import Instagram from "@mui/icons-material/Instagram";
-import Facebook from "@mui/icons-material/Facebook";
+
 import XIcon from "@mui/icons-material/X";
 import CSSAuroraBackground from "@/components/backgrounds/CSSAuroraBackground";
 import styles from "../page.module.css";
@@ -15,7 +15,7 @@ import { useState } from "react";
 const teamMembers = [
   {
     name: "Abrar Jahin",
-    role: "Founder and CEO, Security Researcher",
+    role: "Founder and CEO | Security Researcher",
     image:
       "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%208.59.29%20PM.jpeg?updatedAt=1766169177691",
     quote:
@@ -23,7 +23,6 @@ const teamMembers = [
     socials: {
       linkedin: "https://linkedin.com/in/abrar-jahin",
       twitter: "https://twitter.com/abrajahin",
-      facebook: "https://facebook.com/abrajahin",
       instagram: "https://instagram.com/abrajahin",
     },
     isFounder: true,
@@ -37,7 +36,7 @@ const teamMembers = [
     quote:
       "Watching our students transform from uncertain beginners to confident professionals is why I do this. TSA isn't just teaching skills—we're changing lives and rewriting futures.",
     socials: {
-      Mail: "https://linkedin.com/in/nuren",
+      Mail: "mailto:tasnimnuren@gmail.com",
       // twitter: 'https://twitter.com/nuren',
       // facebook: 'https://facebook.com/nuren',
       // instagram: 'https://instagram.com/nuren',
@@ -51,7 +50,7 @@ const teamMembers = [
     quote:
       "Education should empower, not overwhelm. At TSA, we break down complex cybersecurity concepts into actionable knowledge that students can apply from day one.",
     socials: {
-      Mail: "mailto:islamsaobia@gmail.com",
+      Mail: "mailto:abidhossainove199@gmail.com",
       //linkedin: 'https://linkedin.com/in/abid',
       // twitter: 'https://twitter.com/abid',
       // facebook: 'https://facebook.com/abid',
@@ -85,7 +84,7 @@ const teamMembers = [
       // twitter: 'https://twitter.com/iftekhar',
       // facebook: 'https://facebook.com/iftekhar',
       // instagram: 'https://instagram.com/iftekhar',
-      Mail: "mailto:islamsaobia@gmail.com",
+      Mail: "mailto:iftekharzihad@gmail.com",
     },
   },
   {
@@ -99,7 +98,7 @@ const teamMembers = [
       // twitter: 'https://twitter.com/mubtasim',
       // facebook: 'https://facebook.com/mubtasim',
       // instagram: 'https://instagram.com/mubtasim',
-      Mail: "mailto:islamsaobia@gmail.com",
+      Mail: "mailto:mubtasimfuad945@gmail.com",
     },
   },
   {
@@ -114,7 +113,7 @@ const teamMembers = [
       // twitter: 'https://twitter.com/prottoy',
       // facebook: 'https://facebook.com/prottoy',
       // instagram: 'https://instagram.com/prottoy',
-      Mail: "mailto:islamsaobia@gmail.com",
+      Mail: "mailto:pdrrudro@gmail.com",
     },
   },
 ];

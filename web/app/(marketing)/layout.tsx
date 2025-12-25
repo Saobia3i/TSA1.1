@@ -3,6 +3,7 @@ import Navbar from '@/features/layout/components/Navbar'
 import Footer from '@/features/layout/components/Footer'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import Head from 'next/head'
 
 export default async function MarketingLayout({
   children,
@@ -16,6 +17,24 @@ export default async function MarketingLayout({
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
+      {/* Head Meta Tags for SEO & Open Graph */}
+      <Head>
+        {/* General Meta Tags */}
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Your Marketing Site Title</title>
+
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content="Your Website Title" />
+        <meta property="og:description" content="A brief description of your website." />
+        <meta property="og:image" content="https://yourwebsite.com/og-image.png" />
+        <meta property="og:url" content="https://yourwebsite.com" />
+        <meta name="twitter:card" content="summary_large_image" />
+
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       <Navbar user={user} />
       <main>{children}</main>
       <Footer />

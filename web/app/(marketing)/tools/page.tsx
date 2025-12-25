@@ -596,7 +596,9 @@ export default function ToolsPage() {
                     transition: "all 0.3s ease",
                   }}
                 >
-                  <span>OSINT</span>
+                  <a href="#">
+                    <span>Resources</span>
+                  </a>
                   {isOslintOpen ? (
                     <ChevronUp
                       style={{
@@ -631,7 +633,7 @@ export default function ToolsPage() {
                       }}
                     >
                       <motion.a
-                        href="#"
+                        href="https://github.com/tools-tensorsecurityacademy/ebooks"
                         whileHover={{ scale: 1.03, x: 8 }}
                         whileTap={{ scale: 0.97 }}
                         style={{
@@ -659,11 +661,11 @@ export default function ToolsPage() {
                             color: "#a855f7",
                           }}
                         />
-                        Framework
+                        Ebooks
                       </motion.a>
 
                       <motion.a
-                        href="#"
+                        href="https://github.com/tools-tensorsecurityacademy/methodologies"
                         whileHover={{ scale: 1.03, x: 8 }}
                         whileTap={{ scale: 0.97 }}
                         style={{
@@ -691,11 +693,42 @@ export default function ToolsPage() {
                             color: "#22d3ee",
                           }}
                         />
-                        Resources
+                        Methodologies
+                      </motion.a>
+                      <motion.a
+                        href="https://github.com/tools-tensorsecurityacademy/OSINT"
+                        whileHover={{ scale: 1.03, x: 8 }}
+                        whileTap={{ scale: 0.97 }}
+                        style={{
+                          padding: "16px 24px",
+                          background: "rgba(34, 211, 238, 0.1)",
+                          backdropFilter: "blur(10px)",
+                          border: "2px solid rgba(134, 111, 238, 0.3)",
+                          borderRadius: "12px",
+                          color: "#ffffff",
+                          textDecoration: "none",
+                          fontSize: "17px",
+                          fontWeight: 700,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px",
+                          fontFamily: "var(--font-nunito)",
+                          boxShadow: "0 0 20px rgba(134, 111, 238, 0.3)",
+                          transition: "all 0.3s ease",
+                        }}
+                      >
+                        <Code
+                          style={{
+                            width: "22px",
+                            height: "22px",
+                            color: "#a855f7",
+                          }}
+                        />
+                        Osint
                       </motion.a>
 
                       <motion.a
-                        href="#"
+                        href="https://github.com/tools-tensorsecurityacademy/practice-labs"
                         whileHover={{ scale: 1.03, x: 8 }}
                         whileTap={{ scale: 0.97 }}
                         style={{
@@ -800,7 +833,7 @@ export default function ToolsPage() {
               </p>
 
               <a
-                href="https://wa.me/1234567890"
+                href="https://docs.google.com/forms/d/e/1FAIpQLSfdrN7rYl3oTeg-yqkNhcoTLXPvzLq8gM94-zrm_nPx9AtBUA/viewform"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ textDecoration: "none", display: "inline-block" }}

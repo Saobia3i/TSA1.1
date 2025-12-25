@@ -167,7 +167,7 @@ export default function ServiceDetailsPage({ service }: Props) {
         {/* CTA Button */}
         <div style={{ textAlign: 'center', marginTop: '80px' }}>
           <a
-            href="#contact"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSeN0hTjYG8UHL_ejCSh2UzCx3r988mVEe_0WftQeSf5VViETg/viewform"
             style={{
               display: 'inline-flex',
               alignItems: 'center',

@@ -122,7 +122,7 @@ export default function JoinPage() {
                   </li>
                 </ul>
 
-                <Link href="#">
+                <Link href="https://docs.google.com/forms/d/e/1FAIpQLSf72LAUaDzn76H_xEWe796HtK0wasYrhlvZrJlrQSbtKm8X3A/viewform?usp=dialog">
                   <motion.button
                     whileHover={{
                       scale: 1.05,
@@ -204,7 +204,7 @@ export default function JoinPage() {
                   </li>
                 </ul>
 
-                <Link href="#">
+                <Link href="https://docs.google.com/forms/d/e/1FAIpQLScGk1YoPIxqv8NTSyw7PIfboCRvARfluca0zTqPycHqX1cGIQ/viewform">
                   <motion.button
                     whileHover={{
                       scale: 1.05,
