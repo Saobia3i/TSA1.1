@@ -201,7 +201,7 @@ export default function HomePage() {
                 }}
               >
                 <Image
-                  src="https://ik.imagekit.io/ekb0d0it0/ab.2.png"
+                  src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%208.59.29%20PM.jpeg?updatedAt=1766169177691"
                   alt="Founder – Abrar Jahin"
                   fill
                   sizes="140px"
