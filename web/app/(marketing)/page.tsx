@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle, Quote, Handshake } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useScroll } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,6 +13,14 @@ import ToolsPreview from "@/features/home/components/ToolsPreview";
 
 export default function HomePage() {
   const founderRef = useRef<HTMLElement>(null);
+  const [showPopup, setShowPopup] = useState(true);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    if (dismissed) return;
+    const timer = setTimeout(() => setShowPopup(false), 3500);
+    return () => clearTimeout(timer);
+  }, [dismissed]);
 
   const { scrollYProgress: founderProgress } = useScroll({
     target: founderRef,
@@ -25,41 +33,125 @@ export default function HomePage() {
       <HeroSection />
 
       {/* WhatsApp Floating Button */}
-      <motion.a
-        href="https://wa.me/+8801331759287"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat on WhatsApp"
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{
-          delay: 0.8,
-          duration: 0.4,
-          type: "spring",
-          stiffness: 200,
-        }}
-        whileHover={{ scale: 1.15, rotate: 10 }}
-        whileTap={{ scale: 0.9 }}
-        style={{
-          position: "fixed",
-          bottom: "24px",
-          right: "24px",
-          zIndex: 50,
-          width: "60px",
-          height: "60px",
-          backgroundColor: "#25D366",
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: "0 8px 30px rgba(37, 211, 102, 0.4)",
-          cursor: "pointer",
-        }}
+      <div
+        style={{ position: "fixed", bottom: "24px", right: "24px", zIndex: 50 }}
       >
-        <MessageCircle
-          style={{ width: "28px", height: "28px", color: "white" }}
-        />
-      </motion.a>
+        {/* Popup Message */}
+        <AnimatePresence>
+          {showPopup && !dismissed && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, x: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, x: 10, scale: 0.95 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              style={{
+                position: "absolute",
+                bottom: "78px",
+                right: "0",
+                padding: "10px 12px",
+                borderRadius: "14px",
+                fontSize: "13px",
+                fontWeight: 600,
+                color: "black",
+                whiteSpace: "nowrap",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                background: "rgba(255,255,255,0.9)",
+                border: "1px solid rgba(255, 255, 255, 0.14)",
+                backdropFilter: "blur(14px)",
+                WebkitBackdropFilter: "blur(14px)",
+                boxShadow: "0 12px 34px rgba(0,0,0,0.35)",
+                fontFamily: "var(--font-nunito)",
+              }}
+            >
+              <span>👋 Chat with us!</span>
+
+              {/* Close Button */}
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setDismissed(true);
+                  setShowPopup(false);
+                }}
+                aria-label="Close"
+                style={{
+                  width: "22px",
+                  height: "22px",
+                  borderRadius: "999px",
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  background: "rgba(255,255,255,0.9)",
+                  color: "red",
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  lineHeight: 1,
+                  fontSize: "14px",
+                }}
+              >
+                ✕
+              </button>
+
+              {/* Tail */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "-6px",
+                  right: "18px",
+                  width: "12px",
+                  height: "12px",
+                  background: "rgba(17, 24, 39, 0.55)",
+                  borderRight: "1px solid rgba(255, 255, 255, 0.14)",
+                  borderBottom: "1px solid rgba(255, 255, 255, 0.14)",
+                  transform: "rotate(45deg)",
+                  backdropFilter: "blur(14px)",
+                  WebkitBackdropFilter: "blur(14px)",
+                }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* WhatsApp Button */}
+        <motion.a
+          href="https://wa.me/8801331759287"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat on WhatsApp"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{
+            delay: 0.8,
+            duration: 0.4,
+            type: "spring",
+            stiffness: 200,
+          }}
+          whileHover={{ scale: 1.15, rotate: 10 }}
+          whileTap={{ scale: 0.9 }}
+          onMouseEnter={() => {
+            if (!dismissed) setShowPopup(true);
+          }}
+          style={{
+            width: "60px",
+            height: "60px",
+            backgroundColor: "#25D366",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 8px 30px rgba(37, 211, 102, 0.4)",
+            cursor: "pointer",
+          }}
+        >
+          <MessageCircle
+            style={{ width: "28px", height: "28px", color: "white" }}
+          />
+        </motion.a>
+
+        {/* END WhatsApp Button */}
+      </div>
       {/* <Feature /> */}
       {/* Founder Message Section */}
       <motion.section
@@ -242,7 +334,7 @@ export default function HomePage() {
                 guide. That’s the Trial and Error loop that keeps you stagnant.
                 <span style={{ color: "#22d3ee", fontWeight: 600, gap: "4px" }}>
                   <br />
-                  <br/>
+                  <br />
                   We break the cycle. We give you what no tutorial can, a
                   structured, Mentor-led journey with Live interactive training
                   & real industry insight.
