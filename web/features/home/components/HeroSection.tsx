@@ -604,8 +604,8 @@ function Subtitle() {
         fontFamily: 'var(--font-nunito)',
       }}
     >
-      Master in demand technologies through applied learning. Build, deploy, and{' '}
-      <span style={{ color: '#22d3ee', fontWeight: 700 }}>secure real systems</span>, 
+      Master in demand technologies through applied learning.{' '}
+      <span style={{ color: '#22d3ee', fontWeight: 700 }}>Build, deploy, and secure real systems</span>, 
       with expert mentorship at every step.
     </motion.p>
   );
