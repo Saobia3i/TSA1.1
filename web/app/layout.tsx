@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
+// app/(marketing)/layout.tsx
+import { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  // Global metadata - সব page এ common
   metadataBase: new URL('https://tensorsecurityacademy.com'),
   title: {
     default: 'Tensor Security Academy',
-    template: '%s | TSA' // প্রতিটা page এ এভাবে append হবে
+    template: '%s | TSA',
   },
-  description: 'If you’re ready to step into Cybersecurity but don’t know where to Start, TSA gives you a clear path. We provide 1on1 Mentorship, LIve training, career guidance, Certification support, and hand picked Premium Resources ,everything designed to fast track you into your First Cybersecurity Role. You’ll gain both Offensive and Defensive Security Skills, opening doors to High Demand roles like Penetration Tester, Ethical Hacker, Security Analyst, Malware Developer, SOC Analyst, and Incident Responder. With us, you don’t waste time guessing, you get the exact support and training needed to secure your First Cybersecurity Role with Confidence.',
+  description: 'If you\'re ready to step into Cybersecurity but don\'t know where to Start, TSA gives you a clear path...',
   keywords: ['general', 'keywords', 'for', 'whole', 'site'],
   authors: [{ name: 'Abrar Jahin' }],
   creator: 'Abrar Jahin',
@@ -21,10 +21,27 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     siteName: 'TSA',
+    title: 'Tensor Security Academy',
+    description: 'Step into Cybersecurity with TSA!',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'TSA Open Graph Image',
+      },
+    ],
+    url: 'https://tensorsecurityacademy.com',
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary_large_image', // Fixed: was 'cardType'
+    title: 'Tensor Security Academy',
+    description: 'Step into Cybersecurity with TSA!',
     creator: '@yourhandle',
+    images: ['/twitter-image.png'], // Simplified format
+  },
+  icons: {
+    icon: '/favicon.ico',
   },
 };
 

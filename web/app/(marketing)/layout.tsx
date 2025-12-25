@@ -22,12 +22,12 @@ export default async function MarketingLayout({
         {/* General Meta Tags */}
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Your Marketing Site Title</title>
+        <title>Tensor Security Academy</title>
 
         {/* Open Graph Meta Tags */}
-        <meta property="og:title" content="Your Website Title" />
+        <meta property="og:title" content="Tensor Security Academy" />
         <meta property="og:description" content="A brief description of your website." />
-        <meta property="og:image" content="https://yourwebsite.com/og-image.png" />
+        <meta property="og:image" content="/og-image.png" />
         <meta property="og:url" content="https://yourwebsite.com" />
         <meta name="twitter:card" content="summary_large_image" />
 
