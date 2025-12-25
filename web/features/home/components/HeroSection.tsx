@@ -604,9 +604,9 @@ function Subtitle() {
         fontFamily: 'var(--font-nunito)',
       }}
     >
-      Go from curious to career-ready with{' '}
-      <span style={{ color: '#22d3ee', fontWeight: 700 }}>elite mentorship</span>, 
-      hands-on training, and real-world projects.
+      Master in demand technologies through applied learning. Build, deploy, and{' '}
+      <span style={{ color: '#22d3ee', fontWeight: 700 }}>secure real systems</span>, 
+      with expert mentorship at every step.
     </motion.p>
   );
 }
