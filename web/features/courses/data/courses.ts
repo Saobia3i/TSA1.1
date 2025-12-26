@@ -1,7 +1,7 @@
 
 
 
-import { Shield, Target, Bug, Brain, Zap, Code, BarChart,Clock } from 'lucide-react';
+import { Shield, Target, Bug, Brain, Zap, Code, BarChart, Clock, Lock, Cpu, Database, Globe } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Course {
@@ -37,9 +37,9 @@ export const courses: Course[] = [
     badge: 'Beginner to Advanced',
     level: 'Beginner to Advanced',
     color: '#22d3ee',
-    instructor: 'Tensor Security Academy',
-    students: 1250,
-    rating: 4.9,
+    // instructor: 'Tensor Security Academy',
+    // students: 1250,
+    // rating: 4.9,
     price: '$99/month',
     tags: ['Cybersecurity', 'Penetration Testing', 'Generative AI', 'SOC', 'Red Team', 'Blue Team', 'CTF', 'Live Training'],
     topics: [
@@ -144,13 +144,13 @@ export const courses: Course[] = [
     title: 'Security Analyst Professional Live Training',
     shortDescription: 'From SOC Fundamentals to Advanced Threat Detection.',
     description: 'Comprehensive training from beginner to job-ready Security Analyst. Learn SOC operations, SIEM management, incident detection, and response.',
-    icon: Bug,
+    icon: BarChart,
     duration: '15 Weeks',
     level: 'Beginner to Advanced',
     color: '#a855f7',
     
-    students: 1800,
-    rating: 4.8,
+    // students: 1800,
+    // rating: 4.8,
     price: '$99/month',
     tags: ['Security Analyst', 'SOC', 'SIEM', 'Incident Response', 'Threat Intelligence', 'Splunk', 'Live Training'],
     topics: [
@@ -195,8 +195,8 @@ export const courses: Course[] = [
     level: 'Beginner to Intermediate',
     color: '#10b981',
     
-    students: 950,
-    rating: 4.9,
+    // students: 950,
+    // rating: 4.9,
     price: '$99/month',
     tags: ['Machine Learning', 'Deep Learning', 'ML Security', 'Python', 'Neural Networks', 'AI Security'],
     topics: [
@@ -237,8 +237,8 @@ export const courses: Course[] = [
     level: 'Intermediate to Advanced',
     color: '#f59e0b',
     
-    students: 1400,
-    rating: 4.8,
+    // students: 1400,
+    // rating: 4.8,
     price: '$199/month',
     tags: ['AI Security', 'LLM', 'OWASP', 'Prompt Injection', 'DevSecOps', 'Red Teaming', 'MITRE ATLAS'],
     topics: [
@@ -281,8 +281,8 @@ export const courses: Course[] = [
     level: 'Beginner to Advanced',
     color: '#8b5cf6',
     
-    students: 3200,
-    rating: 4.8,
+    // students: 3200,
+    // rating: 4.8,
     price: '$149/month',
     tags: ['DevOps', 'DevSecOps', 'AWS', 'Docker', 'Kubernetes', 'CI/CD', 'Terraform'],
     topics: [
@@ -320,14 +320,14 @@ export const courses: Course[] = [
     title: 'Mastering MLSecOps: Securing AI & Machine Learning Systems',
     shortDescription: 'A comprehensive training program designed to equip security engineers, ML practitioners, and DevOps professionals with the skills to secure machine learning systems. Learn how to integrate security into the ML lifecycle—from data and model development to deployment and monitoring. This course covers MLSecOps fundamentals, adversarial defense, supply chain security, model provenance, compliance, and trusted AI, with hands-on labs and real-world attack simulations.',
     description: 'A comprehensive training program designed to equip security engineers, ML practitioners, and DevOps professionals with the skills to secure machine learning systems. Learn how to integrate security into the ML lifecycle—from data and model development to deployment and monitoring. This course covers MLSecOps fundamentals, adversarial defense, supply chain security, model provenance, compliance, and trusted AI, with hands-on labs and real-world attack simulations.',
-    icon: Shield,
+    icon: Cpu,
     duration: '16 Weeks',
     badge: ' Intermediate to Advanced',
     level: ' Intermediate to Advanced',
-    color: '#22d3ee',
-    instructor: 'Tensor Security Academy',
-    students: 1250,
-    rating: 4.9,
+    color: '#10b981',
+    // instructor: 'Tensor Security Academy',
+    // students: 1250,
+    // rating: 4.9,
     price: '$299/month',
     tags: ['MLSecOps', 'MLOps', 'AI Security', 'Adversarial ML', 'Model Governance', 'Supply Chain Security', 'Trusted AI', 'Live Training'],
     topics: [
@@ -374,14 +374,14 @@ export const courses: Course[] = [
   title: 'Ethereum Smart Contract Engineering',
   shortDescription: 'Master professional smart contract development with comprehensive Solidity training. Learn to build, test, and deploy secure contracts using industry-standard tools. Implement ERC standards, work with oracles, and optimize gas usage. Graduate ready for junior blockchain developer roles with practical project experience.',
   description: 'Master professional smart contract development with comprehensive Solidity training. Learn to build, test, and deploy secure contracts using industry-standard tools. Implement ERC standards, work with oracles, and optimize gas usage. Graduate ready for junior blockchain developer roles with practical project experience.',
-  icon: Shield,
+  icon: Code,
   duration: '16 Weeks',
   badge: 'Beginner to Intermediate',
   level: 'Beginner to Intermediate',
   color: '#22d3ee',
-  instructor: 'Tensor Security Academy',
-  students: 850,
-  rating: 4.8,
+  // instructor: 'Tensor Security Academy',
+  // students: 850,
+  // rating: 4.8,
   price: '$99/month',
   tags: ['Blockchain', 'Ethereum', 'Solidity', 'Smart Contracts', 'DeFi', 'Hardhat', 'Security', 'Live Training'],
   topics: [
@@ -428,14 +428,14 @@ export const courses: Course[] = [
   title: 'Smart Contract Auditing & Security',
   shortDescription: 'Master essential smart contract security auditing skills through hands-on vulnerability detection. Learn common attack vectors, testing methodologies, and security tools. Practice with real-world vulnerable contracts and write professional audit reports. Build foundational skills for junior security auditor positions in web3.',
   description: 'Master essential smart contract security auditing skills through hands-on vulnerability detection. Learn common attack vectors, testing methodologies, and security tools. Practice with real-world vulnerable contracts and write professional audit reports. Build foundational skills for junior security auditor positions in web3.',
-  icon: Shield,
+  icon: Globe,
   duration: '14 Weeks',
   badge: 'Intermediate',
   level: 'Intermediate',
-  color: '#22d3ee',
-  instructor: 'Tensor Security Academy',
-  students: 620,
-  rating: 4.9,
+  color: '#ec4899',
+  // instructor: 'Tensor Security Academy',
+  //students: 620,
+  //rating: 4.9,
   price: '$149/month',
   tags: ['Security', 'Auditing', 'Smart Contracts', 'Blockchain', 'Vulnerabilities', 'Slither', 'Foundry', 'Live Training'],
   topics: [
@@ -484,10 +484,10 @@ export const courses: Course[] = [
   duration: '12 Weeks',
   badge: 'Advanced',
   level: 'Advanced',
-  color: '#22d3ee',
-  instructor: 'Tensor Security Academy',
-  students: 430,
-  rating: 4.8,
+  color: '#a855f7',
+  // instructor: 'Tensor Security Academy',
+  // students: 430,
+  // rating: 4.8,
   price: '$499/month',
   tags: ['Web3 Security', 'DApp Security', 'Wallet Security', 'Frontend', 'Blockchain', 'Compliance', 'Live Training'],
   topics: [

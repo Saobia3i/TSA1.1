@@ -6,10 +6,6 @@ import {
   X, 
   ChevronDown, 
   Handshake,
-  Linkedin,
-  Instagram,
-  Facebook,
-  Twitter,
   LogIn,
   UserPlus,
   User,
@@ -17,6 +13,10 @@ import {
   LogOut,
   Home,
 } from 'lucide-react';
+import Linkedin from "@mui/icons-material/LinkedIn";
+import Instagram from "@mui/icons-material/Instagram";
+
+import XIcon from "@mui/icons-material/X";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
@@ -41,10 +41,9 @@ const aboutDropdownLinks = [
 ];
 
 const socialLinks = [
-  { name: 'LinkedIn', url: 'https://linkedin.com/company/tensor-security', icon: Linkedin },
-  { name: 'Instagram', url: 'https://instagram.com/tensorsecurity', icon: Instagram },
-  { name: 'Facebook', url: 'https://facebook.com/tensorsecurity', icon: Facebook },
-  { name: 'X', url: 'https://x.com/tensorsecurity', icon: Twitter },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/company/tensorsecurityacademy', icon: Linkedin },
+  { name: 'Instagram', url: 'https://www.instagram.com/tensor_security_academy', icon: Instagram },
+  { name: 'X', url: 'https://x.com/Tensor_Security', icon: XIcon },
 ];
 
 interface NavbarProps {
@@ -510,8 +509,8 @@ export default function Navbar({ user = null }: NavbarProps) {
                         }}
                       >
                         <div style={{ 
-                          width: '32px', 
-                          height: '32px', 
+                          width: '34px', 
+                          height: '34px', 
                           borderRadius: '50%', 
                           border: '2px solid rgba(255, 255, 255, 0.4)',
                           display: 'flex',
