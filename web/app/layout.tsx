@@ -5,45 +5,125 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL('https://tensorsecurityacademy.com'),
   title: {
-    default: 'Tensor Security Academy',
-    // template: '%s | TSA',
-    template: 'Home | TSA',
+    default: 'Tensor Security Academy - Cybersecurity & Blockchain Training Platform',
+    template: '%s | Tensor Security Academy',
   },
-  description: 'If you\'re ready to step into Cybersecurity but don\'t know where to Start, TSA gives you a clear path...',
-  keywords: ['general', 'keywords', 'for', 'whole', 'site'],
-  authors: [{ name: 'Abrar Jahin' }],
-  creator: 'Abrar Jahin',
+  description: 'Master cybersecurity with hands-on training in ethical hacking, penetration testing, blockchain security, and network security. Industry-recognized certifications, expert instructors, and practical labs for beginners to advanced professionals.',
+  keywords: [
+    // Core Cybersecurity Keywords (High Volume)
+    'cybersecurity',
+    'cyber security training',
+    'cybersecurity certification',
+    'information security',
+    'network security',
+    'cyber security courses',
+    'ethical hacking',
+    'penetration testing',
+    
+    // Blockchain & Web3 Security
+    'blockchain security',
+    'blockchain security training',
+    'cryptocurrency security',
+    'smart contract security',
+    'web3 security',
+    'blockchain cybersecurity',
+    
+    // Training & Education
+    'cybersecurity training online',
+    'cyber security courses online',
+    'cybersecurity bootcamp',
+    'cyber security for beginners',
+    'learn cybersecurity',
+    'cybersecurity edtech',
+    'online security training',
+    
+    // Specialized Topics
+    'web application security',
+    'cloud security training',
+    'incident response training',
+    'malware analysis course',
+    'security operations center',
+    'vulnerability assessment',
+    'threat intelligence',
+    
+    // Tools & Services
+    'cybersecurity tools',
+    'penetration testing tools',
+    'vulnerability scanning',
+    'security audit services',
+    'cybersecurity consulting',
+    
+    // Career & Certification
+    'cybersecurity career',
+    'cyber security certification online',
+    'ethical hacking certification',
+    'comptia security+',
+    'certified ethical hacker',
+    'penetration testing certification',
+    
+    // Location-based (if applicable)
+    'cybersecurity training Bangladesh',
+    'cyber security courses South Asia',
+  ],
+  authors: [{ name: 'Tensor Security Academy' }],
+  creator: 'Tensor Security Academy',
   publisher: 'Tensor Security Academy',
+  
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
+  
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'TSA',
-    title: 'Tensor Security Academy',
-    description: 'Step into Cybersecurity with TSA!',
+    url: 'https://tensorsecurityacademy.com',
+    siteName: 'Tensor Security Academy',
+    title: 'Cybersecurity & Blockchain Training - Tensor Security Academy',
+    description: 'Learn cybersecurity and blockchain security through hands-on courses, industry certifications, and practical labs. Expert-led training for ethical hacking, penetration testing, and security operations.',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'TSA Open Graph Image',
+        alt: 'Tensor Security Academy - Professional Cybersecurity Education',
       },
     ],
-    url: 'https://tensorsecurityacademy.com',
   },
+  
   twitter: {
-    card: 'summary_large_image', // Fixed: was 'cardType'
-    title: 'Tensor Security Academy',
-    description: 'Step into Cybersecurity with TSA!',
-    creator: 'https://x.com/tensorsecurity',
-    images: ['/twitter-image.png'], // Simplified format
+    card: 'summary_large_image',
+    title: 'Tensor Security Academy - Cybersecurity Training',
+    description: 'Master ethical hacking, blockchain security, and penetration testing with industry-leading courses and certifications.',
+    creator: '@tensorsecurity',
+    images: ['/twitter-image.png'],
   },
+  
   icons: {
     icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
   },
+  
+  // Google Verification (Add your verification code)
+  verification: {
+    google: '<meta name="google-site-verification" content="ZsyLVx0KKTSTYN1JHaMYDAVD3q5mn0f-N14hWvyZY1Y" />',
+  },
+  
+  // Canonical URL
+  alternates: {
+    canonical: 'https://tensorsecurityacademy.com',
+  },
+  
+  // Additional metadata for better indexing
+  category: 'Education',
+  classification: 'Cybersecurity Training Platform',
 };
 
 export default function RootLayout({
@@ -53,6 +133,51 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'EducationalOrganization',
+              name: 'Tensor Security Academy',
+              description: 'Professional cybersecurity and blockchain security training platform',
+              url: 'https://tensorsecurityacademy.com',
+              logo: 'https://tensorsecurityacademy.com/logo.png',
+              sameAs: [
+                'https://x.com/Tensor_Security',
+                'https://www.linkedin.com/company/tensorsecurityacademy',
+              ],
+              offers: {
+                '@type': 'AggregateOffer',
+                itemOffered: [
+                  {
+                    '@type': 'Course',
+                    name: 'Cybersecurity Training',
+                    description: 'Comprehensive cybersecurity courses',
+                    provider: {
+                      '@type': 'Organization',
+                      name: 'Tensor Security Academy',
+                    },
+                  },
+                  {
+                    '@type': 'Course',
+                    name: 'Blockchain Security Training',
+                    description: 'Specialized blockchain and cryptocurrency security',
+                    provider: {
+                      '@type': 'Organization',
+                      name: 'Tensor Security Academy',
+                    },
+                  },
+                ],
+              },
+              areaServed: 'Worldwide',
+              availableLanguage: 'English',
+            }),
+          }}
+        />
+      </head>
       <body style={{ margin: 0, padding: 0 }}>
         {children}
       </body>
