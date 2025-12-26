@@ -101,7 +101,7 @@ export default function CourseCard({ course, index, onClick }: CourseCardProps) 
           display: 'flex',
           gap: '12px',
           fontSize: '13px',
-          color: '#ffff',
+          color: '#dfdfdf',
           marginBottom: '16px',
           fontFamily: 'var(--font-nunito)',
         }}
