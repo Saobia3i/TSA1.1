@@ -138,7 +138,7 @@ function buildBottomFeatures(isMobile: boolean): FeatureItem[] {
           >
             Countries
             <br />
-            Project Expansion by 2026
+            Projected Expansion by 2026
           </span>
         </div>
       ),

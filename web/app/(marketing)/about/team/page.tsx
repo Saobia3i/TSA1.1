@@ -10,7 +10,7 @@ import Instagram from "@mui/icons-material/Instagram";
 import XIcon from "@mui/icons-material/X";
 import CSSAuroraBackground from "@/components/backgrounds/CSSAuroraBackground";
 import styles from "../page.module.css";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 const teamMembers = [
   {
@@ -26,7 +26,6 @@ const teamMembers = [
       instagram: "https://instagram.com/abrajahin",
     },
     isFounder: true,
-    
   },
   {
     name: "Nuren Tasnim",
@@ -122,6 +121,22 @@ export default function TeamPage() {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const founder = teamMembers[0];
   const members = teamMembers.slice(1);
+  //const prefersReducedMotion = useReducedMotion();
+  const cardVariants = useMemo(
+    () => ({
+      hidden: { opacity: 0, y: 40 },
+      visible: (i: number) => ({
+        opacity: 1,
+        y: 0,
+        transition: {
+          duration: 0.4,
+          delay: i * 0.04,
+          ease: [0.25, 0.46, 0.45, 0.94],
+        },
+      }),
+    }),
+    []
+  );
 
   return (
     <CSSAuroraBackground intensity="low">
@@ -183,7 +198,7 @@ export default function TeamPage() {
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.4 }}
               className={styles.compactTeamCard}
               style={{
                 border: "3px solid #FFD700",
@@ -192,7 +207,7 @@ export default function TeamPage() {
             >
               <motion.div
                 animate={{ opacity: [0.3, 0.6, 0.3] }}
-                transition={{ duration: 4, repeat: Infinity }}
+                transition={{ duration: 3, repeat: Infinity }}
                 className={styles.compactCardGlow}
                 style={{
                   background:
@@ -249,6 +264,7 @@ export default function TeamPage() {
                 style={{
                   cursor: "pointer",
                   fontSize: "20px",
+
                   color: expandedCard === 0 ? "#FFD700" : "#ccc",
                 }}
               >
@@ -256,7 +272,7 @@ export default function TeamPage() {
               </div>
 
               {/* QUOTE EXPAND */}
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {expandedCard === 0 && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
@@ -268,6 +284,7 @@ export default function TeamPage() {
                       background:
                         "linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 165, 0, 0.04))",
                       border: "1.5px solid rgba(255, 215, 0, 0.25)",
+                      overflow: "hidden",
                     }}
                   >
                     <MessageSquare
@@ -294,15 +311,33 @@ export default function TeamPage() {
                 >
                   <Mail style={{ width: "18px", height: "18px" }} />
                 </a>
-                <a href={founder.socials.twitter} target="_blank" rel="noopener noreferrer" className={styles.compactSocialButton} style={{ border: '1.5px solid #FFD700', color: '#FFD700' }}>
-        <XIcon style={{ width: '18px', height: '18px' }} />
-      </a>
-      <a href={founder.socials.linkedin} target="_blank" rel="noopener noreferrer" className={styles.compactSocialButton} style={{ border: '1.5px solid #FFD700', color: '#FFD700' }}>
-        <Linkedin style={{ width: '18px', height: '18px' }} />
-      </a>
-      <a href={founder.socials.instagram} target="_blank" rel="noopener noreferrer" className={styles.compactSocialButton} style={{ border: '1.5px solid #FFD700', color: '#FFD700' }}>
-        <Instagram style={{ width: '18px', height: '18px' }} />
-      </a>
+                <a
+                  href={founder.socials.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.compactSocialButton}
+                  style={{ border: "1.5px solid #FFD700", color: "#FFD700" }}
+                >
+                  <XIcon style={{ width: "18px", height: "18px" }} />
+                </a>
+                <a
+                  href={founder.socials.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.compactSocialButton}
+                  style={{ border: "1.5px solid #FFD700", color: "#FFD700" }}
+                >
+                  <Linkedin style={{ width: "18px", height: "18px" }} />
+                </a>
+                <a
+                  href={founder.socials.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.compactSocialButton}
+                  style={{ border: "1.5px solid #FFD700", color: "#FFD700" }}
+                >
+                  <Instagram style={{ width: "18px", height: "18px" }} />
+                </a>
               </div>
             </motion.div>
           </div>
@@ -315,13 +350,19 @@ export default function TeamPage() {
           <div className={styles.compactTeamGrid}>
             {members.map((member, index) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.08 }}
+                key={`member-${index}`} 
+                custom={index} 
+                //variants={cardVariants} 
+                initial="hidden" // 👈 এইভাবে change
+                whileInView="visible" // 👈 এইভাবে change
+                viewport={{
+                  once: true,
+                  amount: 0.2, // 👈 এই line যোগ
+                  margin: "0px 0px -50px 0px", // 👈 এই line যোগ
+                }}
                 whileHover={{ y: -8 }}
                 className={styles.compactTeamCard}
+                style={{ willChange: "transform" }} // 👈 এই line যোগ
               >
                 <motion.div
                   animate={{ opacity: [0.2, 0.4, 0.2] }}
@@ -331,6 +372,7 @@ export default function TeamPage() {
                     delay: index * 0.3,
                   }}
                   className={styles.compactCardGlow}
+                  style={{ pointerEvents: 'none' }}
                 />
 
                 <motion.div
@@ -367,7 +409,7 @@ export default function TeamPage() {
                 </div>
 
                 {/* QUOTE EXPAND */}
-                <AnimatePresence>
+                <AnimatePresence mode="wait">
                   {expandedCard === index + 1 && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
@@ -375,6 +417,7 @@ export default function TeamPage() {
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.3 }}
                       className={styles.compactQuoteExpand}
+                      style={{ overflow: 'hidden' }}
                     >
                       <MessageSquare
                         style={{
