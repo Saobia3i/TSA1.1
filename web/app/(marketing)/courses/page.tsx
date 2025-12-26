@@ -101,37 +101,36 @@ export default function CoursesPage() {
             </p>
           </div>
 
-          <div style={{ textAlign: "center", marginBottom: "30px" }}>
-            <motion.a
-              href="/https://drive.google.com/file/d/1-0_F78lIVtdHOJfKU18fzZEUAXFFVdth/view?usp=sharing" // Replace with your PDF path
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(168, 85, 247, 0.4)' }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "12px",
-                padding: "14px 28px",
-                fontSize: "16px",
-                fontWeight: 700,
-                borderRadius: "12px",
-                background:
-                  "linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))",
-                border: "2px solid rgba(34, 211, 238, 0.4)",
-                color: "white",
-                cursor: "pointer",
-                fontFamily: "var(--font-nunito)",
-                backdropFilter: "blur(10px)",
-                boxShadow: "0 8px 25px rgba(34, 211, 238, 0.3)",
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              }}
-            >
-              {/* <FileText style={{ width: '18px', height: '18px' }} /> */}
-              TSA Whitepaper
-              <Download style={{ width: "18px", height: "18px" }} />
-            </motion.a>
-          </div>
+         <div style={{ textAlign: "center", marginBottom: "30px" }}>
+  <motion.a
+    href="https://drive.google.com/file/d/1-0_F78lIVtdHOJfKU18fzZEUAXFFVdth/view?usp=sharing" // Corrected the link
+    target="_blank"
+    rel="noopener noreferrer"
+    whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(168, 85, 247, 0.4)' }}
+    whileTap={{ scale: 0.95 }}
+    style={{
+      display: "inline-flex",
+      alignItems: "center",
+      gap: "12px",
+      padding: "14px 28px",
+      fontSize: "16px",
+      fontWeight: 700,
+      borderRadius: "12px",
+      background: "linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))",
+      border: "2px solid rgba(34, 211, 238, 0.4)",
+      color: "white",
+      cursor: "pointer",
+      fontFamily: "var(--font-nunito)",
+      backdropFilter: "blur(10px)",
+      boxShadow: "0 8px 25px rgba(34, 211, 238, 0.3)",
+      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    }}
+  >
+    TSA Whitepaper
+    <Download style={{ width: "18px", height: "18px" }} />
+  </motion.a>
+</div>
+
 
           {/* Search Bar */}
           <div style={{ maxWidth: "600px", margin: "0 auto 50px" }}>

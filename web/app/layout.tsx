@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image', // Fixed: was 'cardType'
     title: 'Tensor Security Academy',
     description: 'Step into Cybersecurity with TSA!',
-    creator: '@yourhandle',
+    creator: 'https://x.com/tensorsecurity',
     images: ['/twitter-image.png'], // Simplified format
   },
   icons: {

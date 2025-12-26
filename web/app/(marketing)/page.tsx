@@ -435,7 +435,7 @@ export default function HomePage() {
               fontFamily: "var(--font-nunito)",
             }}
           >
-            Our Concern
+            Truested by
           </h2>
         </div>
 
@@ -560,7 +560,7 @@ export default function HomePage() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "12px",
-                padding: "14px 28px",
+                padding: "16px 28px",
                 fontSize: "16px",
                 fontWeight: 700,
                 borderRadius: "12px",

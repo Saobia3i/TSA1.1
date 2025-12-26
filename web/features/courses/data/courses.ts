@@ -1,5 +1,5 @@
-// courses.ts - Complete production-ready file with PDF data
-// Senior Developer Standards: TypeScript strict, exhaustive data, curriculum toggle ready
+
+
 
 import { Shield, Target, Bug, Brain, Zap, Code, BarChart,Clock } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -527,7 +527,6 @@ export const courses: Course[] = [
 
 ];
 
-// 🛠️ Production-ready utility functions (unchanged)
 export function getAllCourses(): Course[] {
   return courses;
 }
