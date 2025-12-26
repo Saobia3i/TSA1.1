@@ -434,7 +434,7 @@ export default function HomePage() {
               fontFamily: "var(--font-nunito)",
             }}
           >
-            Truested by
+            Trusted by
           </h2>
         </div>
 

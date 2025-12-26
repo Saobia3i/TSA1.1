@@ -1,7 +1,9 @@
-'use client';
+"use client";
 
-import { useState, memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, memo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+
 import {
   X,
   Clock,
@@ -11,8 +13,8 @@ import {
   Star,
   Users,
   BookOpen,
-} from 'lucide-react';
-import type { Course } from '../data/courses';
+} from "lucide-react";
+import type { Course } from "../data/courses";
 
 interface CourseDetailsModalProps {
   course: Course;
@@ -36,14 +38,14 @@ export default memo(function CourseDetailsModal({
       exit={{ opacity: 0 }}
       onClick={onClose}
       style={{
-        position: 'fixed',
+        position: "fixed",
         inset: 0,
-        backgroundColor: 'rgba(0,0,0,0.9)',
-        backdropFilter: 'blur(10px)',
+        backgroundColor: "rgba(0,0,0,0.9)",
+        backdropFilter: "blur(10px)",
         zIndex: 99999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         padding: 20,
       }}
     >
@@ -54,16 +56,16 @@ export default memo(function CourseDetailsModal({
         onClick={(e) => e.stopPropagation()}
         style={{
           maxWidth: 900,
-          width: '100%',
-          maxHeight: '90vh',
-          backgroundColor: 'rgba(17,24,39,0.95)',
-          color: 'white',
+          width: "100%",
+          maxHeight: "90vh",
+          backgroundColor: "rgba(17,24,39,0.95)",
+          color: "white",
           borderRadius: 24,
           border: `2px solid ${course.color}60`,
           boxShadow: `0 0 80px ${course.color}60`,
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         {/* Close */}
@@ -71,18 +73,18 @@ export default memo(function CourseDetailsModal({
           onClick={onClose}
           whileHover={{ scale: 1.1, rotate: 90 }}
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 40,
             right: 20,
             background: `${course.color}30`,
             border: `2px solid ${course.color}60`,
-            borderRadius: '50%',
+            borderRadius: "50%",
             width: 60,
             height: 60,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
             color: course.color,
           }}
         >
@@ -91,16 +93,16 @@ export default memo(function CourseDetailsModal({
 
         {/* Scrollable Content - FIXED SCROLLBAR */}
         <div
-            className="scrollContainer"
-  style={{
-    padding: 40,
-    overflowY: 'auto',
-    paddingBottom: 140,
-    scrollbarWidth: 'thin', // Firefox
-    scrollbarColor: 'rgba(34, 197, 94, 0.5) transparent', // Firefox
-    msOverflowStyle: 'none', // IE/Edge
-  }}
->
+          className="scrollContainer"
+          style={{
+            padding: 40,
+            overflowY: "auto",
+            paddingBottom: 140,
+            scrollbarWidth: "thin", // Firefox
+            scrollbarColor: "rgba(34, 197, 94, 0.5) transparent", // Firefox
+            msOverflowStyle: "none", // IE/Edge
+          }}
+        >
           <AnimatePresence mode="wait">
             {!showCurriculum ? (
               <motion.div
@@ -116,9 +118,9 @@ export default memo(function CourseDetailsModal({
                     height: 70,
                     borderRadius: 16,
                     background: `linear-gradient(${course.color}40, ${course.color}20)`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     marginBottom: 24,
                   }}
                 >
@@ -129,8 +131,8 @@ export default memo(function CourseDetailsModal({
                 {course.badge && (
                   <span
                     style={{
-                      display: 'inline-block',
-                      padding: '6px 16px',
+                      display: "inline-block",
+                      padding: "6px 16px",
                       background: `${course.color}30`,
                       border: `1px solid ${course.color}60`,
                       borderRadius: 20,
@@ -138,7 +140,7 @@ export default memo(function CourseDetailsModal({
                       color: course.color,
                       fontWeight: 700,
                       marginBottom: 16,
-                      fontFamily: 'var(--font-nunito)',
+                      fontFamily: "var(--font-nunito)",
                     }}
                   >
                     {course.badge}
@@ -149,28 +151,41 @@ export default memo(function CourseDetailsModal({
                 <h2
                   id="course-title"
                   style={{
-                    fontSize: 'clamp(24px, 4vw, 36px)',
+                    fontSize: "clamp(24px, 4vw, 36px)",
                     fontWeight: 800,
-                    color: 'white',
+                    color: "white",
                     marginBottom: 16,
-                    fontFamily: 'var(--font-nunito)',
+                    fontFamily: "var(--font-nunito)",
                   }}
                 >
                   {course.title}
                 </h2>
 
                 {/* Stats */}
-                <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginBottom: 20 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 20,
+                    flexWrap: "wrap",
+                    marginBottom: 20,
+                  }}
+                >
                   {course.rating && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div
+                      style={{ display: "flex", alignItems: "center", gap: 6 }}
+                    >
                       <Star size={18} color="#fbbf24" fill="#fbbf24" />
-                      <span style={{ color: '#d1d5db' }}>{course.rating} Rating</span>
+                      <span style={{ color: "#d1d5db" }}>
+                        {course.rating} Rating
+                      </span>
                     </div>
                   )}
                   {course.students && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div
+                      style={{ display: "flex", alignItems: "center", gap: 6 }}
+                    >
                       <Users size={18} color={course.color} />
-                      <span style={{ color: '#d1d5db' }}>
+                      <span style={{ color: "#d1d5db" }}>
                         {course.students.toLocaleString()} Students
                       </span>
                     </div>
@@ -178,12 +193,18 @@ export default memo(function CourseDetailsModal({
                 </div>
 
                 {/* Description */}
-                <p style={{ color: '#d1d5db', lineHeight: 1.8, marginBottom: 24 }}>
+                <p
+                  style={{
+                    color: "#d1d5db",
+                    lineHeight: 1.8,
+                    marginBottom: 24,
+                  }}
+                >
                   {course.description}
                 </p>
 
                 {/* Meta */}
-                <div style={{ display: 'flex', gap: 20, marginBottom: 32 }}>
+                <div style={{ display: "flex", gap: 20, marginBottom: 32 }}>
                   <Clock size={20} color={course.color} />
                   <span>{course.duration}</span>
                   <BarChart size={20} color={course.color} />
@@ -191,10 +212,15 @@ export default memo(function CourseDetailsModal({
                 </div>
 
                 {/* Topics */}
-                <h3 style={{ color: 'white', marginBottom: 20 }}>What You'll Learn</h3>
-                <ul style={{ listStyle: 'none', padding: 0 }}>
+                <h3 style={{ color: "white", marginBottom: 20 }}>
+                  What You'll Learn
+                </h3>
+                <ul style={{ listStyle: "none", padding: 0 }}>
                   {course.topics.map((topic, i) => (
-                    <li key={i} style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
+                    <li
+                      key={i}
+                      style={{ display: "flex", gap: 12, marginBottom: 12 }}
+                    >
                       <CheckCircle size={20} color={course.color} />
                       <span>{topic}</span>
                     </li>
@@ -208,16 +234,21 @@ export default memo(function CourseDetailsModal({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                <h3 style={{ fontSize: 24, marginBottom: 24, color: 'white' }}>
+                <h3 style={{ fontSize: 24, marginBottom: 24, color: "white" }}>
                   Full Curriculum
                 </h3>
-                <ul style={{ listStyle: 'none', padding: 0 }}>
-                  {course.curriculum.map((item, i) => (  // ✅ FIXED: course.curriculum
-                    <li key={i} style={{  paddingLeft: 28, marginBottom: 14 }}>
-                      {/* <CheckCircle size={18} color={course.color} /> */}
-                      <span style={{ color: '#ffff' }}>{item}</span>
-                    </li>
-                  ))}
+                <ul style={{ listStyle: "none", padding: 0 }}>
+                  {course.curriculum.map(
+                    (
+                      item,
+                      i // ✅ FIXED: course.curriculum
+                    ) => (
+                      <li key={i} style={{ paddingLeft: 28, marginBottom: 14 }}>
+                        {/* <CheckCircle size={18} color={course.color} /> */}
+                        <span style={{ color: "#ffff" }}>{item}</span>
+                      </li>
+                    )
+                  )}
                 </ul>
               </motion.div>
             )}
@@ -227,15 +258,15 @@ export default memo(function CourseDetailsModal({
         {/* Fixed Bottom Bar */}
         <div
           style={{
-            position: 'absolute',
+            position: "absolute",
             bottom: 0,
             left: 0,
             right: 0,
-            padding: '20px 40px',
-            display: 'flex',
+            padding: "20px 40px",
+            display: "flex",
             gap: 16,
             background:
-              'linear-gradient(to top, rgba(17,24,39,0.98), transparent)',
+              "linear-gradient(to top, rgba(17,24,39,0.98), transparent)",
           }}
         >
           <motion.button
@@ -247,18 +278,18 @@ export default memo(function CourseDetailsModal({
               borderRadius: 12,
               border: `2px solid ${course.color}90`,
               gap: 8,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               background: `black 50%`,
-              color: 'white',
+              color: "white",
               fontWeight: 700,
-              fontFamily: 'var(--font-nunito)',
+              fontFamily: "var(--font-nunito)",
             }}
           >
-            <BookOpen size={18} /> {showCurriculum ? 'What You\'ll Learn' : 'View Curriculum'}
+            <BookOpen size={18} />{" "}
+            {showCurriculum ? "What You'll Learn" : "View Curriculum"}
           </motion.button>
-
           <motion.button
             whileHover={{ scale: 1.05 }}
             style={{
@@ -267,12 +298,22 @@ export default memo(function CourseDetailsModal({
               borderRadius: 12,
               border: `2px solid ${course.color}80`,
               background: `linear-gradient(${course.color}, ${course.color}50)`,
-              color: 'white',
+              color: "white",
               fontWeight: 700,
-              fontFamily: 'var(--font-nunito)',
+              fontFamily: "var(--font-nunito)",
             }}
           >
-            Enroll Now {course.price && `• ${course.price}`}
+            <Link
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfduDI5LRqLxkuvr7eS1vcLmupV4yQs8XUV2BoyznR4mQNwJw/viewform" // Link to course enrollment page (replace course.enrollLink with the actual URL)
+              passHref // Pass the href to the button
+              style={{
+                display: "block",
+                textDecoration: "none",
+                color: "white", // Ensure text is white inside the link
+              }}
+            >
+              Enroll Now {course.price && `• ${course.price}`}
+            </Link>
           </motion.button>
         </div>
       </motion.div>

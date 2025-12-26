@@ -101,13 +101,13 @@ export default function CourseCard({ course, index, onClick }: CourseCardProps) 
           display: 'flex',
           gap: '12px',
           fontSize: '13px',
-          color: '#9ca3af',
+          color: '#ffff',
           marginBottom: '16px',
           fontFamily: 'var(--font-nunito)',
         }}
       >
-        <span><Clock style={{ width: '14px', height: '14px', marginRight: '4px' }} /> {course.duration}</span>
-        <span><BarChart style={{ width: '14px', height: '14px', marginRight: '4px' }} /> {course.level}</span>
+        <span><Clock style={{ color: course.color,width: '14px', height: '14px', marginRight: '4px' }} /> {course.duration}</span>
+        <span><BarChart style={{ color: course.color,width: '14px', height: '14px', marginRight: '4px' }} /> {course.level}</span>
       </div>
 
       {/* Tags */}
