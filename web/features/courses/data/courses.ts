@@ -87,8 +87,8 @@ export const courses: Course[] = [
     level: 'Beginner to Intermediate',
     color: '#ec4899',
    
-    students: 2100,
-    rating: 4.9,
+    // students: 2100,
+    // rating: 4.9,
     price: '$129/month',
     tags: ['Ethical Hacking', 'Penetration Testing', 'Web Security', 'Network Security', 'Active Directory', 'OSCP Prep', 'Bug Bounty', 'Live Training'],
     topics: [

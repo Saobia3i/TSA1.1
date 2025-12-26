@@ -9,7 +9,6 @@ import {
   Clock,
   BarChart,
   CheckCircle,
-  Circle,
   Star,
   Users,
   BookOpen,
@@ -213,7 +212,7 @@ export default memo(function CourseDetailsModal({
 
                 {/* Topics */}
                 <h3 style={{ color: "white", marginBottom: 20 }}>
-                  What You'll Learn
+                  What You&apos;ll Learn
                 </h3>
                 <ul style={{ listStyle: "none", padding: 0 }}>
                   {course.topics.map((topic, i) => (

@@ -6,7 +6,8 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://tensorsecurityacademy.com'),
   title: {
     default: 'Tensor Security Academy',
-    template: '%s | TSA',
+    // template: '%s | TSA',
+    template: 'Home | TSA',
   },
   description: 'If you\'re ready to step into Cybersecurity but don\'t know where to Start, TSA gives you a clear path...',
   keywords: ['general', 'keywords', 'for', 'whole', 'site'],

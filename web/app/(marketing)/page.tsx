@@ -10,6 +10,19 @@ import CoursesPreview from "@/features/home/components/CoursesPreview";
 import ServicesPreview from "@/features/home/components/ServicesPreview";
 import ToolsPreview from "@/features/home/components/ToolsPreview";
 
+// Add structured data for homepage
+const homeJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Tensor Security Academy',
+  url: 'https://www.tensorsecurityacademy.com',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://www.tensorsecurityacademy.com/search?q={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+}
+
 export default function HomePage() {
   const founderRef = useRef<HTMLElement>(null);
   const [showPopup, setShowPopup] = useState(true);
