@@ -3,7 +3,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { MessageCircle, Quote, Handshake } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
-import { useScroll } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import HeroSection from "@/features/home/components/HeroSection";
@@ -22,10 +21,10 @@ export default function HomePage() {
     return () => clearTimeout(timer);
   }, [dismissed]);
 
-  const { scrollYProgress: founderProgress } = useScroll({
-    target: founderRef,
-    offset: ["start end", "end start"],
-  });
+  // const { scrollYProgress } = useScroll({
+  //   target: founderRef,
+  //   offset: ["start end", "end start"],
+  // });
 
   return (
     <div style={{ backgroundColor: "#000", overflowX: "hidden" }}>

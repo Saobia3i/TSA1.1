@@ -467,7 +467,7 @@ export default function ToolsPage() {
                 }}
               >
                 Join our community of security researchers and contribute to
-                open-source tools. Whether you're fixing bugs, adding features,
+                open-source tools. Whether you&apos;re fixing bugs, adding features,
                 or improving documentation—every contribution makes a
                 difference.
               </p>

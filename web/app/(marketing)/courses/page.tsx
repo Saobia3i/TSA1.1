@@ -7,7 +7,6 @@ import {
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
-  FileText,
   Download,
 } from "lucide-react";
 import Link from "next/link";

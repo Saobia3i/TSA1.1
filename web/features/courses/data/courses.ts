@@ -1,7 +1,7 @@
 
 
 
-import { Shield, Target, Bug, Brain, Zap, Code, BarChart, Clock, Lock, Cpu, Database, Globe } from 'lucide-react';
+import { Shield, Target, Brain, Zap, Code, BarChart, Cpu, Globe } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface Course {
