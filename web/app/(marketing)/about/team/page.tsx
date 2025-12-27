@@ -15,7 +15,7 @@ import { useState, useMemo } from "react";
 const teamMembers = [
   {
     name: "Abrar Jahin",
-    role: "Founder and CEO | Security Researcher",
+    role: "Founder & CEO, TSA | Security Researcher",
     image:
       "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%208.59.29%20PM.jpeg?updatedAt=1766169177691",
     quote:
@@ -102,7 +102,7 @@ const teamMembers = [
   },
   {
     name: "Prottoy Rudro",
-    role: "Faculty Member, Cyber Security Expert",
+    role: "Faculty Member, Cybersecurity Researcher",
     image:
       "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%209.00.47%20PM.jpeg?updatedAt=1766169177691",
     quote:
