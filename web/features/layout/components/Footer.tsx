@@ -251,7 +251,7 @@ export default function Footer() {
                     lineHeight: 1.5,
                   }}
                 >
-                  Dhaka, Bangladesh
+                  Global (Remote)
                 </span>
               </div>
             </div>
