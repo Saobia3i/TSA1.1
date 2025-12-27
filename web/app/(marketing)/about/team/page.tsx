@@ -57,7 +57,7 @@ const teamMembers = [
     },
   },
   {
-    name: "Saobia Tinni",
+    name: "Saobia Islam",
     role: "Principal Web Developer",
     image:
       "https://ik.imagekit.io/ekb0d0it0/Untitled%20design.png?updatedAt=1764315898570",
