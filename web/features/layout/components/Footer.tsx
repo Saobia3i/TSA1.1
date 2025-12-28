@@ -345,7 +345,7 @@ export default function Footer() {
               margin: 0,
             }}
           >
-            Designed & Developed by Saobia3i
+            Built with Next.js
           </p>
         </div>
       </div>

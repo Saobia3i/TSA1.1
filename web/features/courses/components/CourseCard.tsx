@@ -24,7 +24,7 @@ export default function CourseCard({ course, index, onClick }: CourseCardProps) 
         padding: '24px',
         backgroundColor: 'rgba(17, 24, 39, 0.7)',
         borderRadius: '16px',
-        border: '2px solid rgba(255, 255, 255, 0.6)',
+        border: `2px solid ${course.color}40`,
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.3s',
@@ -106,8 +106,8 @@ export default function CourseCard({ course, index, onClick }: CourseCardProps) 
           fontFamily: 'var(--font-nunito)',
         }}
       >
-        <span><Clock style={{ color: course.color,width: '14px', height: '14px', marginRight: '4px' }} /> {course.duration}</span>
-        <span><BarChart style={{ color: course.color,width: '14px', height: '14px', marginRight: '4px' }} /> {course.level}</span>
+        <span><Clock style={{ color: course.color,width: '16px', height: '16px', marginRight: '4px' }} /> {course.duration}</span>
+        <span><BarChart style={{ color: course.color,width: '16px', height: '16px', marginRight: '4px' }} /> {course.level}</span>
       </div>
 
       {/* Tags */}

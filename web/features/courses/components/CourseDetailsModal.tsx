@@ -65,6 +65,7 @@ export default memo(function CourseDetailsModal({
           position: "relative",
           display: "flex",
           flexDirection: "column",
+          zIndex: 99999,
         }}
       >
         {/* Close */}
@@ -280,7 +281,7 @@ export default memo(function CourseDetailsModal({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: `black 50%`,
+              background: `#010101 `,
               color: "white",
               fontWeight: 700,
               fontFamily: "var(--font-nunito)",
