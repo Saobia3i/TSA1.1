@@ -2,7 +2,10 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
-  images: {
+  compress: true,
+  
+    images: {
+    formats: ['image/avif', 'image/webp'], // Modern formats
     qualities: [75, 90],
     remotePatterns: [
       {
@@ -11,6 +14,10 @@ const nextConfig: NextConfig = {
       },
     ],
     unoptimized: false,
+    minimumCacheTTL: 60,
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production', // Production এ console.log remove
   },
 
   experimental: {
@@ -19,6 +26,7 @@ const nextConfig: NextConfig = {
       
     },
     optimizeCss: true,
+    optimizePackageImports: ['lucide-react', 'recharts'], 
     
   },
 

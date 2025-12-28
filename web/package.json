@@ -12,6 +12,13 @@
     "postinstall": "prisma generate"
     
   },
+  "browserslist": [
+    "chrome >= 111",
+    "edge >= 111", 
+    "firefox >= 109",
+    "safari >= 16.4",
+    "not dead"
+  ],
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
