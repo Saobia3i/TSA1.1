@@ -46,6 +46,8 @@ export default memo(function CourseDetailsModal({
         alignItems: "center",
         justifyContent: "center",
         padding: 20,
+        overflowY: "auto",
+        
       }}
     >
       <motion.div
@@ -59,13 +61,13 @@ export default memo(function CourseDetailsModal({
           maxHeight: "90vh",
           backgroundColor: "rgba(17,24,39,0.95)",
           color: "white",
-          borderRadius: 24,
+          borderRadius: 5,
           border: `2px solid ${course.color}60`,
           boxShadow: `0 0 80px ${course.color}60`,
           position: "relative",
           display: "flex",
           flexDirection: "column",
-          zIndex: 99999,
+          //zIndex: 99999,
         }}
       >
         {/* Close */}
