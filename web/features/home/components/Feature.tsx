@@ -175,7 +175,6 @@ function buildBottomFeatures(isMobile: boolean): FeatureItem[] {
             }}
           >
             <span
-              aria-label="active"
               style={{
                 width: "8px",
                 height: "8px",

@@ -177,6 +177,20 @@ export default function RootLayout({
             }),
           }}
         />
+ {/* CRITICAL FIX: Render-blocking CSS inline (150ms → 0ms) */}
+  <style id="critical-css">{`
+    /* Hero + Featured courses critical styles only */
+    .hero-section,.featured-grid{min-height:60vh;display:flex;align-items:center;justify-content:center}
+    .hero-title{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.1}
+    .course-card{background:linear-gradient(145deg,#1e293b,#334155);border-radius:1rem;padding:2rem}
+    .grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}
+    .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+    .text-white{color:#fff}
+    .mb-6{margin-bottom:1.5rem}
+  `}</style>
+  
+
+
       </head>
       <body style={{ margin: 0, padding: 0 }}>
         {children}

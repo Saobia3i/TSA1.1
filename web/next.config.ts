@@ -18,6 +18,8 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '2mb',
       
     },
+    optimizeCss: true,
+    
   },
 
   turbopack: {},  // Suppresses Turbopack warnings with Webpack usage

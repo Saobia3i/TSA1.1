@@ -87,7 +87,7 @@ export default function Footer() {
               <h3
                 style={{
                   fontSize: "clamp(16px, 3vw, 18px)",
-                  fontWeight: 700,
+                  fontWeight: 600,
                   color: "#22d3ee",
                   fontFamily: "var(--font-space-mono)",
                   margin: 0,
@@ -99,7 +99,7 @@ export default function Footer() {
             <p
               style={{
                 fontSize: "clamp(13px, 2.5vw, 14px)",
-                color: "#9ca3af",
+                color: "#fff",
                 lineHeight: 1.6,
                 maxWidth: "280px",
               }}
@@ -114,7 +114,7 @@ export default function Footer() {
             <h4
               style={{
                 fontSize: "clamp(15px, 2.8vw, 16px)",
-                fontWeight: 600,
+                fontWeight: 400,
                 color: "#22d3ee",
                 marginBottom: "16px",
                 fontFamily: "var(--font-space-mono)",
@@ -133,7 +133,7 @@ export default function Footer() {
                   href={link.href}
                   style={{
                     fontSize: "clamp(13px, 2.5vw, 14px)",
-                    color: "#9ca3af",
+                    color: "#fff",
                     textDecoration: "none",
                     transition: "color 0.3s ease",
                     width: "fit-content",
@@ -143,7 +143,7 @@ export default function Footer() {
                     (e.currentTarget.style.color = "#22d3ee")
                   }
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "#9ca3af")
+                    (e.currentTarget.style.color = "#fff")
                   }
                 >
                   {link.label}
@@ -157,7 +157,7 @@ export default function Footer() {
             <h4
               style={{
                 fontSize: "clamp(15px, 2.8vw, 16px)",
-                fontWeight: 600,
+                fontWeight: 400,
                 color: "#22d3ee",
                 marginBottom: "16px",
                 fontFamily: "var(--font-space-mono)",
@@ -193,7 +193,7 @@ export default function Footer() {
                   href="mailto:info@tensorsecurity.com"
                   style={{
                     fontSize: "clamp(12px, 2.3vw, 14px)",
-                    color: "#9ca3af",
+                    color: "#fff",
                     textDecoration: "none",
                     wordBreak: "break-word",
                   }}
@@ -201,7 +201,7 @@ export default function Footer() {
                     (e.currentTarget.style.color = "#22d3ee")
                   }
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "#9ca3af")
+                    (e.currentTarget.style.color = "#fff")
                   }
                 >
                   contact@tensorsecurityacademy.com
@@ -224,9 +224,9 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   style={{
                     fontSize: "clamp(12px, 2.3vw, 14px)",
-                    color: "#9ca3af",
+                    color: "#fff",
                     textDecoration: "none",
-                    fontWeight: 600,
+                    fontWeight: 400,
                   }}
                 >
                   WhatsApp Support
@@ -247,7 +247,7 @@ export default function Footer() {
                 <span
                   style={{
                     fontSize: "clamp(12px, 2.3vw, 14px)",
-                    color: "#9ca3af",
+                    color: "#fff",
                     lineHeight: 1.5,
                   }}
                 >
@@ -262,7 +262,7 @@ export default function Footer() {
             <h4
               style={{
                 fontSize: "clamp(15px, 2.8vw, 16px)",
-                fontWeight: 600,
+                fontWeight: 400,
                 color: "#22d3ee",
                 marginBottom: "16px",
                 fontFamily: "var(--font-space-mono)",
@@ -330,7 +330,7 @@ export default function Footer() {
           <p
             style={{
               fontSize: "clamp(12px, 2.5vw, 14px)",
-              color: "#9ca3af",
+              color: "#dfdfdf",
               fontFamily: "var(--font-space-mono)",
               margin: 0,
             }}
@@ -341,7 +341,7 @@ export default function Footer() {
           <p
             style={{
               fontSize: "clamp(11px, 2vw, 12px)",
-              color: "#6b7280",
+              color: "#dfdfdf",
               margin: 0,
             }}
           >
