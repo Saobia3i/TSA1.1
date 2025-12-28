@@ -1,18 +1,26 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/api/', '/admin/', '/private/', '/_next/', '/dashboard/'],
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/admin/", "/private/", "/dashboard/"],
       },
       {
-        userAgent: ['GPTBot', 'ChatGPT-User', 'Google-Extended', 'CCBot', 'anthropic-ai', 'Claude-Web', 'PerplexityBot'],
-        allow: '/',
+        userAgent: [
+          "GPTBot",
+          "ChatGPT-User",
+          "Google-Extended",
+          "CCBot",
+          "anthropic-ai",
+          "Claude-Web",
+          "PerplexityBot",
+        ],
+        allow: "/",
       },
     ],
-    sitemap: 'https://www.tensorsecurityacademy.com/sitemap.xml',
-  }
+    sitemap: "https://www.tensorsecurityacademy.com/sitemap.xml",
+  };
 }
