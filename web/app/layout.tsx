@@ -113,7 +113,7 @@ export const metadata: Metadata = {
   
   // Google Verification (Add your verification code)
   verification: {
-    google: '<meta name="google-site-verification" content="ZsyLVx0KKTSTYN1JHaMYDAVD3q5mn0f-N14hWvyZY1Y" />',
+    google: '<meta name="google-site-verification: google982b476790b09ef0.html" />',
   },
   
   // Canonical URL
