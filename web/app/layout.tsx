@@ -118,8 +118,10 @@ export const metadata: Metadata = {
   
   // Canonical URL
   alternates: {
-    canonical: 'BASE_URL',
-  },
+  canonical: '/', // ✅ Relative path (recommended)
+  // OR
+  //canonical: BASE_URL, // ✅ Use the variable (no quotes)
+},
   
   // Additional metadata for better indexing
   category: 'Education',
@@ -146,7 +148,7 @@ export default function RootLayout({
               url: BASE_URL,
               logo: `${BASE_URL}/logo.png`,
               sameAs: [
-                'https://x.com/Tensor_Security"',
+                'https://x.com/Tensor_Security',
                 'https://www.linkedin.com/company/tensorsecurityacademy',
               ],
               offers: {

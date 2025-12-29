@@ -3,21 +3,20 @@ import path from "path";
 
 const nextConfig: NextConfig = {
   compress: true,
-  
+    // CRITICAL: Redirect www to non-www
   redirects: async () => [
     {
       source: '/:path*',
-      destination: 'https://www.tensorsecurityacademy.com/:path*',
+      destination: 'https://tensorsecurityacademy.com/:path*',
       permanent: true,
       has: [
         {
           type: 'host',
-          value: 'tensorsecurityacademy.com',
+          value: 'www.tensorsecurityacademy.com',
         },
       ],
     },
   ],
-  
     images: {
     formats: ['image/avif', 'image/webp'], // Modern formats
     qualities: [75, 90],
