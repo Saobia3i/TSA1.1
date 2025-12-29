@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.tensorsecurityacademy.com'
+  // CRITICAL FIX: Change to non-www version
+  const baseUrl = 'https://tensorsecurityacademy.com'
   
   // Core pages
   const routes = [
@@ -25,6 +26,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    },
+    // NEW: Add login/signup pages
+    {
+      url: `${baseUrl}/login`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/signup`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
@@ -66,34 +80,41 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly' as const,
       priority: 0.85,
     },
-    {
-      url: `${baseUrl}/tools/vulnerability-scanner`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/tools/penetration-testing`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/services/security-consultation`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
+    // {
+    //   url: `${baseUrl}/tools/vulnerability-scanner`,
+    //   lastModified: new Date(),
+    //   changeFrequency: 'monthly' as const,
+    //   priority: 0.8,
+    // },
+    // {
+    //   url: `${baseUrl}/tools/penetration-testing`,
+    //   lastModified: new Date(),
+    //   changeFrequency: 'monthly' as const,
+    //   priority: 0.8,
+    // },
+    // {
+    //   url: `${baseUrl}/services/security-consultation`,
+    //   lastModified: new Date(),
+    //   changeFrequency: 'monthly' as const,
+    //   priority: 0.8,
+    // },
+    // // NEW: Add web-application-vapt service
+    // {
+    //   url: `${baseUrl}/services/web-application-vapt`,
+    //   lastModified: new Date(),
+    //   changeFrequency: 'monthly' as const,
+    //   priority: 0.8,
+    // },
   ]
 
   // Additional important pages
   const additionalPages = [
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.85,
-    },
+    // {
+    //   url: `${baseUrl}/blog`,
+    //   lastModified: new Date(),
+    //   changeFrequency: 'daily' as const,
+    //   priority: 0.85,
+    // },
     {
       url: `${baseUrl}/certifications`,
       lastModified: new Date(),
@@ -107,29 +128,53 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/free-resources`,
+      url: `${baseUrl}//about/about-us`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/careers`,
+      url: `${baseUrl}//about/team`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     },
+    // {
+    //   url: `${baseUrl}/success-stories`,
+    //   lastModified: new Date(),
+    //   changeFrequency: 'monthly' as const,
+    //   priority: 0.75,
+    // },
     {
-      url: `${baseUrl}/success-stories`,
+      url: `${baseUrl}/about/join`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
-      priority: 0.75,
+      priority: 0.7,
     },
   ]
+
+  // Legal pages (OPTIONAL - only add if these pages exist on your site)
+  // const legalPages = [
+  //   {
+  //     url: `${baseUrl}/privacy-policy`,
+  //     lastModified: new Date(),
+  //     changeFrequency: 'yearly' as const,
+  //     priority: 0.5,
+  //   },
+  //   {
+  //     url: `${baseUrl}/terms-of-service`,
+  //     lastModified: new Date(),
+  //     changeFrequency: 'yearly' as const,
+  //     priority: 0.5,
+  //   },
+  // ]
 
   return [
     ...routes,
     ...courseCategoryPages,
     ...toolsPages,
     ...additionalPages,
+    // Uncomment the line below if you have legal pages
+    // ...legalPages,
   ]
 }

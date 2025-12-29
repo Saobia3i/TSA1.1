@@ -1,7 +1,7 @@
 // app/(marketing)/layout.tsx
 import { Metadata } from "next";
 import "./globals.css";
-const BASE_URL = 'https://www.tensorsecurityacademy.com'; 
+const BASE_URL = 'https://tensorsecurityacademy.com'; 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
@@ -113,12 +113,12 @@ export const metadata: Metadata = {
   
   // Google Verification (Add your verification code)
   verification: {
-    google: '<meta name="google-site-verification: google982b476790b09ef0.html" />',
+    google: 'google982b476790b09ef0',
   },
   
   // Canonical URL
   alternates: {
-    canonical: '/',
+    canonical: 'BASE_URL',
   },
   
   // Additional metadata for better indexing

@@ -4,6 +4,20 @@ import path from "path";
 const nextConfig: NextConfig = {
   compress: true,
   
+  redirects: async () => [
+    {
+      source: '/:path*',
+      destination: 'https://www.tensorsecurityacademy.com/:path*',
+      permanent: true,
+      has: [
+        {
+          type: 'host',
+          value: 'tensorsecurityacademy.com',
+        },
+      ],
+    },
+  ],
+  
     images: {
     formats: ['image/avif', 'image/webp'], // Modern formats
     qualities: [75, 90],

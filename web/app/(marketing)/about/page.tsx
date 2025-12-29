@@ -141,7 +141,7 @@ export default function AboutPage() {
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>The Problem We Exist to Solve</h2>
             <p className={styles.sectionDescription}>
-              Tensor Security Academy wasn't built to chase EdTech market trends, it was born from lived experience. Founder Abrar Jahin launched TSA during his university days, driven by a clear vision: to solve three critical problems he had personally encountered in his early career. Instead of accepting these barriers, he founded TSA with a vision to eliminate them for the next generation of security professionals.
+              Tensor Security Academy wasn&apos;t built to chase EdTech market trends, it was born from lived experience. Founder Abrar Jahin launched TSA during his university days, driven by a clear vision: to solve three critical problems he had personally encountered in his early career. Instead of accepting these barriers, he founded TSA with a vision to eliminate them for the next generation of security professionals.
             </p>
           </div>
 
@@ -161,7 +161,7 @@ export default function AboutPage() {
                   whileHover={{ y: -8 }}
                   className={styles.card}
                 >
-                  <h3 className={styles.cardTitle}>"{problem.title}"</h3>
+                  <h3 className={styles.cardTitle}>&quot;{problem.title}&quot;</h3>
                   <p className={styles.cardDescription}>{problem.description}</p>
                 </motion.div>
               </motion.div>
@@ -176,7 +176,7 @@ export default function AboutPage() {
             className={styles.conclusionCard}
           >
             <p className={styles.conclusionText}>
-              The conclusion was inescapable: <span className={styles.highlightCyan}>passive learning doesn't build cybersecurity careers</span>. Certificates without capability won't get you hired. And going it alone? That's the slowest, most frustrating path possible—one that causes most aspiring professionals to give up before they ever break through.
+              The conclusion was inescapable: <span className={styles.highlightCyan}>passive learning doesn&apos;t build cybersecurity careers</span>. Certificates without capability won&apos;t get you hired. And going it alone? That&apos;s the slowest, most frustrating path possible—one that causes most aspiring professionals to give up before they ever break through.
             </p>
           </motion.div>
         </motion.section>
@@ -236,10 +236,10 @@ export default function AboutPage() {
             className={styles.closingStatement}
           >
             <p className={styles.closingStatementText}>
-              This approach works. The model was validated. The impact was undeniable. What began as Abrar's vision in Bangladesh has now expanded to{' '}
+              This approach works. The model was validated. The impact was undeniable. What began as Abrar&apos;s vision in Bangladesh has now expanded to{' '}
               <span className={styles.highlightGradient}>
                 United States of America
-              </span>, where TSA is actively training students and career shifters across America, equipping them with the hands-on skills and mentorship needed to launch successful cybersecurity careers. With ambitious plans to bring this transformative approach to the UK, Australia, Canada, and other English-speaking countries. This isn't just growth—it's a mission to democratize cybersecurity education on a global scale.
+              </span>, where TSA is actively training students and career shifters across America, equipping them with the hands-on skills and mentorship needed to launch successful cybersecurity careers. With ambitious plans to bring this transformative approach to the UK, Australia, Canada, and other English-speaking countries. This isn&apos;t just growth—it&apos;s a mission to democratize cybersecurity education on a global scale.
             </p>
           </motion.div>
         </motion.section>
@@ -258,13 +258,13 @@ export default function AboutPage() {
           >
             <h2 className={styles.whyTsaTitle}>Why TSA Is More Than an Academy</h2>
             <p className={styles.whyTsaText}>
-              TSA decentralizes knowledge. We're the bridge that elevates Bangladesh and South Asia's extraordinary, untapped tech talent onto the international stage at scale with the Western world's need for affordable, expert-led training. For too long, world-class cybersecurity and tech knowledge has been locked behind six-figure tuitions and geographic barriers. <span className={styles.whyTsaHighlight}>We're shattering those walls.</span>
+              TSA decentralizes knowledge. We&apos;re the bridge that elevates Bangladesh and South Asia&apos;s extraordinary, untapped tech talent onto the international stage at scale with the Western world&apos;s need for affordable, expert-led training. For too long, world-class cybersecurity and tech knowledge has been locked behind six-figure tuitions and geographic barriers. <span className={styles.whyTsaHighlight}>We&apos;re shattering those walls.</span>
             </p>
             <p className={styles.whyTsaText}>
               TSA is a revolutionary platform where brilliance meets opportunity, regardless of borders. Western students get expert training without crushing debt. Our professionals get global recognition without artificial barriers. Everyone wins when knowledge flows freely.
             </p>
             <p className={styles.whyTsaTextAlt}>
-              This is more than a platform. This is how we prove that genius knows no geography. Your breakthrough becomes our shared legacy. Your excellence becomes our collective proof to the world, where Bangladesh's tech excellence becomes impossible to ignore.
+              This is more than a platform. This is how we prove that genius knows no geography. Your breakthrough becomes our shared legacy. Your excellence becomes our collective proof to the world, where Bangladesh&apos;s tech excellence becomes impossible to ignore.
             </p>
           </motion.div>
         </motion.section>
