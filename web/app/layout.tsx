@@ -1,9 +1,9 @@
 // app/(marketing)/layout.tsx
 import { Metadata } from "next";
 import "./globals.css";
-
+const BASE_URL = 'https://www.tensorsecurityacademy.com'; 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://tensorsecurityacademy.com'),
+  metadataBase: new URL(BASE_URL),
   title: {
     default: 'Tensor Security Academy - Cybersecurity & Blockchain Training Platform',
     template: '%s | Tensor Security Academy',
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://tensorsecurityacademy.com',
+    url: BASE_URL,
     siteName: 'Tensor Security Academy',
     title: 'Cybersecurity & Blockchain Training - Tensor Security Academy',
     description: 'Learn cybersecurity and blockchain security through hands-on courses, industry certifications, and practical labs. Expert-led training for ethical hacking, penetration testing, and security operations.',
@@ -118,7 +118,7 @@ export const metadata: Metadata = {
   
   // Canonical URL
   alternates: {
-    canonical: 'https://tensorsecurityacademy.com',
+    canonical: '/',
   },
   
   // Additional metadata for better indexing
@@ -143,10 +143,10 @@ export default function RootLayout({
               '@type': 'EducationalOrganization',
               name: 'Tensor Security Academy',
               description: 'Professional cybersecurity and blockchain security training platform',
-              url: 'https://tensorsecurityacademy.com',
-              logo: 'https://tensorsecurityacademy.com/logo.png',
+              url: BASE_URL,
+              logo: `${BASE_URL}/logo.png`,
               sameAs: [
-                'https://x.com/Tensor_Security',
+                'https://x.com/Tensor_Security"',
                 'https://www.linkedin.com/company/tensorsecurityacademy',
               ],
               offers: {
