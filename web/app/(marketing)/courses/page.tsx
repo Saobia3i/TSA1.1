@@ -13,9 +13,17 @@ import Link from "next/link";
 import { getAllCourses, type Course } from "@/features/courses/data/courses";
 import CourseCard from "@/features/courses/components/CourseCard";
 import CourseDetailsModal from "@/features/courses/components/CourseDetailsModal";
-
+//import { Metadata } from 'next'
 const ITEMS_PER_PAGE = 6;
-
+// export const metadata: Metadata = {
+//   title: 'Courses - Tensor Security Academy',
+//   description: 'Explore our comprehensive cybersecurity courses including ethical hacking, penetration testing, blockchain security, and more.',
+//   openGraph: {
+//     title: 'Cybersecurity Courses - Tensor Security Academy',
+//     description: 'Comprehensive cybersecurity training courses for beginners to advanced professionals.',
+//     images: ['/og-image.png'],
+//   },
+// }
 export default function CoursesPage() {
   const allCourses = getAllCourses();
   const [searchQuery, setSearchQuery] = useState("");

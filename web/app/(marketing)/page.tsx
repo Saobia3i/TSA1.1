@@ -9,19 +9,29 @@ import HeroSection from "@/features/home/components/HeroSection";
 import CoursesPreview from "@/features/home/components/CoursesPreview";
 import ServicesPreview from "@/features/home/components/ServicesPreview";
 import ToolsPreview from "@/features/home/components/ToolsPreview";
+//import { Metadata } from 'next'
 
+// export const metadata: Metadata = {
+//   title: 'Tensor Security Academy - Cybersecurity & Blockchain Training',
+//   description: 'Master cybersecurity with hands-on training in ethical hacking, penetration testing, blockchain security, and network security. Industry-recognized certifications, expert instructors, and practical labs.',
+//   openGraph: {
+//     title: 'Tensor Security Academy - Cybersecurity Training',
+//     description: 'Master cybersecurity with hands-on training in ethical hacking, penetration testing, and blockchain security.',
+//     images: ['/og-image.png'],
+//   },
+// }
 // Add structured data for homepage
-const homeJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'Tensor Security Academy',
-  url: 'https://www.tensorsecurityacademy.com',
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: 'https://www.tensorsecurityacademy.com/search?q={search_term_string}',
-    'query-input': 'required name=search_term_string',
-  },
-}
+// const homeJsonLd = {
+//   '@context': 'https://schema.org',
+//   '@type': 'WebSite',
+//   name: 'Tensor Security Academy',
+//   url: 'https://tensorsecurityacademy.com',
+//   potentialAction: {
+//     '@type': 'SearchAction',
+//     target: 'https://tensorsecurityacademy.com/search?q={search_term_string}',
+//     'query-input': 'required name=search_term_string',
+//   },
+// }
 
 export default function HomePage() {
   const founderRef = useRef<HTMLElement>(null);
