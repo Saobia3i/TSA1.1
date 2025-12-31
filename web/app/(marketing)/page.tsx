@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   },
   
   openGraph: {
-    title: 'Tensor Security Academy - Elite Cybersecurity Training',
+    title: 'Tensor Security Academy - Elite Cybersecurity Training and Professional Services',
     description: 'Transform your career with expert-led cybersecurity training. Learn ethical hacking, penetration testing, and blockchain security from industry professionals.',
     url: 'https://tensorsecurityacademy.com',
     siteName: 'Tensor Security Academy',
