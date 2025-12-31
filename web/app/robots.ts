@@ -21,6 +21,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
       },
     ],
-    sitemap: "https://www.tensorsecurityacademy.com/sitemap.xml",
+    sitemap: "https://tensorsecurityacademy.com/sitemap.xml",
   };
 }
