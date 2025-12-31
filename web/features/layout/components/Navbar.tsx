@@ -537,7 +537,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                         onMouseEnter={(e) => {
                           e.currentTarget.style.background =
                             "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
-                          e.currentTarget.style.transform = "translateX(6px)";
+                          e.currentTarget.style.transform = "translateX(3px) ,translateY(3px)";
                           e.currentTarget.style.borderColor =
                             "rgba(0, 212, 255, 0.4)";
                           e.currentTarget.style.boxShadow =
@@ -564,7 +564,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                           }}
                         >
                           <IconComponent
-                            sx={{ color: '#ffffff', fontSize: '18px' }}
+                            sx={{ color: "#ffffff", fontSize: "18px" }}
                           />
                         </div>
                         <span>{social.name}</span>
@@ -1156,62 +1156,68 @@ export default function Navbar({ user = null }: NavbarProps) {
                       style={{ marginTop: "8px", transition: "all 0.3s ease" }}
                     >
                       {socialLinks.map((social) => {
-  const IconComponent = social.icon;
-  return (
-    <a
-      key={social.name}
-      href={social.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`Follow us on ${social.name}`}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        padding: '14px 18px',
-        borderRadius: '12px',
-        textDecoration: 'none',
-        color: 'white',
-        fontSize: '14px',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        fontFamily: '"Nunito Sans", sans-serif',
-        fontWeight: 600,
-        border: '1px solid transparent',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = 'linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))';
-        e.currentTarget.style.transform = 'translateX(6px)';
-        e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.4)';
-        e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.3)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = 'transparent';
-        e.currentTarget.style.transform = 'translateX(0)';
-        e.currentTarget.style.borderColor = 'transparent';
-        e.currentTarget.style.boxShadow = 'none';
-      }}
-    >
-      <div
-        style={{
-          width: '34px',
-          height: '34px',
-          borderRadius: '50%',
-          border: '2px solid rgba(255, 255, 255, 0.4)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(255, 255, 255, 0.05)',
-          transition: 'all 0.3s ease',
-        }}
-      >
-        {/* For Material-UI Icons (LinkedIn, Instagram, X) */}
-        <IconComponent sx={{ color: '#ffffff', fontSize: '20px' }} />
-      </div>
-      <span>{social.name}</span>
-    </a>
-  );
-})}
-
+                        const IconComponent = social.icon;
+                        return (
+                          <a
+                            key={social.name}
+                            href={social.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`Follow us on ${social.name}`}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "12px",
+                              padding: "14px 18px",
+                              borderRadius: "12px",
+                              textDecoration: "none",
+                              color: "white",
+                              fontSize: "14px",
+                              transition:
+                                "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                              fontFamily: '"Nunito Sans", sans-serif',
+                              fontWeight: 600,
+                              border: "1px solid transparent",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background =
+                                "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
+                              e.currentTarget.style.transform =
+                                "translateX(6px)";
+                              e.currentTarget.style.borderColor =
+                                "rgba(0, 212, 255, 0.4)";
+                              e.currentTarget.style.boxShadow =
+                                "0 0 15px rgba(0, 212, 255, 0.3)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = "transparent";
+                              e.currentTarget.style.transform = "translateX(0)";
+                              e.currentTarget.style.borderColor = "transparent";
+                              e.currentTarget.style.boxShadow = "none";
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: "34px",
+                                height: "34px",
+                                borderRadius: "50%",
+                                border: "2px solid rgba(255, 255, 255, 0.4)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                background: "rgba(255, 255, 255, 0.05)",
+                                transition: "all 0.3s ease",
+                              }}
+                            >
+                              {/* For Material-UI Icons (LinkedIn, Instagram, X) */}
+                              <IconComponent
+                                sx={{ color: "#ffffff", fontSize: "20px" }}
+                              />
+                            </div>
+                            <span>{social.name}</span>
+                          </a>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

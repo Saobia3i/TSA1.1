@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: 'Tensor Security Academy',
   description: 'Elite Cybersecurity Training & Professional Services',
-  url: 'https://www.tensorsecurityacademy.com/',
+  url: 'https://tensorsecurityacademy.com/',
   ogImage: 'https://tensorsecurity.com/og-image.png',
   links: {
     linkedin: 'https://www.linkedin.com/company/tensorsecurityacademy',
