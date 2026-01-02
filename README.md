@@ -19,14 +19,16 @@
 
 > Global EdTech platform revolutionizing cybersecurity and AI education with cutting-edge technology and immersive learning experiences.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat&logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
-[![Framer Motion](https://img.shields.io/badge/Framer_Motion-11-ff69b4?style=flat&logo=framer)](https://www.framer.com/motion/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat&logo=postgresql)](https://www.postgresql.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-5.0-2D3748?style=flat&logo=prisma)](https://www.prisma.io/)
-[![NextAuth](https://img.shields.io/badge/NextAuth.js-4.24-000000?style=flat&logo=next.js)](https://next-auth.js.org/)
-[![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?style=flat&logo=vercel)](https://vercel.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.0.7-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.2.1-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-5.15.0-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
+[![NextAuth](https://img.shields.io/badge/NextAuth.js-4.24.13-black?style=for-the-badge&logo=auth0&logoColor=white)](https://next-auth.js.org/)
+[![Material UI](https://img.shields.io/badge/Material_UI-7.3.5-007FFF?style=for-the-badge&logo=mui&logoColor=white)](https://mui.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.18-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.23.24-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
+[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-black?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 
 **Live Site:** [tensorsecurityacademy.com](https://tensorsecurityacademy.com)
 
@@ -59,7 +61,7 @@ Tensor Security Academy is a **global EdTech platform** designed to transform cy
 ## 🚀 Tech Stack
 
 ### Core Framework
-- **[Next.js 15](https://nextjs.org/)** - Latest App Router with server-side rendering and React Server Components
+- **[Next.js 16.0.7](https://nextjs.org/)** - Latest App Router with server-side rendering and React Server Components
 - **[React 19](https://react.dev/)** - Cutting-edge React with concurrent features
 - **[TypeScript](https://www.typescriptlang.org/)** - Full type safety throughout the codebase
 
