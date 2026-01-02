@@ -1,3 +1,20 @@
+<p align="center">
+  <img
+    src="https://ik.imagekit.io/ekb0d0it0/logo3.png"
+    alt="Tensor Security Academy Logo"
+    width="360"
+    height="360"
+    style="
+      border-radius: 28px;
+      border: 3px solid #e879f9;
+      box-shadow:
+        0 0 25px rgba(236, 72, 153, 0.9),
+        0 0 45px rgba(59, 130, 246, 0.7),
+        0 25px 55px rgba(0, 0, 0, 0.75);
+    "
+  />
+</p>
+
 # 🔐 Tensor Security Academy
 
 > Global EdTech platform revolutionizing cybersecurity and AI education with cutting-edge technology and immersive learning experiences.
@@ -12,6 +29,9 @@
 [![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?style=flat&logo=vercel)](https://vercel.com/)
 
 **Live Site:** [tensorsecurityacademy.com](https://tensorsecurityacademy.com)
+
+## <ins>📊 WakaTime (Coding Activity)</ins>
+[![wakatime](https://wakatime.com/badge/user/7f0860ba-774e-43d9-8390-34249079bba4/project/14cc4ab8-602c-4fc1-81c7-7f6139131b95.svg)]
 
 ---
 
@@ -111,7 +131,7 @@ This project follows a **modular, component-driven architecture** with clear sep
 - ✅ **Type-Safe Data Layer** - Prisma generates TypeScript types from schema
 - ✅ **Repository Pattern** - Data access abstracted through Prisma models
 
-**Not Strictly MVC** but follows similar principles:
+**It's MVC inspired** :
 - **View:** React components (presentation)
 - **Controller:** Server Actions + API routes (business logic)
 - **Model:** Prisma schema (data structure)
@@ -181,40 +201,67 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String    @unique
+  password      String?
+  contact       String?    @unique
+  role          String    @default("STUDENT")
   emailVerified DateTime?
-  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
   accounts      Account[]
   sessions      Session[]
   enrollments   Enrollment[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+
+  @@index([email])
+  @@index([contact])
 }
 
-model Course {
-  id          String       @id @default(cuid())
-  title       String
-  slug        String       @unique
-  description String
-  category    String
-  level       String
-  enrollments Enrollment[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Enrollment {
-  id        String   @id @default(cuid())
-  userId    String
-  courseId  String
-  user      User     @relation(fields: [userId], references: [id])
-  course    Course   @relation(fields: [courseId], references: [id])
-  status    String   @default("pending")
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String
+  courseName String
+  enrolledAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@unique([userId, courseId])
 }
 
-// + Account, Session models for NextAuth
 ```
 
 **Current Status:**
@@ -233,15 +280,15 @@ model Enrollment {
 ## 🛠️ Installation & Setup
 
 ### Prerequisites
-- Node.js 18+
+- Node.js 16+
 - PostgreSQL 14+
 - npm/yarn/pnpm
 - Git
 
 ### Clone Repository
 ```bash
-git clone https://github.com/saobia3i/tensor-security-academy.git
-cd tensor-security-academy
+git clone https://github.com/saobia3i/tsa1.1.git
+cd web
 ```
 
 ### Install Dependencies
@@ -251,23 +298,7 @@ npm install
 yarn install
 ```
 
-### Environment Variables
-Create `.env` file:
-```env
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/tsa_db"
 
-# NextAuth
-NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="your-secret-key-here"
-
-# Google OAuth
-GOOGLE_CLIENT_ID="your-google-client-id"
-GOOGLE_CLIENT_SECRET="your-google-client-secret"
-
-# Site
-NEXT_PUBLIC_SITE_URL="https://tensorsecurityacademy.com"
-```
 
 ### Database Setup
 ```bash
@@ -300,12 +331,6 @@ npm start
 ### Cyber Aesthetic
 Every page is designed with a **tech-forward, cyber-inspired aesthetic**:
 
-- 🌑 **Dark Theme** - Base color: `#000` (pure black)
-- 💠 **Gradient Accents** - Cyan (`#22d3ee`) to Purple (`#a855f7`)
-- ✨ **Glassmorphism** - Frosted glass effects with backdrop blur
-- 🔮 **Glowing Elements** - Neon-style borders and shadows
-- 📐 **Grid Patterns** - Subtle tech grid overlays
-- ⚡ **Motion Design** - Smooth scroll animations on every page
 
 ### Animation Strategy
 - **Scroll-Triggered** - Elements animate as they enter viewport
@@ -379,23 +404,9 @@ User redirected to dashboard
 
 ---
 
-## 🌐 Open Source Security Tools
 
-Custom-built penetration testing tools integrated with the platform:
 
-### [AI PENTEST Toolkit](https://github.com/tools-tensorsecurityacademy/AI-Pentest-Toolkit)
-AI-powered offensive security framework automating penetration testing workflows.
 
-### [DirRumble](https://github.com/tools-tensorsecurityacademy/dirrumble)
-Lightning-fast HTTP directory fuzzer designed for WAF bypass testing.
-
-### [NexusTrace](https://github.com/tools-tensorsecurityacademy/NexusTrace)
-High-speed DNS resolver and subdomain enumeration tool for reconnaissance.
-
-### [XSS-Cobra](https://github.com/tools-tensorsecurityacademy/XSS-Cobra)
-Ultra-fast XSS scanner with intelligent mutation engine for advanced testing.
-
----
 
 ## 🚀 Deployment
 
@@ -445,7 +456,7 @@ npx prisma migrate deploy
 - [ ] Live session booking
 - [ ] Certificate generation
 - [ ] Community forum
-- [ ] Mobile app (React Native)
+<!-- - [ ] Mobile app (React Native) -->
 
 ---
 
@@ -493,7 +504,7 @@ Full-Stack Developer & Web Architect
 - 📧 Email: islamsaobia@gmail.com
 - 💼 LinkedIn: [linkedin.com/in/saobia-islam](https://linkedin.com/in/saobia-islam)
 - 🐙 GitHub: [@saobia3i](https://github.com/saobia3i)
-- 🌐 Website: [tensorsecurityacademy.com](https://tensorsecurityacademy.com)
+- 🌐 Website: [https://islamsaobia.vercel.app/](https://islamsaobia.vercel.app/)
 
 **Role:** Solo developer, designer, and architect  
 **Year:** 2025  
@@ -517,7 +528,7 @@ All rights reserved © 2025 Tensor Security Academy
 - Framer Motion for beautiful animations
 - Tailwind Labs for the CSS framework
 - PostgreSQL community
-- Open-source community
+<!-- - Open-source community -->
 
 ---
 
@@ -534,7 +545,7 @@ All rights reserved © 2025 Tensor Security Academy
 
 <div align="center">
 
-**Built with ❤️ by a solo developer for the global cybersecurity community**
+**Built with love,passion & dedication by Saobia Islam for the global cybersecurity community**
 
 ⭐ Star this repo if you find it helpful!
 
