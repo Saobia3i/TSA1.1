@@ -26,9 +26,9 @@ export default async function MarketingLayout({
 
         {/* Open Graph Meta Tags */}
         <meta property="og:title" content="Tensor Security Academy" />
-        <meta property="og:description" content="A brief description of your website." />
+        <meta property="og:description" content="A Global edtech website" />
         <meta property="og:image" content="/og-image.png" />
-        <meta property="og:url" content="https://yourwebsite.com" />
+        <meta property="og:url" content="https://tensorsecurityacademy.com" />
         <meta name="twitter:card" content="summary_large_image" />
 
         {/* Favicon */}
