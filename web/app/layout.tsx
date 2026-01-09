@@ -1,6 +1,7 @@
 // app/(marketing)/layout.tsx
 import { Metadata } from "next";
 import "./globals.css";
+import InstallPrompt from "../components/InstallPrompt";
 const BASE_URL = "https://tensorsecurityacademy.com";
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -141,16 +142,18 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* PWA Manifest */}
-         <link rel="manifest" href="/site.webmanifest" />
-  <meta name="theme-color" content="#9333ea" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="TSA" />
-  <link rel="apple-touch-icon" href="/logo.png" />
-  <link rel="apple-touch-icon" sizes="192x192" href="/apple-touch-iconpng" />
-  <link rel="apple-touch-icon" sizes="512x512" href="/logo.png" />
-  
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#9333ea" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+        <meta name="apple-mobile-web-app-title" content="TSA" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+        <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png" />
 
         {/* JSON-LD Structured Data */}
         <script
@@ -223,7 +226,10 @@ export default function RootLayout({
     .mb-6{margin-bottom:1.5rem}
   `}</style>
       </head>
-      <body style={{ margin: 0, padding: 0 }}>{children}</body>
+      <body style={{ margin: 0, padding: 0 }}>
+        {children}
+        <InstallPrompt />
+      </body>
     </html>
   );
 }
