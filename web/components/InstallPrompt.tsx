@@ -207,7 +207,7 @@ export default function InstallPrompt() {
             </div>
 
             {/* ✅ tiny vertical padding so text doesn't feel glued */}
-            <div className="flex-1 min-w-0 py-0">
+            {/* <div className="flex-1 min-w-0 py-0"> */}
               <h5 className="font-bold text-sm text-white leading-tight">Install TSA App</h5>
 
               {iosSafari ? (
@@ -215,7 +215,7 @@ export default function InstallPrompt() {
               ) : (
                 <p className="text-xs text-white/80">Quick access & offline mode</p>
               )}
-            </div>
+            {/* </div> */}
           </div>
 
           <div className="flex gap-2 shrink-0">
