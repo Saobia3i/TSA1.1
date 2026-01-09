@@ -143,7 +143,7 @@ export default function RootLayout({
       <head>
         {/* PWA Manifest */}
         <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#9333ea" />
+        <meta name="theme-color" content="#000" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
