@@ -6,10 +6,15 @@
   "scope": "/",
   "orientation": "portrait-primary",
   "display": "standalone",
-  "background_color": "#000",
-  "theme_color": "#000",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "categories": ["education", "security"],
   "icons": [
+    {
+      "src": "/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
