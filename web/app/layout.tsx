@@ -141,12 +141,16 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* PWA Manifest */}
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#9333ea" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+         <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#9333ea" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="TSA" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/apple-touch-iconpng" />
+  <link rel="apple-touch-icon" sizes="512x512" href="/logo.png" />
+  
 
         {/* JSON-LD Structured Data */}
         <script
