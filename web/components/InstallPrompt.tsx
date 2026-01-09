@@ -53,7 +53,7 @@ function dismissedRecently(): boolean {
   const raw = w.localStorage.getItem(DISMISS_KEY);
   if (!raw) return false;
   const last = Number(raw);
-  return Number.isFinite(last) && Date.now() - last < 5 * 60 * 1000;
+  return Number.isFinite(last) && Date.now() - last < 5 * 60 * 1000; // 5 minutes
 }
 
 export default function InstallPrompt() {
@@ -68,6 +68,7 @@ export default function InstallPrompt() {
   const installed = useMemo(() => (clientReady ? isStandalone() : false), [clientReady]);
   const iosSafari = useMemo(() => (clientReady ? isIOS() && isSafari() : false), [clientReady]);
 
+  // Inject animations + decide initial render
   useEffect(() => {
     const w = safeWindow();
     if (!w) return;
@@ -103,6 +104,7 @@ export default function InstallPrompt() {
     return () => w.cancelAnimationFrame(raf);
   }, []);
 
+  // Auto hide
   useEffect(() => {
     const w = safeWindow();
     if (!w) return;
@@ -117,6 +119,7 @@ export default function InstallPrompt() {
     };
   }, [clientReady, render]);
 
+  // Capture beforeinstallprompt
   useEffect(() => {
     const w = safeWindow();
     if (!w) return;
@@ -124,7 +127,7 @@ export default function InstallPrompt() {
     if (!mobileOnly || installed) return;
 
     const onBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
+      e.preventDefault(); // stops default mini-infobar
       setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
 
@@ -142,16 +145,12 @@ export default function InstallPrompt() {
     };
   }, [clientReady, mobileOnly, installed]);
 
-  const showHintTemporarily = (msg: string) => {
-    console.info('Install hint:', msg);
-  };
-
   const handleInstallClick = async () => {
     const w = safeWindow();
     if (!w) return;
 
     if (iosSafari) {
-      showHintTemporarily('iPhone: Share → Add to Home Screen');
+      // iOS Safari doesn't support prompt()
       return;
     }
 
@@ -167,7 +166,9 @@ export default function InstallPrompt() {
       return;
     }
 
-    showHintTemporarily('Open Chrome menu (⋮) → Install app');
+    // If no deferred prompt exists, still show button (your requirement)
+    // This means the click can't open the native prompt, but button stays.
+    // (You can optionally show a toast here.)
   };
 
   const handleDismiss = () => {
@@ -184,7 +185,7 @@ export default function InstallPrompt() {
 
   return (
     <div
-      className="fixed left-0 right-0 z-50 md:hidden flex justify-center items-start px-4"
+      className="fixed left-0 right-0 z-[999999] md:hidden flex justify-center items-start px-4"
       style={{
         top: TOP_OFFSET_PX,
         animation:
@@ -193,22 +194,32 @@ export default function InstallPrompt() {
             : `tsaSlideUpTop ${EXIT_MS}ms ease-in both`,
       }}
     >
-      <div className="w-full max-w-md bg-black/80 backdrop-blur-2xl text-white p-3 shadow-2xl rounded-xl border border-white/80">
-
+      {/* ✅ GUARANTEED BLACK + BLUR + WHITE BORDER (inline style) */}
+      <div
+        className="w-full max-w-md p-3 shadow-2xl rounded-xl"
+        style={{
+          backgroundColor: 'rgba(0,0,0,0.88)',
+          border: '2px solid rgba(255,255,255,0.85)',
+          backdropFilter: 'blur(18px)',
+          WebkitBackdropFilter: 'blur(18px)',
+        }}
+      >
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="bg-white/10 p-2 rounded-lg shrink-0">
+            <div
+              className="p-2 rounded-lg shrink-0"
+              style={{ backgroundColor: 'rgba(255,255,255,0.10)' }}
+            >
               <Image src="/icon-72.png" alt="TSA" width={32} height={32} />
             </div>
 
-            <div className="flex-1">
-              <h5 className="font-bold text-sm">Install TSA App</h5>
+            <div className="flex-1 min-w-0">
+              <h5 className="font-bold text-sm text-white leading-tight">Install TSA App</h5>
+
               {iosSafari ? (
                 <p className="text-xs text-white/80">iPhone: Share → Add to Home Screen</p>
-              ) : deferredPrompt ? (
-                <p className="text-xs text-white/80">Quick access & offline mode</p>
               ) : (
-                <p className="text-xs text-white/80">Get faster access</p>
+                <p className="text-xs text-white/80">Quick and fast access</p>
               )}
             </div>
           </div>
@@ -216,7 +227,12 @@ export default function InstallPrompt() {
           <div className="flex gap-2 shrink-0">
             <button
               onClick={handleInstallClick}
-              className="border border-white text-white bg-white/10 px-3 py-2 rounded-lg font-semibold text-xs hover:bg-white/20 transition flex items-center gap-1"
+              className="px-3 py-2 rounded-lg font-semibold text-xs transition flex items-center gap-1"
+              style={{
+                border: '1px solid rgba(255,255,255,0.85)',
+                backgroundColor: 'rgba(255,255,255,0.10)',
+                color: '#fff',
+              }}
             >
               <Download className="w-4 h-4" />
               Install
@@ -224,7 +240,12 @@ export default function InstallPrompt() {
 
             <button
               onClick={handleDismiss}
-              className="border border-white text-white bg-white/10 p-2 hover:bg-white/20 rounded-lg transition"
+              className="p-2 rounded-lg transition"
+              style={{
+                border: '1px solid rgba(255,255,255,0.60)',
+                backgroundColor: 'rgba(255,255,255,0.10)',
+                color: '#fff',
+              }}
               aria-label="Dismiss"
             >
               <X className="w-4 h-4" />
