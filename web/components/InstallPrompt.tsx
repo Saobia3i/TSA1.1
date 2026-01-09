@@ -162,7 +162,7 @@ export default function InstallPrompt() {
               </div>
 
               <div className="flex-1">
-                <h3 className="font-bold text-sm">Install TSA App</h3>
+                <h4 className="font-bold text-sm">Install TSA App</h4>
 
                 {iosSafari ? (
                   <p className="text-xs text-white/80">iPhone: Share → Add to Home Screen</p>
