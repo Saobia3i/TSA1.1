@@ -314,7 +314,7 @@ export default memo(function CourseDetailsModal({
                 color: "white", // Ensure text is white inside the link
               }}
             >
-              Enroll Now {course.price && `• ${course.price}`}
+              Enroll Now {/* {course.price && `• ${course.price}`} */}
             </Link>
           </motion.button>
         </div>
