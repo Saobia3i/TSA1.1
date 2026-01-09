@@ -10,7 +10,9 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const DISMISS_KEY = 'pwa-prompt-dismissed';
-const SHOW_MS = 4500;
+
+// ✅ slightly less delay
+const SHOW_MS = 3500;
 const EXIT_MS = 350;
 const ENTER_MS = 380;
 const TOP_OFFSET_PX = 80;
@@ -68,7 +70,6 @@ export default function InstallPrompt() {
   const installed = useMemo(() => (clientReady ? isStandalone() : false), [clientReady]);
   const iosSafari = useMemo(() => (clientReady ? isIOS() && isSafari() : false), [clientReady]);
 
-  // Inject animations + decide initial render
   useEffect(() => {
     const w = safeWindow();
     if (!w) return;
@@ -104,7 +105,6 @@ export default function InstallPrompt() {
     return () => w.cancelAnimationFrame(raf);
   }, []);
 
-  // Auto hide
   useEffect(() => {
     const w = safeWindow();
     if (!w) return;
@@ -119,7 +119,6 @@ export default function InstallPrompt() {
     };
   }, [clientReady, render]);
 
-  // Capture beforeinstallprompt
   useEffect(() => {
     const w = safeWindow();
     if (!w) return;
@@ -127,7 +126,7 @@ export default function InstallPrompt() {
     if (!mobileOnly || installed) return;
 
     const onBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault(); // stops default mini-infobar
+      e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
     };
 
@@ -149,10 +148,7 @@ export default function InstallPrompt() {
     const w = safeWindow();
     if (!w) return;
 
-    if (iosSafari) {
-      // iOS Safari doesn't support prompt()
-      return;
-    }
+    if (iosSafari) return;
 
     if (deferredPrompt) {
       await deferredPrompt.prompt();
@@ -163,12 +159,7 @@ export default function InstallPrompt() {
         w.setTimeout(() => setRender(false), EXIT_MS);
       }
       setDeferredPrompt(null);
-      return;
     }
-
-    // If no deferred prompt exists, still show button (your requirement)
-    // This means the click can't open the native prompt, but button stays.
-    // (You can optionally show a toast here.)
   };
 
   const handleDismiss = () => {
@@ -194,12 +185,14 @@ export default function InstallPrompt() {
             : `tsaSlideUpTop ${EXIT_MS}ms ease-in both`,
       }}
     >
-      {/* ✅ GUARANTEED BLACK + BLUR + WHITE BORDER (inline style) */}
       <div
-        className="w-full max-w-md p-3 shadow-2xl rounded-xl"
+        className="w-full max-w-md shadow-2xl rounded-xl"
+        // ✅ more inner space from border
         style={{
+          padding: '16px', // was p-3
           backgroundColor: 'rgba(0,0,0,0.88)',
-          border: '2px solid rgba(255,255,255,0.85)',
+          // ✅ thinner border
+          border: '1.25px solid rgba(255,255,255,0.75)',
           backdropFilter: 'blur(18px)',
           WebkitBackdropFilter: 'blur(18px)',
         }}
@@ -213,13 +206,14 @@ export default function InstallPrompt() {
               <Image src="/icon-72.png" alt="TSA" width={32} height={32} />
             </div>
 
-            <div className="flex-1 min-w-0">
+            {/* ✅ tiny vertical padding so text doesn't feel glued */}
+            <div className="flex-1 min-w-0 py-0.5">
               <h5 className="font-bold text-sm text-white leading-tight">Install TSA App</h5>
 
               {iosSafari ? (
                 <p className="text-xs text-white/80">iPhone: Share → Add to Home Screen</p>
               ) : (
-                <p className="text-xs text-white/80">Quick and fast access</p>
+                <p className="text-xs text-white/80">Quick access & offline mode</p>
               )}
             </div>
           </div>
@@ -229,7 +223,7 @@ export default function InstallPrompt() {
               onClick={handleInstallClick}
               className="px-3 py-2 rounded-lg font-semibold text-xs transition flex items-center gap-1"
               style={{
-                border: '1px solid rgba(255,255,255,0.85)',
+                border: '1px solid rgba(255,255,255,0.75)',
                 backgroundColor: 'rgba(255,255,255,0.10)',
                 color: '#fff',
               }}
@@ -242,7 +236,7 @@ export default function InstallPrompt() {
               onClick={handleDismiss}
               className="p-2 rounded-lg transition"
               style={{
-                border: '1px solid rgba(255,255,255,0.60)',
+                border: '1px solid rgba(255,255,255,0.55)',
                 backgroundColor: 'rgba(255,255,255,0.10)',
                 color: '#fff',
               }}
