@@ -15,8 +15,31 @@ const withPWA = withPWAInit({
 
   buildExcludes: [/middleware-manifest\.json$/],
 
-  // ✅ Offline fallback for page navigations
-  navigateFallback: "/offline",
+  // Precache important pages for offline access
+  additionalManifestEntries: [
+    { url: "/", revision: null },
+    { url: "/about", revision: null },
+    { url: "/about/team", revision: null },
+    { url: "/about/join", revision: null },
+    { url: "/courses", revision: null },
+    { url: "/services", revision: null },
+    { url: "/services/web-application-vapt", revision: null },
+    { url: "/services/vapt-service", revision: null },
+    { url: "/services/api-security-testing", revision: null },
+    { url: "/services/ai-llm-security-assessment", revision: null },
+    { url: "/services/network-security-audit", revision: null },
+    { url: "/services/osint-assessment", revision: null },
+    { url: "/services/soc-as-a-service", revision: null },
+    { url: "/services/ai-automation-solutions", revision: null },
+    { url: "/services/secure-web-development", revision: null },
+    { url: "/tools", revision: null },
+    { url: "/dashboard", revision: null },
+    { url: "/auth/login", revision: null },
+    { url: "/auth/signup", revision: null },
+  ],
+
+  // Fallback to home page for uncached routes when offline
+  navigateFallback: "/",
   navigateFallbackDenylist: [
     /^\/api\//,           // don't intercept api
     /^\/_next\//,         // don't intercept next internals
@@ -92,11 +115,10 @@ const withPWA = withPWAInit({
     // ✅ Pages / navigation (THIS is what makes your site usable offline)
     {
       urlPattern: ({ request }) => request.mode === "navigate",
-      handler: "NetworkFirst",
+      handler: "CacheFirst",
       options: {
         cacheName: "pages",
-        networkTimeoutSeconds: 3,
-        expiration: { maxEntries: 32, maxAgeSeconds: 24 * 60 * 60 },
+        expiration: { maxEntries: 100, maxAgeSeconds: 30 * 24 * 60 * 60 }, // 30 days
       },
     },
   ],
