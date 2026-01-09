@@ -335,7 +335,7 @@ export default function Footer() {
               margin: 0,
             }}
           >
-            © {new Date().getFullYear()} Tensor Security Academy. All rights
+            © 2025 Tensor Security Academy. All rights
             reserved.
           </p>
           <p
