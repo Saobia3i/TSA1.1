@@ -186,10 +186,10 @@ export default function InstallPrompt() {
       }}
     >
       <div
-        className="w-full max-w-md shadow-2xl rounded-xl"
+        className="w-full max-w-[320px] shadow-2xl rounded-xl"
         // ✅ more inner space from border
         style={{
-          padding: '16px', // was p-3
+          padding: '12px', // was p-3
           backgroundColor: 'rgba(0,0,0,0.88)',
           // ✅ thinner border
           border: '1.25px solid rgba(255,255,255,0.75)',
@@ -207,7 +207,7 @@ export default function InstallPrompt() {
             </div>
 
             {/* ✅ tiny vertical padding so text doesn't feel glued */}
-            <div className="flex-1 min-w-0 py-0.5">
+            <div className="flex-1 min-w-0 py-0">
               <h5 className="font-bold text-sm text-white leading-tight">Install TSA App</h5>
 
               {iosSafari ? (
