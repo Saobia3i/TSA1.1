@@ -213,7 +213,7 @@ export default function InstallPrompt() {
               {iosSafari ? (
                 <p className="text-xs text-white/80">iPhone: Share → Add to Home Screen</p>
               ) : (
-                <p className="text-xs text-white/80">For faster and quick access </p>
+                <p className="text-xs text-white/80">Quick access & offline mode</p>
               )}
             </div>
           </div>
