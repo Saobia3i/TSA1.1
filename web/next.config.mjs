@@ -152,7 +152,14 @@ const nextConfig = {
   experimental: {
     serverActions: { bodySizeLimit: "2mb" },
     optimizeCss: true,
-    optimizePackageImports: ["lucide-react", "recharts"],
+    optimizePackageImports: [
+    "lucide-react",
+    "recharts",
+    "@mui/material",
+    "@mui/icons-material",
+    "@heroicons/react",
+
+    ],
   },
 
   turbopack: {},

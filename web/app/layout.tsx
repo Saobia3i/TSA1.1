@@ -3,6 +3,8 @@ import { Metadata } from "next";
 import "./globals.css";
 import InstallPrompt from "../components/InstallPrompt";
 const BASE_URL = "https://tensorsecurityacademy.com";
+import RegisterSW from "./RegisterSW";
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
@@ -227,8 +229,10 @@ export default function RootLayout({
   `}</style>
       </head>
       <body style={{ margin: 0, padding: 0 }}>
-        {children}
         <InstallPrompt />
+        <RegisterSW />
+        {children}
+        
       </body>
     </html>
   );
