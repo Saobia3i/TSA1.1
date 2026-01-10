@@ -49,7 +49,7 @@ export default function CoursesPage() {
   return (
     <>
       <div
-        style={{ minHeight: "100vh", paddingTop: "90px", overflowX: "hidden" }}
+        style={{ minHeight: "100vh", paddingTop: "90px" }}
       >
         <div
           style={{ maxWidth: "1280px", margin: "0 auto", padding: "60px 24px" }}
@@ -206,6 +206,8 @@ export default function CoursesPage() {
                   gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
                   gap: "24px",
                   marginBottom: "50px",
+                  justifyContent: "center",
+                  justifyItems: "center",
                 }}
               >
                 {displayedCourses.map((course, index) => (

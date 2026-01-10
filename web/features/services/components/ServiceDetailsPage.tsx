@@ -24,8 +24,7 @@ export default function ServiceDetailsPage({ service }: Props) {
     <div style={{ 
       // background: 'linear-gradient(180deg, #000000 0%, #0a0a0a 50%, #000000 100%)', 
       minHeight: '100vh', 
-      paddingTop: '90px',
-      overflowX: 'hidden'
+      paddingTop: '90px'
     }}>
       <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '80px 24px' }}>
         {/* Back Button */}
@@ -158,7 +157,7 @@ export default function ServiceDetailsPage({ service }: Props) {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '28px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '28px', maxWidth: '1200px', margin: '0 auto', justifyContent: 'center', justifyItems: 'center' }}>
           {service.packages.map((pkg, index) => (
             <PackageCard key={pkg.name} pkg={pkg} index={index} />
           ))}

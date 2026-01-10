@@ -96,20 +96,45 @@
 }
 
 /* ============================================
-   CYBERSECURITY ANIMATED BACKGROUND - OPTIMIZED
+   iOS + BROWSER RESPONSIVE FIX (NO DESIGN CHANGE)
    ============================================ */
 
+/* ✅ Fix 1: iOS Safari phantom horizontal overflow (grid shifts right) */
 html, body {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
+  overflow-x: clip; /* better than hidden on iOS */
 }
+@supports not (overflow: clip) {
+  html, body { overflow-x: hidden; }
+}
+
+/* ✅ Fix 2: 100vw sometimes causes iOS “push right”, keep design same */
+html { max-width: none; }
+body { max-width: none; }
+
+/* ✅ Fix 3: grid/flex children can overflow on iOS (min-width:auto issue) */
+:where(.grid > *, .flex > *, [style*="display: grid"] > *, [style*="display: flex"] > *) {
+  min-width: 0;
+}
+
+/* ✅ Fix 4: long tokens can push cards outside (URLs / long text) */
+:where(p, h1, h2, h3, h4, h5, h6, a, span) {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* ============================================
+   CYBERSECURITY ANIMATED BACKGROUND - OPTIMIZED
+   ============================================ */
+
+/* (Your original block stays; only 2 small safe tweaks below) */
 
 body {
   position: relative;
   background: #000000 !important;
-  overflow-x: hidden;
-  max-width: 100vw;
+  overflow-x: hidden; /* kept */
+  /* max-width: 100vw;  ❌ removed by Fix 2 above (max-width:none) */
   margin: 0;
   padding: 0;
   color: var(--color-text);
@@ -139,7 +164,7 @@ body::after {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: 
+  background:
     radial-gradient(circle at 20% 50%, rgba(39, 113, 225, 0.25) 0%, transparent 50%),
     radial-gradient(circle at 80% 30%, rgba(138, 43, 226, 0.25) 0%, transparent 50%),
     radial-gradient(circle at 60% 70%, rgba(75, 0, 130, 0.25) 0%, transparent 50%),
@@ -151,6 +176,18 @@ body::after {
   filter: blur(80px);
   opacity: 0.5;
   animation: cyberGlow 20s ease-in-out infinite;
+
+  /* ✅ Fix 5: prevent iOS Safari from treating animated fixed layer as layout width */
+  contain: paint;
+  transform-origin: center;
+}
+
+/* ✅ Fix 6 (iOS only): background-attachment fixed is buggy, keep same look */
+@supports (-webkit-touch-callout: none) {
+  body::after {
+    background-attachment: scroll !important; /* prevents iOS layout shift */
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 /* FIX #3: Optimized animation (less blur, better performance) */
@@ -201,9 +238,10 @@ main {
   font-family: var(--font-family-base) !important;
 }
 
+/* ✅ IMPORTANT: keep your original html styles, but remove 100vw clamp effect */
 html {
-  overflow-x: hidden;
-  max-width: 100vw;
+  overflow-x: hidden; /* kept (fallback) */
+  /* max-width: 100vw; ❌ already overridden above with max-width:none */
   scroll-behavior: smooth;
   font-family: var(--font-family-base) !important;
 }
@@ -332,11 +370,11 @@ html {
 
 @keyframes glowPulse {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(var(--color-teal-300-rgb), 0.5), 
+    box-shadow: 0 0 15px rgba(var(--color-teal-300-rgb), 0.5),
                 0 0 30px rgba(var(--color-teal-300-rgb), 0.3);
   }
   50% {
-    box-shadow: 0 0 25px rgba(var(--color-teal-300-rgb), 0.7), 
+    box-shadow: 0 0 25px rgba(var(--color-teal-300-rgb), 0.7),
                 0 0 40px rgba(var(--color-teal-300-rgb), 0.5);
   }
 }
@@ -480,4 +518,22 @@ html {
   body::after {
     filter: blur(40px);
   }
+}
+
+/* ✅ iOS Safari viewport height stability (no design change) */
+@supports (-webkit-touch-callout: none) {
+  body { min-height: -webkit-fill-available; }
+  html { height: -webkit-fill-available; }
+}
+
+
+/* 3) Critical: flex/grid children must be allowed to shrink (iOS bug) */
+* {
+  min-width: 0;
+}
+
+/* 4) Long text/URLs should never push layout */
+p, h1, h2, h3, h4, h5, h6, a, span, div {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }

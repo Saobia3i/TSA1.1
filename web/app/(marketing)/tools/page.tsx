@@ -173,7 +173,8 @@ export default function ToolsPage() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(380px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(380px, 100%), 1fr))",
+
             gap: "32px",
             marginBottom: "80px",
           }}
