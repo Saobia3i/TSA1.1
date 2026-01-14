@@ -128,14 +128,14 @@ const withPWA = withPWAInit({
 const nextConfig = {
   compress: true,
 
-  redirects: async () => [
-    {
-      source: "/:path*",
-      destination: "https://tensorsecurityacademy.com/:path*",
-      permanent: true,
-      has: [{ type: "host", value: "www.tensorsecurityacademy.com" }],
-    },
-  ],
+  // redirects: async () => [
+  //   {
+  //     source: "/:path*",
+  //     destination: "https://tensorsecurityacademy.com/:path*",
+  //     permanent: true,
+  //     has: [{ type: "host", value: "www.tensorsecurityacademy.com" }],
+  //   },
+  // ],
 
   images: {
     formats: ["image/avif", "image/webp"],
