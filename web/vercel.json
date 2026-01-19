@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.tensorsecurityacademy.com" }],
+      "destination": "https://tensorsecurityacademy.com/$1",
+      "permanent": true
+    }
+  ]
+}

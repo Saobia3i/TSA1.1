@@ -24,25 +24,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly' as const,
       priority: 0.95,
     },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    },
-    // NEW: Add login/signup pages
-    {
-      url: `${baseUrl}/login`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/signup`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    },
+    
+    
+    
   ]
 
   // Course categories
@@ -59,12 +43,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'malware-analysis',
   ]
 
-  const courseCategoryPages = courseCategories.map(category => ({
-    url: `${baseUrl}/courses/${category}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.9,
-  }))
+  // const courseCategoryPages = courseCategories.map(category => ({
+  //   url: `${baseUrl}/courses/${category}`,
+  //   lastModified: new Date(),
+  //   changeFrequency: 'weekly' as const,
+  //   priority: 0.9,
+  // }))
 
   // Tools & Services pages
   const toolsPages = [
@@ -115,24 +99,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     //   changeFrequency: 'daily' as const,
     //   priority: 0.85,
     // },
-    {
-      url: `${baseUrl}/certifications`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/pricing`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/about/about-us`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    },
+    // {
+    //   url: `${baseUrl}/certifications`,
+    //   lastModified: new Date(),
+    //   changeFrequency: 'monthly' as const,
+    //   priority: 0.85,
+    // },
+   
+   
     {
       url: `${baseUrl}/about/team`,
       lastModified: new Date(),
@@ -171,7 +145,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     ...routes,
-    ...courseCategoryPages,
+    //...courseCategoryPages,
     ...toolsPages,
     ...additionalPages,
     // Uncomment the line below if you have legal pages
