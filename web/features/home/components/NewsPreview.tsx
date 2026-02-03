@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { IconPinnedFilled } from '@tabler/icons-react';
@@ -170,161 +170,156 @@ export default function NewsPreview() {
 
       {/* News Cards Container */}
       <motion.div
-        layout
         style={{
           maxWidth: '800px',
           margin: '0 auto',
           paddingBottom: '80px',
         }}
       >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current.id}
-            layout
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              background: 'rgba(17, 24, 39, 0.85)',
-              border: current.isPinned
-                ? '2px solid rgba(34, 211, 238, 0.8)'
-                : '2px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: '16px',
-              overflow: 'hidden',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
-            {heroImage ? (
-              <img
-                src={heroImage}
-                alt={current.title}
-                style={{
-                  width: '100%',
-                  height: 'auto',
-                  minHeight: 'clamp(180px, 25vw, 240px)',
-                  maxHeight: '320px',
-                  objectFit: 'contain',
-                  objectPosition: 'center',
-                  display: 'block',
-                  backgroundColor: 'rgba(17, 24, 39, 0.8)',
-                }}
-                loading="lazy"
-                decoding="async"
-              />
-            ) : (
+        <motion.div
+          key={current.id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            background: 'rgba(17, 24, 39, 0.85)',
+            border: current.isPinned
+              ? '2px solid rgba(34, 211, 238, 0.8)'
+              : '2px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
+            backdropFilter: 'blur(10px)',
+          }}
+        >
+          {heroImage ? (
+            <img
+              src={heroImage}
+              alt={current.title}
+              style={{
+                width: '100%',
+                height: 'auto',
+                minHeight: 'clamp(180px, 25vw, 240px)',
+                maxHeight: '320px',
+                objectFit: 'contain',
+                objectPosition: 'center',
+                display: 'block',
+                backgroundColor: 'rgba(17, 24, 39, 0.8)',
+              }}
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <div
+              aria-hidden
+              style={{
+                width: '100%',
+                height: 'clamp(180px, 25vw, 240px)',
+                display: 'grid',
+                placeItems: 'center',
+                background:
+                  'linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))',
+                color: '#e5e7eb',
+                fontWeight: 600,
+                fontSize: '14px',
+                letterSpacing: '0.5px',
+              }}
+            >
+              Image Coming Soon
+            </div>
+          )}
+
+          <div style={{ padding: 'clamp(16px, 3vw, 24px)' }}>
+            {current.isPinned && (
               <div
-                aria-hidden
                 style={{
-                  width: '100%',
-                  height: 'clamp(180px, 25vw, 240px)',
-                  display: 'grid',
-                  placeItems: 'center',
-                  background:
-                    'linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))',
-                  color: '#e5e7eb',
-                  fontWeight: 600,
-                  fontSize: '14px',
-                  letterSpacing: '0.5px',
+                  fontSize: '12px',
+                  color: '#22d3ee',
+                  fontWeight: 700,
+                  marginBottom: '8px',
+                  letterSpacing: '0.3px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
                 }}
               >
-                Image Coming Soon
+                <IconPinnedFilled size={14} />
+                Pinned
               </div>
             )}
 
-            <div style={{ padding: 'clamp(16px, 3vw, 24px)' }}>
-              {current.isPinned && (
-                <div
+            <h3
+              style={{
+                fontSize: 'clamp(18px, 2.5vw, 24px)',
+                fontWeight: 800,
+                color: 'white',
+                marginBottom: '8px',
+                fontFamily: 'var(--font-space-mono)',
+                lineHeight: 1.3,
+              }}
+            >
+              {current.title}
+            </h3>
+
+            <p
+              style={{
+                color: '#9ca3af',
+                marginBottom: '10px',
+                fontSize: 'clamp(11px, 1.4vw, 13px)',
+                fontFamily: 'var(--font-space-mono)',
+              }}
+            >
+              {current.date}
+            </p>
+
+            <p
+              style={{
+                fontSize: 'clamp(13px, 1.6vw, 14px)',
+                color: '#d1d5db',
+                lineHeight: 1.6,
+                marginBottom: '16px',
+                maxWidth: '680px',
+              }}
+            >
+              {current.shortDescription}
+            </p>
+
+            <div
+              style={{
+                display: 'flex',
+                gap: '10px',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+              }}
+            >
+              <Link href={`/news/${current.id}`} style={{ textDecoration: 'none' }}>
+                <motion.button
+                  whileHover={{
+                    scale: 1.03,
+                    boxShadow:
+                      '0 0 20px rgba(34, 211, 238, 0.5), 0 0 40px rgba(168, 85, 247, 0.3)',
+                  }}
+                  whileTap={{ scale: 0.97 }}
                   style={{
-                    fontSize: '12px',
-                    color: '#22d3ee',
+                    padding: '11px 22px',
+                    fontSize: '14px',
                     fontWeight: 700,
-                    marginBottom: '8px',
-                    letterSpacing: '0.3px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
+                    borderRadius: '10px',
+                    border: '2px solid rgba(34, 211, 238, 0.6)',
+                    background:
+                      'linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(168, 85, 247, 0.12))',
+                    color: '#22d3ee',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    fontFamily: 'var(--font-space-mono)',
                   }}
                 >
-                  <IconPinnedFilled size={14} />
-                  Pinned
-                </div>
-              )}
-
-              <h3
-                style={{
-                  fontSize: 'clamp(18px, 2.5vw, 24px)',
-                  fontWeight: 800,
-                  color: 'white',
-                  marginBottom: '8px',
-                  fontFamily: 'var(--font-space-mono)',
-                  lineHeight: 1.3,
-                }}
-              >
-                {current.title}
-              </h3>
-
-              <p
-                style={{
-                  color: '#9ca3af',
-                  marginBottom: '10px',
-                  fontSize: 'clamp(11px, 1.4vw, 13px)',
-                  fontFamily: 'var(--font-space-mono)',
-                }}
-              >
-                {current.date}
-              </p>
-
-              <p
-                style={{
-                  fontSize: 'clamp(13px, 1.6vw, 14px)',
-                  color: '#d1d5db',
-                  lineHeight: 1.6,
-                  marginBottom: '16px',
-                  maxWidth: '680px',
-                }}
-              >
-                {current.shortDescription}
-              </p>
-
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '10px',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                }}
-              >
-                <Link href={`/news/${current.id}`} style={{ textDecoration: 'none' }}>
-                  <motion.button
-                    whileHover={{
-                      scale: 1.03,
-                      boxShadow:
-                        '0 0 20px rgba(34, 211, 238, 0.5), 0 0 40px rgba(168, 85, 247, 0.3)',
-                    }}
-                    whileTap={{ scale: 0.97 }}
-                    style={{
-                      padding: '11px 22px',
-                      fontSize: '14px',
-                      fontWeight: 700,
-                      borderRadius: '10px',
-                      border: '2px solid rgba(34, 211, 238, 0.6)',
-                      background:
-                        'linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(168, 85, 247, 0.12))',
-                      color: '#22d3ee',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      fontFamily: 'var(--font-space-mono)',
-                    }}
-                  >
-                    Read More
-                  </motion.button>
-                </Link>
-              </div>
+                  Read More
+                </motion.button>
+              </Link>
             </div>
-          </motion.div>
-        </AnimatePresence>
+          </div>
+        </motion.div>
 
         {/* Navigation Dots */}
         <div
