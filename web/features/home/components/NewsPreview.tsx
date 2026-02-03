@@ -3,8 +3,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { IconArrowLeft, IconPinnedFilled, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
-import { getAllNews } from '@/features/news/data/NewsData';
+import { IconPinnedFilled } from '@tabler/icons-react';
+import { getAllNews, NewsItem } from '@/features/news/data/NewsData';
 
 export default function NewsPreview() {
   const allNews = useMemo(() => {
@@ -14,13 +14,7 @@ export default function NewsPreview() {
         console.warn('NewsPreview - No news data available');
         return [];
       }
-      return news
-        .slice()
-        .sort(
-          (a, b) =>
-            Number(!!b.isPinned) - Number(!!a.isPinned) ||
-            new Date(b.date).getTime() - new Date(a.date).getTime()
-        );
+      return news;
     } catch (e) {
       console.error('NewsPreview - Error loading news:', e);
       return [];
@@ -28,14 +22,11 @@ export default function NewsPreview() {
   }, []);
 
   const featured = useMemo(() => allNews.slice(0, 4), [allNews]);
-
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (index >= featured.length) {
-      setIndex(0);
-    }
+    if (index >= featured.length) setIndex(0);
   }, [featured.length, index]);
 
   useEffect(() => {
@@ -60,15 +51,16 @@ export default function NewsPreview() {
   const heroImage = current?.heroImages?.[0];
 
   return (
-    <motion.section
+    <section
       style={{
         padding: 'clamp(32px, 4vw, 48px) clamp(16px, 3vw, 24px)',
         backgroundColor: 'rgba(17, 24, 39, 0.3)',
         borderTop: '1px solid rgba(255, 255, 255, 0.06)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+        position: 'relative',
       }}
     >
-      {/* Header Section */}
+      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -133,25 +125,23 @@ export default function NewsPreview() {
         </p>
       </motion.div>
 
-      {/* Main Content Container */}
-      <div
+      {/* News Cards Container */}
+      <motion.div
+        layout
         style={{
-          maxWidth: '800px', // ✅ Reduced from 1000px
+          maxWidth: '800px',
           margin: '0 auto',
-          paddingBottom: 'clamp(24px, 3vw, 36px)',
+          paddingBottom: '80px',
         }}
       >
-        {/* News Card */}
         <AnimatePresence mode="wait">
           <motion.div
             key={current.id}
+            layout
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
-            transition={{
-              duration: 0.5,
-              ease: [0.16, 1, 0.3, 1],
-            }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             style={{
               background: 'rgba(17, 24, 39, 0.85)',
               border: current.isPinned
@@ -163,7 +153,6 @@ export default function NewsPreview() {
               backdropFilter: 'blur(10px)',
             }}
           >
-            {/* Image Section */}
             {heroImage ? (
               <img
                 src={heroImage}
@@ -171,8 +160,8 @@ export default function NewsPreview() {
                 style={{
                   width: '100%',
                   height: 'auto',
-                  minHeight: 'clamp(180px, 25vw, 240px)', // ✅ Reduced height
-                  maxHeight: '320px', // ✅ Max height constraint
+                  minHeight: 'clamp(180px, 25vw, 240px)',
+                  maxHeight: '320px',
                   objectFit: 'contain',
                   objectPosition: 'center',
                   display: 'block',
@@ -201,7 +190,6 @@ export default function NewsPreview() {
               </div>
             )}
 
-            {/* Content Section */}
             <div style={{ padding: 'clamp(16px, 3vw, 24px)' }}>
               {current.isPinned && (
                 <div
@@ -223,7 +211,7 @@ export default function NewsPreview() {
 
               <h3
                 style={{
-                  fontSize: 'clamp(18px, 2.5vw, 24px)', // ✅ Reduced font size
+                  fontSize: 'clamp(18px, 2.5vw, 24px)',
                   fontWeight: 800,
                   color: 'white',
                   marginBottom: '8px',
@@ -247,7 +235,7 @@ export default function NewsPreview() {
 
               <p
                 style={{
-                  fontSize: 'clamp(13px, 1.6vw, 14px)', // ✅ Slightly smaller
+                  fontSize: 'clamp(13px, 1.6vw, 14px)',
                   color: '#d1d5db',
                   lineHeight: 1.6,
                   marginBottom: '16px',
@@ -257,7 +245,6 @@ export default function NewsPreview() {
                 {current.shortDescription}
               </p>
 
-              {/* Action Buttons */}
               <div
                 style={{
                   display: 'flex',
@@ -289,27 +276,6 @@ export default function NewsPreview() {
                     }}
                   >
                     Read More
-                  </motion.button>
-                </Link>
-
-                <Link href="/news" style={{ textDecoration: 'none' }}>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    style={{
-                      padding: '11px 20px',
-                      fontSize: '14px',
-                      fontWeight: 700,
-                      borderRadius: '10px',
-                      border: '2px solid rgba(255, 255, 255, 0.2)',
-                      background: 'rgba(17, 24, 39, 0.4)',
-                      color: '#e5e7eb',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      fontFamily: 'var(--font-space-mono)',
-                    }}
-                  >
-                    View All
                   </motion.button>
                 </Link>
               </div>
@@ -352,22 +318,41 @@ export default function NewsPreview() {
             />
           ))}
         </div>
+      </motion.div>
 
-        {paused && (
-          <p
+      {/* Fixed Button */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          bottom: '16px',
+          transform: 'translateX(-50%)',
+        }}
+      >
+        <Link href="/news" style={{ textDecoration: 'none' }}>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             style={{
-              textAlign: 'center',
-              marginTop: '12px',
-              fontSize: '12px',
-              color: '#9ca3af',
+              padding: '11px 20px',
+              fontSize: '14px',
+              fontWeight: 700,
+              borderRadius: '10px',
+              border: '2px solid rgba(255, 255, 255, 0.9)',
+              background: 'rgba(17, 24, 39, 0.4)',
+              color: '#e5e7eb',
+              cursor: 'pointer',
+              alignItems: 'center',
+              display: 'inline-flex',
+              gap: '8px',
+              transition: 'all 0.3s ease',
               fontFamily: 'var(--font-space-mono)',
-              fontStyle: 'italic',
             }}
           >
-            Paused • Click dot to resume
-          </p>
-        )}
+            View All News
+          </motion.button>
+        </Link>
       </div>
-    </motion.section>
+    </section>
   );
 }
