@@ -3,7 +3,7 @@
 import { Mail, MapPin, MessageCircle } from "lucide-react";
 import Linkedin from "@mui/icons-material/LinkedIn";
 import Instagram from "@mui/icons-material/Instagram";
-//import YouTubeIcon from '@mui/icons-material/YouTube';
+import YouTubeIcon from "@mui/icons-material/YouTube";
 import XIcon from "@mui/icons-material/X";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,6 +18,12 @@ const socialLinks = [
     icon: Linkedin,
     url: "https://www.linkedin.com/company/tensorsecurityacademy",
     color: "#0A66C2",
+  },
+  {
+    name: "YouTube",
+    icon: YouTubeIcon,
+    url: "https://www.youtube.com/@TensorSecurityAcademy",
+    color: "#FF0000",
   },
   {
     name: "Instagram",
