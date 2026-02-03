@@ -6,10 +6,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { IconPinnedFilled } from '@tabler/icons-react';
 import { getAllNews, NewsItem } from '@/features/news/data/NewsData';
 
+const isValidNewsItem = (item: NewsItem | null | undefined): item is NewsItem => {
+  return Boolean(item && typeof item.id === 'number' && item.title && item.date);
+};
+
 export default function NewsPreview() {
   const allNews = useMemo(() => {
     try {
-      const news = getAllNews();
+      const news = getAllNews().filter(isValidNewsItem);
       if (!news || news.length === 0) {
         console.warn('NewsPreview - No news data available');
         return [];
@@ -26,6 +30,20 @@ export default function NewsPreview() {
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
+    // Dev-time mount log to help debugging when preview doesn't show
+    try {
+      // eslint-disable-next-line no-console
+      console.debug('NewsPreview mounted', { allNewsLength: allNews.length, featuredLength: featured.length });
+    } catch (e) {
+      // ignore
+    }
+  }, [allNews.length, featured.length]);
+
+  useEffect(() => {
+    if (featured.length === 0) {
+      setIndex(0);
+      return;
+    }
     if (index >= featured.length) setIndex(0);
   }, [featured.length, index]);
 
@@ -47,8 +65,17 @@ export default function NewsPreview() {
     );
   }
 
-  const current = featured[index];
-  const heroImage = current?.heroImages?.[0];
+  const safeIndex = featured.length === 0 ? 0 : Math.min(index, featured.length - 1);
+  const current = featured[safeIndex];
+  const heroImage = Array.isArray(current?.heroImages) ? current?.heroImages?.[0] : undefined;
+
+  if (!current) {
+    return (
+      <section style={{ padding: '40px 24px', textAlign: 'center' }}>
+        <p style={{ color: '#9ca3af' }}>No news available</p>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -61,6 +88,23 @@ export default function NewsPreview() {
       }}
     >
       {/* Header */}
+      {process.env.NODE_ENV !== 'production' && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 8,
+            right: 12,
+            background: 'rgba(255,255,255,0.06)',
+            color: '#e5e7eb',
+            padding: '6px 10px',
+            borderRadius: 8,
+            fontSize: 12,
+            zIndex: 60,
+          }}
+        >
+          News: {featured.length}
+        </div>
+      )}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
