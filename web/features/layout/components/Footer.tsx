@@ -3,7 +3,7 @@
 import { Mail, MapPin, MessageCircle } from "lucide-react";
 import Linkedin from "@mui/icons-material/LinkedIn";
 import Instagram from "@mui/icons-material/Instagram";
-
+//import YouTubeIcon from '@mui/icons-material/YouTube';
 import XIcon from "@mui/icons-material/X";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,6 +12,7 @@ const LOGO_URL =
   "https://res.cloudinary.com/dojh4b9sb/image/upload/v1765462630/logo1_cyoiop.jpg";
 
 const socialLinks = [
+
   {
     name: "LinkedIn",
     icon: Linkedin,

@@ -84,12 +84,6 @@ const jsonLd = {
 export default function HomePage() {
   return (
     <>
-     <head>
-        <meta 
-          name="description" 
-          content="Master cybersecurity with hands-on training in ethical hacking, penetration testing, blockchain security, and network security. Industry-recognized certifications, expert instructors, and practical labs for beginners to advanced professionals."
-        />
-      </head>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -97,5 +91,4 @@ export default function HomePage() {
       <HomePageClient />
     </>
   )
-  
 }

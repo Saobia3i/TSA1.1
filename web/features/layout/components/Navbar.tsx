@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Linkedin from "@mui/icons-material/LinkedIn";
 import Instagram from "@mui/icons-material/Instagram";
-
+import YouTubeIcon from '@mui/icons-material/YouTube';
 import XIcon from "@mui/icons-material/X";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -41,6 +41,11 @@ const socialLinks = [
     name: "LinkedIn",
     url: "https://www.linkedin.com/company/tensorsecurityacademy",
     icon: Linkedin,
+  },
+  {
+    name: "Youtube",
+    url: "https://www.youtube.com/@TensorSecurityAcademy",
+    icon: YouTubeIcon,
   },
   {
     name: "Instagram",

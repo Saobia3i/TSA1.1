@@ -4,6 +4,7 @@ import Footer from '@/features/layout/components/Footer'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import Head from 'next/head'
+import MantineClientProvider from './mantine-provider'
 
 export default async function MarketingLayout({
   children,
@@ -36,7 +37,9 @@ export default async function MarketingLayout({
       </Head>
 
       <Navbar user={user} />
-      <main>{children}</main>
+      <MantineClientProvider>
+        <main>{children}</main>
+      </MantineClientProvider>
       <Footer />
     </div>
   )

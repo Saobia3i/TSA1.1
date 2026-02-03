@@ -9,6 +9,7 @@ import HeroSection from "@/features/home/components/HeroSection";
 import CoursesPreview from "@/features/home/components/CoursesPreview";
 import ServicesPreview from "@/features/home/components/ServicesPreview";
 import ToolsPreview from "@/features/home/components/ToolsPreview";
+import NewsPreview from "@/features/home/components/NewsPreview";
 //import { Metadata } from 'next'
 
 // export const metadata: Metadata = {
@@ -434,6 +435,7 @@ export default function HomePage() {
       </motion.section>
 
       {/* Feature Previews from Features folder */}
+      <NewsPreview />
       <CoursesPreview />
       <ServicesPreview />
       <ToolsPreview />
