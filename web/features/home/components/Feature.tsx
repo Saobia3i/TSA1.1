@@ -86,15 +86,15 @@ type FeatureItem = {
 /* ================= DATA ================= */
 
 const TOP_FEATURES: FeatureItem[] = [
-  { icon: <Users size={28} />, text: "1-on-1 Mentorship", color: "#22d3ee" },
-  { icon: <Zap size={28} />, text: "Live Training", color: "#a855f7" },
+  { icon: <Users size={28} color="#fff" />, text: "1-on-1 Mentorship", color: "#22d3ee" },
+  { icon: <Zap size={28} color="#fff" />, text: "Live Training", color: "#a855f7" },
   {
-    icon: <CheckCircle size={28} />,
+    icon: <CheckCircle size={28} color="#fff" />,
     text: "Career Guidance",
     color: "#ec4899",
   },
   {
-    icon: <Shield size={28} />,
+    icon: <Shield size={28} color="#fff" />,
     text: "Certification Support",
     color: "#06b6d4",
   },
