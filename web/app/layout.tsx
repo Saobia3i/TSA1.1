@@ -4,6 +4,7 @@ import "./globals.css";
 import InstallPrompt from "../components/InstallPrompt";
 const BASE_URL = "https://tensorsecurityacademy.com";
 import RegisterSW from "./RegisterSW";
+import PWAUpdateManager from "@/components/PWAUpdateManager";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -232,7 +233,7 @@ export default function RootLayout({
         <InstallPrompt />
         <RegisterSW />
         {children}
-        
+        <PWAUpdateManager />
       </body>
     </html>
   );

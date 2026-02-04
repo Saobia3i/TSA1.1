@@ -73,6 +73,13 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+// Allow the app to trigger immediate activation
+self.addEventListener("message", (event) => {
+  if (event?.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
 // Helper: network-first with timeout fallback to cache (best for pages)
 async function networkFirstWithTimeout(req, cacheName, timeoutMs = 2500) {
   const cache = await caches.open(cacheName);

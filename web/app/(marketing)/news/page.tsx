@@ -36,8 +36,8 @@ export default function NewsPage() {
   }, [allNews, searchQuery, sort]);
 
   return (
-    <div style={{ minHeight: '100vh', paddingTop: '90px' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '60px 24px' }}>
+    <div style={{ minHeight: '100vh', paddingTop: 'clamp(60px, 10vw, 90px)' }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: 'clamp(30px, 8vw, 60px) clamp(16px, 4vw, 24px)' }}>
         {/* Back Button */}
         <Link href="/" style={{ textDecoration: 'none' }}>
           <motion.button
@@ -50,17 +50,20 @@ export default function NewsPage() {
               background: 'rgba(17, 24, 39, 0.7)',
               border: '2px solid rgba(255, 255, 255, 0.3)',
               borderRadius: '10px',
-              padding: '10px 20px',
+              padding: 'clamp(8px, 2vw, 10px) clamp(14px, 3vw, 20px)',
               color: 'white',
-              fontSize: '14px',
+              fontSize: 'clamp(12px, 2vw, 14px)',
               fontWeight: 600,
               cursor: 'pointer',
-              marginBottom: '40px',
+              marginBottom: 'clamp(24px, 5vw, 40px)',
               fontFamily: 'var(--font-space-mono)',
             }}
           >
-            <ArrowLeft style={{ width: '18px', height: '18px' }} />
-            Back to Home
+            <ArrowLeft style={{ width: '18px', height: '18px', minWidth: '18px' }} />
+            <span style={{ display: 'none' }} onClick={(e) => e.stopPropagation()}>
+              Back to Home
+            </span>
+            <span style={{ display: 'block' }} className="hidden sm:inline">Back to Home</span>
           </motion.button>
         </Link>
 
@@ -68,7 +71,7 @@ export default function NewsPage() {
         <div
           style={{
             textAlign: 'left',
-            marginBottom: '50px',
+            marginBottom: 'clamp(30px, 8vw, 50px)',
             maxWidth: '900px',
             marginLeft: 'auto',
             marginRight: 'auto',
@@ -79,16 +82,16 @@ export default function NewsPage() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '10px',
-              padding: '6px 14px',
+              padding: 'clamp(6px, 1.2vw, 8px) clamp(12px, 2vw, 14px)',
               borderRadius: '999px',
               background: 'rgba(34, 211, 238, 0.12)',
               border: '1px solid rgba(34, 211, 238, 0.4)',
               color: '#22d3ee',
-              fontSize: '12px',
+              fontSize: 'clamp(10px, 1.8vw, 12px)',
               fontWeight: 800,
               letterSpacing: '1.2px',
               textTransform: 'uppercase',
-              marginBottom: '14px',
+              marginBottom: 'clamp(10px, 2vw, 14px)',
               fontFamily: 'var(--font-space-mono)',
             }}
           >
@@ -96,16 +99,17 @@ export default function NewsPage() {
           </div>
           <h1
             style={{
-              fontSize: 'clamp(34px, 5.6vw, 56px)',
+              fontSize: 'clamp(28px, 7vw, 56px)',
               fontWeight: 800,
               background: 'linear-gradient(135deg, #22d3ee, #a855f7)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              marginBottom: '14px',
+              marginBottom: 'clamp(10px, 2vw, 14px)',
               fontFamily: 'var(--font-space-mono)',
               letterSpacing: '0.6px',
               textTransform: 'uppercase',
               textShadow: '0 10px 30px rgba(34, 211, 238, 0.2)',
+              wordBreak: 'break-word',
             }}
           >
             News & Updates
@@ -121,7 +125,7 @@ export default function NewsPage() {
               maxWidth: '680px',
             }}
           />
-          <p style={{ fontSize: '16px', color: '#9ca3af', maxWidth: '700px', margin: '0' }}>
+          <p style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: '#9ca3af', maxWidth: '700px', margin: '0', lineHeight: 1.5 }}>
             Latest announcements, blogs, webinars and community highlights
           </p>
         </div>
@@ -130,10 +134,10 @@ export default function NewsPage() {
         <div
           style={{
             maxWidth: '900px',
-            margin: '0 auto 40px',
+            margin: '0 auto clamp(24px, 5vw, 40px)',
             display: 'grid',
-            gridTemplateColumns: 'minmax(0, 1fr) 180px',
-            gap: '14px',
+            gridTemplateColumns: 'minmax(0, 1fr) auto',
+            gap: 'clamp(10px, 2vw, 14px)',
           }}
         >
           <div
@@ -148,12 +152,14 @@ export default function NewsPage() {
             <Search
               style={{
                 position: 'absolute',
-                left: '16px',
+                left: 'clamp(12px, 2vw, 16px)',
                 top: '50%',
                 transform: 'translateY(-50%)',
                 width: '20px',
                 height: '20px',
                 color: '#22d3ee',
+                minWidth: '20px',
+                minHeight: '20px',
               }}
             />
             <input
@@ -163,13 +169,14 @@ export default function NewsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{
                 width: '100%',
-                padding: '16px 16px 16px 48px',
+                padding: 'clamp(12px, 2.5vw, 16px) clamp(12px, 2.5vw, 16px) clamp(12px, 2.5vw, 16px) clamp(40px, 7vw, 48px)',
                 background: 'transparent',
                 border: 'none',
                 color: 'white',
-                fontSize: '15px',
+                fontSize: 'clamp(13px, 2vw, 15px)',
                 outline: 'none',
                 fontFamily: 'var(--font-space-mono)',
+                boxSizing: 'border-box',
               }}
             />
           </div>
@@ -178,8 +185,7 @@ export default function NewsPage() {
             value={sort}
             onChange={(e) => setSort(e.target.value as 'new' | 'old')}
             style={{
-              width: '100%',
-              padding: '16px',
+              padding: 'clamp(12px, 2.5vw, 16px)',
               borderRadius: '12px',
               background: 'rgba(17, 24, 39, 0.7)',
               border: '2px solid rgba(255, 255, 255, 0.3)',
@@ -187,7 +193,9 @@ export default function NewsPage() {
               fontFamily: 'var(--font-space-mono)',
               outline: 'none',
               cursor: 'pointer',
-              fontSize: '14px',
+              fontSize: 'clamp(12px, 2vw, 14px)',
+              minWidth: '120px',
+              boxSizing: 'border-box',
             }}
           >
             <option value="new">Newest</option>
@@ -196,7 +204,7 @@ export default function NewsPage() {
         </div>
 
         {searchQuery && (
-          <p style={{ marginBottom: '22px', fontSize: '14px', color: '#9ca3af', textAlign: 'center' }}>
+          <p style={{ marginBottom: '22px', fontSize: 'clamp(12px, 2vw, 14px)', color: '#9ca3af', textAlign: 'center' }}>
             Found {filtered.length} news item{filtered.length !== 1 ? 's' : ''}
           </p>
         )}
@@ -209,13 +217,13 @@ export default function NewsPage() {
               margin: '0 auto',
               background: 'rgba(17, 24, 39, 0.5)',
               border: '2px solid rgba(255, 255, 255, 0.15)',
-              borderRadius: '20px',
-              padding: 'clamp(20px, 3vw, 32px)',
+              borderRadius: 'clamp(12px, 3vw, 20px)',
+              padding: 'clamp(16px, 3vw, 32px)',
               backdropFilter: 'blur(10px)',
               boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)',
             }}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 3vw, 24px)' }}>
               {filtered.map((news, idx) => (
                 <div key={news.id}>
                   <Link href={`/news/${news.id}`} style={{ textDecoration: 'none' }}>
@@ -226,9 +234,9 @@ export default function NewsPage() {
                       }}
                       style={{
                         display: 'flex',
-                        flexDirection: 'row',
+                        flexDirection: window.innerWidth < 768 ? 'column' : 'row',
                         gap: 'clamp(16px, 2.5vw, 24px)',
-                        padding: 'clamp(16px, 2.5vw, 20px)',
+                        padding: 'clamp(12px, 2.5vw, 20px)',
                         background: 'rgba(17, 24, 39, 0.7)',
                         border: news.isPinned
                           ? '2px solid rgba(34, 211, 238, 0.8)'
@@ -245,9 +253,9 @@ export default function NewsPage() {
                       <div
                         style={{
                           position: 'relative',
-                          width: 'clamp(200px, 25vw, 280px)',
-                          minWidth: 'clamp(200px, 25vw, 280px)',
-                          height: 'clamp(140px, 18vw, 200px)',
+                          width: window.innerWidth < 768 ? '100%' : 'clamp(180px, 25vw, 280px)',
+                          minWidth: window.innerWidth < 768 ? '100%' : 'clamp(180px, 25vw, 280px)',
+                          height: window.innerWidth < 768 ? 'clamp(180px, 50vw, 250px)' : 'clamp(140px, 18vw, 200px)',
                           borderRadius: '12px',
                           overflow: 'hidden',
                           flexShrink: 0,
@@ -260,6 +268,7 @@ export default function NewsPage() {
                           style={{ objectFit: 'cover' }}
                           loading="lazy"
                           quality={85}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         />
 
                         {news.isPinned && (
@@ -310,27 +319,28 @@ export default function NewsPage() {
                           <p
                             style={{
                               color: '#9ca3af',
-                              marginBottom: '10px',
-                              fontSize: 'clamp(11px, 1.4vw, 13px)',
+                              marginBottom: 'clamp(8px, 1.5vw, 10px)',
+                              fontSize: 'clamp(11px, 1.6vw, 13px)',
                               fontWeight: 600,
                               fontFamily: 'var(--font-space-mono)',
                             }}
                           >
                             {new Date(news.date).toLocaleDateString('en-US', {
                               year: 'numeric',
-                              month: 'long',
+                              month: 'short',
                               day: 'numeric',
                             })}
                           </p>
 
                           <h3
                             style={{
-                              fontSize: 'clamp(16px, 2.2vw, 22px)',
+                              fontSize: 'clamp(16px, 4vw, 22px)',
                               fontWeight: 800,
                               color: 'white',
-                              marginBottom: '10px',
+                              marginBottom: 'clamp(8px, 1.5vw, 10px)',
                               fontFamily: 'var(--font-space-mono)',
                               lineHeight: 1.3,
+                              wordBreak: 'break-word',
                             }}
                           >
                             {news.title}
@@ -338,12 +348,12 @@ export default function NewsPage() {
 
                           <p
                             style={{
-                              fontSize: 'clamp(13px, 1.6vw, 15px)',
+                              fontSize: 'clamp(13px, 2vw, 15px)',
                               color: '#d1d5db',
                               lineHeight: 1.6,
-                              marginBottom: '14px',
+                              marginBottom: 'clamp(10px, 2vw, 14px)',
                               display: '-webkit-box',
-                              WebkitLineClamp: 2,
+                              WebkitLineClamp: window.innerWidth < 768 ? 3 : 2,
                               WebkitBoxOrient: 'vertical',
                               overflow: 'hidden',
                             }}
@@ -357,12 +367,12 @@ export default function NewsPage() {
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '8px',
-                            padding: '10px 20px',
+                            padding: 'clamp(8px, 1.5vw, 10px) clamp(14px, 2.5vw, 20px)',
                             background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))',
                             border: '2px solid rgba(34, 211, 238, 0.4)',
                             borderRadius: '10px',
                             color: '#22d3ee',
-                            fontSize: 'clamp(12px, 1.5vw, 14px)',
+                            fontSize: 'clamp(11px, 1.8vw, 14px)',
                             fontWeight: 700,
                             fontFamily: 'var(--font-space-mono)',
                             alignSelf: 'flex-start',
@@ -382,7 +392,7 @@ export default function NewsPage() {
                       style={{
                         height: '1px',
                         background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
-                        margin: '24px 0',
+                        margin: 'clamp(16px, 3vw, 24px) 0',
                       }}
                     />
                   )}
@@ -391,8 +401,8 @@ export default function NewsPage() {
             </div>
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <p style={{ fontSize: '18px', color: '#9ca3af' }}>No news found matching your search.</p>
+          <div style={{ textAlign: 'center', padding: 'clamp(40px, 10vw, 60px) clamp(16px, 3vw, 20px)' }}>
+            <p style={{ fontSize: 'clamp(16px, 2.5vw, 18px)', color: '#9ca3af' }}>No news found matching your search.</p>
           </div>
         )}
       </div>
