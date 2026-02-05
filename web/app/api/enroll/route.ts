@@ -114,33 +114,37 @@ export async function POST(request: Request) {
     // 7. TRIGGER n8n WORKFLOW (ASYNC - NON-BLOCKING)
     // Important: We don't await this - fire and forget
     // This ensures fast response to user even if n8n is slow
-    fetch(process.env.N8N_WEBHOOK_URL!, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        // Optional: Add authentication header for security
-        ...(process.env.N8N_WEBHOOK_SECRET && {
-          'Authorization': `Bearer ${process.env.N8N_WEBHOOK_SECRET}`,
-        }),
-      },
-      body: JSON.stringify(n8nPayload),
-    })
-    .then(async (res) => {
-      if (res.ok) {
-        console.log('✅ n8n workflow triggered successfully');
-        const responseData = await res.json().catch(() => null);
-        console.log('n8n response:', responseData);
-      } else {
-        console.error('⚠️ n8n workflow failed but enrollment is saved');
-        console.error('Status:', res.status, await res.text());
-      }
-    })
-    .catch((err) => {
-      // Log error but DON'T fail the enrollment
-      console.error('⚠️ n8n webhook error (enrollment still successful):', err);
-    });
+    if (process.env.N8N_WEBHOOK_URL) {
+      fetch(process.env.N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Optional: Add authentication header for security
+          ...(process.env.N8N_WEBHOOK_SECRET && {
+            'Authorization': `Bearer ${process.env.N8N_WEBHOOK_SECRET}`,
+          }),
+        },
+        body: JSON.stringify(n8nPayload),
+      })
+      .then(async (res) => {
+        if (res.ok) {
+          console.log('✅ n8n workflow triggered successfully');
+          const responseData = await res.json().catch(() => null);
+          console.log('n8n response:', responseData);
+        } else {
+          console.error('⚠️ n8n workflow failed but enrollment is saved');
+          console.error('Status:', res.status, await res.text());
+        }
+      })
+      .catch((err) => {
+        // Log error but DON'T fail the enrollment
+        console.error('⚠️ n8n webhook error (enrollment still successful):', err);
+      });
 
-    console.log('🚀 n8n webhook triggered (async)');
+      console.log('🚀 n8n webhook triggered (async)');
+    } else {
+      console.warn('⚠️ N8N_WEBHOOK_URL is not set. Skipping webhook trigger.');
+    }
 
     // 8. RETURN SUCCESS IMMEDIATELY (Don't wait for n8n)
     return NextResponse.json({

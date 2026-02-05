@@ -14,6 +14,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import type { Course } from "../data/courses";
+import EnrollmentForm from "../../../components/forms/Enrollment";
 
 interface CourseDetailsModalProps {
   course: Course;
@@ -26,6 +27,7 @@ export default memo(function CourseDetailsModal({
 }: CourseDetailsModalProps) {
   const Icon = course.icon;
   const [showCurriculum, setShowCurriculum] = useState(false);
+  const [showEnrollmentForm, setShowEnrollmentForm] = useState(false);
 
   return (
     <motion.div
@@ -106,7 +108,21 @@ export default memo(function CourseDetailsModal({
           }}
         >
           <AnimatePresence mode="wait">
-            {!showCurriculum ? (
+            {showEnrollmentForm ? (
+              <motion.div
+                key="enrollment"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <EnrollmentForm
+                  courseId={course.id}
+                  courseName={course.title}
+                  //coursePrice={course.price}
+                  courseDescription={course.shortDescription}
+                />
+              </motion.div>
+            ) : !showCurriculum ? (
               <motion.div
                 key="details"
                 initial={{ opacity: 0 }}
@@ -273,7 +289,7 @@ export default memo(function CourseDetailsModal({
         >
           <motion.button
             whileHover={{ scale: 1.05 }}
-            onClick={() => setShowCurriculum((v) => !v)}
+            onClick={() => showEnrollmentForm ? setShowEnrollmentForm(false) : setShowCurriculum((v) => !v)}
             style={{
               flex: 1,
               padding: 16,
@@ -290,10 +306,11 @@ export default memo(function CourseDetailsModal({
             }}
           >
             <BookOpen size={18} />{" "}
-            {showCurriculum ? "What You'll Learn" : "View Curriculum"}
+            {showEnrollmentForm ? "Back" : showCurriculum ? "What You'll Learn" : "View Curriculum"}
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
+            onClick={() => setShowEnrollmentForm(true)}
             style={{
               flex: 1,
               padding: 16,
@@ -303,19 +320,10 @@ export default memo(function CourseDetailsModal({
               color: "white",
               fontWeight: 700,
               fontFamily: "var(--font-nunito)",
+              cursor: "pointer",
             }}
           >
-            <Link
-              href="https://docs.google.com/forms/d/e/1FAIpQLSfduDI5LRqLxkuvr7eS1vcLmupV4yQs8XUV2BoyznR4mQNwJw/viewform" // Link to course enrollment page (replace course.enrollLink with the actual URL)
-              passHref // Pass the href to the button
-              style={{
-                display: "block",
-                textDecoration: "none",
-                color: "white", // Ensure text is white inside the link
-              }}
-            >
-              Enroll Now {/* {course.price && `• ${course.price}`} */}
-            </Link>
+            Enroll Now {/* {course.price && `• ${course.price}`} */}
           </motion.button>
         </div>
       </motion.div>

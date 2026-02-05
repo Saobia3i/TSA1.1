@@ -7,14 +7,14 @@ import { useRouter } from 'next/navigation';
 interface EnrollmentFormProps {
   courseId: string;
   courseName: string;
-  coursePrice?: number;
+  //coursePrice?: number;
   courseDescription?: string;
 }
 
 export default function EnrollmentForm({
   courseId,
   courseName,
-  coursePrice,
+  //coursePrice,
   courseDescription,
 }: EnrollmentFormProps) {
   const { data: session, status } = useSession();
@@ -37,35 +37,46 @@ export default function EnrollmentForm({
     setError('');
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
       const response = await fetch('/api/enroll', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           courseId,
           courseName,
         }),
+        signal: controller.signal,
       });
 
-      const data = await response.json();
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(data.error || 'Enrollment failed');
+        const payload = await response.json().catch(() => null);
+        const message =
+          payload?.error ||
+          (response.status === 401
+            ? 'Please login to enroll.'
+            : 'Enrollment failed. Please try again.');
+        throw new Error(message);
       }
 
-      // Success!
       setSuccess(true);
-      
-      // Wait 2 seconds then redirect
+
+      // Wait 2 seconds then redirect to courses page
       setTimeout(() => {
-        router.push('/dashboard/my-courses');
+        router.push('/courses');
         router.refresh();
       }, 2000);
 
     } catch (err) {
       console.error('Enrollment error:', err);
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        setError('Request timed out. Please try again.');
+      } else {
+        setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      }
     } finally {
       setIsEnrolling(false);
     }
@@ -82,12 +93,12 @@ export default function EnrollmentForm({
               <path d="M8 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-300"/>
             </svg>
           </div>
-          <h3 className="success-title">🎉 Enrollment Successful!</h3>
+          <h3 className="success-title">🎉 Enrollment Request Successful!</h3>
           <p className="success-message">
-            You've been enrolled in <strong>{courseName}</strong>
+            Check updates in your <strong>mail</strong>
           </p>
           <p className="redirect-message">
-            Redirecting to your dashboard...
+            Redirecting to course page...
           </p>
         </div>
       </div>
@@ -106,12 +117,12 @@ export default function EnrollmentForm({
       <div className="course-info">
         <h4 className="course-name">{courseName}</h4>
         
-        {coursePrice && (
+        {/* {coursePrice && (
           <div className="price-tag">
             <span className="currency">৳</span>
             <span className="amount">{coursePrice.toLocaleString()}</span>
           </div>
-        )}
+        )} */}
 
         {courseDescription && (
           <p className="course-description">{courseDescription}</p>
@@ -189,7 +200,7 @@ export default function EnrollmentForm({
             </>
           ) : (
             <>
-              <span>Enroll Now</span>
+              <span>Request Enrollment?</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
