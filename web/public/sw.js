@@ -1,24 +1,8 @@
 // public/sw.js
-const CACHE_VERSION = "TSA-v2";
+const CACHE_VERSION = "TSA-v3";
 
-// Only include routes that are PUBLIC and return 200 without auth/middleware redirects
+// Only include static assets that are safe to keep across deploys.
 const PRECACHE = [
-  "/",
-  "/about",
-  "/about/team",
-  "/about/join",
-  "/courses",
-  "/services",
-  "/services/web-application-vapt",
-  "/services/vapt-service",
-  "/services/api-security-testing",
-  "/services/ai-llm-security-assessment",
-  "/services/network-security-audit",
-  "/services/osint-assessment",
-  "/services/soc-as-a-service",
-  "/services/ai-automation-solutions",
-  "/services/secure-web-development",
-  "/tools",
   "/icon-72.png",
   "/icon-192.png",
   "/icon-512.png",
@@ -80,35 +64,6 @@ self.addEventListener("message", (event) => {
   }
 });
 
-// Helper: network-first with timeout fallback to cache (best for pages)
-async function networkFirstWithTimeout(req, cacheName, timeoutMs = 2500) {
-  const cache = await caches.open(cacheName);
-
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("network timeout")), timeoutMs)
-  );
-
-  try {
-    const res = await Promise.race([fetch(req), timeoutPromise]);
-
-    // Cache only successful HTML/doc responses (avoid caching errors)
-    if (
-      res &&
-      res.ok &&
-      (res.type === "basic" || res.type === "default") &&
-      res.headers.get("content-type")?.includes("text/html")
-    ) {
-      await cache.put(req, res.clone());
-    }
-
-    return res;
-  } catch (e) {
-    const cached = await cache.match(req);
-    if (cached) return cached;
-    throw e;
-  }
-}
-
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
@@ -119,21 +74,19 @@ self.addEventListener("fetch", (event) => {
   // Never handle API requests
   if (url.pathname.startsWith("/api/")) return;
 
+  // Never handle Next.js internal assets (avoid stale chunk errors)
+  if (url.pathname.startsWith("/_next/")) return;
+
   // NAVIGATION (pages)
   if (req.mode === "navigate") {
     event.respondWith(
       (async () => {
-        // Use request as key instead of url.pathname to avoid edge cases
-        const cache = await caches.open(CACHE_VERSION);
-        const cached = await cache.match(req);
-        if (cached) return cached;
-
         try {
-          // Network-first with a small timeout, then fallback to cache
-          const res = await networkFirstWithTimeout(req, CACHE_VERSION, 2500);
-          return res;
+          // Network-only for HTML to prevent serving stale pages after deploys
+          return await fetch(req);
         } catch {
-          // Offline fallback: serve cached home if nothing else is available
+          // Offline fallback
+          const cache = await caches.open(CACHE_VERSION);
           const home = await cache.match(new Request("/"));
           if (home) return home;
 
@@ -147,10 +100,11 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // STATIC ASSETS (Cache-first)
+  // STATIC ASSETS (Cache-first, excluding JS/CSS chunks)
   if (
-    url.pathname.startsWith("/_next/static/") ||
-    /\.(?:png|jpg|jpeg|webp|svg|ico|css|js)$/.test(url.pathname)
+    /\.(?:png|jpg|jpeg|webp|svg|ico|woff|woff2|ttf|otf)$/.test(
+      url.pathname
+    )
   ) {
     event.respondWith(
       (async () => {
