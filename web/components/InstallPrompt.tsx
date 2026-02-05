@@ -12,7 +12,7 @@ interface BeforeInstallPromptEvent extends Event {
 const DISMISS_KEY = 'pwa-prompt-dismissed';
 
 // ✅ slightly less delay
-const SHOW_MS = 21000;
+const SHOW_MS = 2100;
 const EXIT_MS = 250;
 const ENTER_MS = 280;
 const TOP_OFFSET_PX = 80;
