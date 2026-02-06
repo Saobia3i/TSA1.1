@@ -12,9 +12,10 @@ interface PackageCardProps {
     highlight?: boolean;
   };
   index: number;
+  onSelect?: (packageName: string) => void;
 }
 
-export function PackageCard({ pkg, index }: PackageCardProps) {
+export function PackageCard({ pkg, index, onSelect }: PackageCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -161,6 +162,7 @@ export function PackageCard({ pkg, index }: PackageCardProps) {
             e.currentTarget.style.borderColor = pkg.highlight ? 'rgba(34, 211, 238, 0.8)' : 'rgba(255, 255, 255, 0.8)';
             e.currentTarget.style.transform = 'translateY(0)';
           }}
+          onClick={() => onSelect?.(pkg.name)}
         >
           Select {pkg.name}
         </button>

@@ -2,7 +2,6 @@
 
 import { useState, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 
 import {
   X,
@@ -14,7 +13,6 @@ import {
   BookOpen,
 } from "lucide-react";
 import type { Course } from "../data/courses";
-import EnrollmentForm from "../../../components/forms/Enrollment";
 
 interface CourseDetailsModalProps {
   course: Course;
@@ -27,7 +25,6 @@ export default memo(function CourseDetailsModal({
 }: CourseDetailsModalProps) {
   const Icon = course.icon;
   const [showCurriculum, setShowCurriculum] = useState(false);
-  const [showEnrollmentForm, setShowEnrollmentForm] = useState(false);
 
   return (
     <motion.div
@@ -108,21 +105,7 @@ export default memo(function CourseDetailsModal({
           }}
         >
           <AnimatePresence mode="wait">
-            {showEnrollmentForm ? (
-              <motion.div
-                key="enrollment"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <EnrollmentForm
-                  courseId={course.id}
-                  courseName={course.title}
-                  //coursePrice={course.price}
-                  courseDescription={course.shortDescription}
-                />
-              </motion.div>
-            ) : !showCurriculum ? (
+            {!showCurriculum ? (
               <motion.div
                 key="details"
                 initial={{ opacity: 0 }}
@@ -287,9 +270,9 @@ export default memo(function CourseDetailsModal({
               "linear-gradient(to top, rgba(17,24,39,0.98), transparent)",
           }}
         >
-          <motion.button
+          <motion.a
             whileHover={{ scale: 1.05 }}
-            onClick={() => showEnrollmentForm ? setShowEnrollmentForm(false) : setShowCurriculum((v) => !v)}
+            onClick={() => setShowCurriculum((v) => !v)}
             style={{
               flex: 1,
               padding: 16,
@@ -306,11 +289,13 @@ export default memo(function CourseDetailsModal({
             }}
           >
             <BookOpen size={18} />{" "}
-            {showEnrollmentForm ? "Back" : showCurriculum ? "What You'll Learn" : "View Curriculum"}
-          </motion.button>
-          <motion.button
+            {showCurriculum ? "What You'll Learn" : "View Curriculum"}
+          </motion.a>
+          <motion.a
             whileHover={{ scale: 1.05 }}
-            onClick={() => setShowEnrollmentForm(true)}
+            href="https://docs.google.com/forms/d/e/1FAIpQLSfduDI5LRqLxkuvr7eS1vcLmupV4yQs8XUV2BoyznR4mQNwJw/viewform"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               flex: 1,
               padding: 16,
@@ -324,7 +309,7 @@ export default memo(function CourseDetailsModal({
             }}
           >
             Enroll Now {/* {course.price && `• ${course.price}`} */}
-          </motion.button>
+          </motion.a>
         </div>
       </motion.div>
     </motion.div>

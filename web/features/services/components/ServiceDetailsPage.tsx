@@ -2,9 +2,11 @@
 'use client';
 
 import { PackageCard } from '../components/PackageCard';
+import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Calendar  } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import type { Service } from '../data/services';
+import ServiceBooking from '@/components/forms/ServiceBooking';
 
 interface ServiceData {
   slug: string;
@@ -19,6 +21,8 @@ interface Props {
 }
 
 export default function ServiceDetailsPage({ service }: Props) {
+  const [selectedPackage, setSelectedPackage] = useState<string>("");
+  const [showBookingForm, setShowBookingForm] = useState(false);
 
   return (
     <div style={{ 
@@ -159,14 +163,18 @@ export default function ServiceDetailsPage({ service }: Props) {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '28px', maxWidth: '1200px', margin: '0 auto', justifyContent: 'center', justifyItems: 'center' }}>
           {service.packages.map((pkg, index) => (
-            <PackageCard key={pkg.name} pkg={pkg} index={index} />
+            <PackageCard
+              key={pkg.name}
+              pkg={pkg}
+              index={index}
+              onSelect={setSelectedPackage}
+            />
           ))}
         </div>
 
-        {/* CTA Button */}
         <div style={{ textAlign: 'center', marginTop: '80px' }}>
-          <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSeN0hTjYG8UHL_ejCSh2UzCx3r988mVEe_0WftQeSf5VViETg/viewform"
+          <button
+            type="button"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -178,7 +186,6 @@ export default function ServiceDetailsPage({ service }: Props) {
               color: 'white',
               fontSize: '16px',
               fontWeight: 700,
-              textDecoration: 'none',
               cursor: 'pointer',
               fontFamily: 'var(--font-nunito-sans)',
               boxShadow: '0 0 20px rgba(34, 211, 238, 0.3)',
@@ -197,21 +204,18 @@ export default function ServiceDetailsPage({ service }: Props) {
               e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.5)';
               e.currentTarget.style.transform = 'translateY(0)';
             }}
-            onTouchStart={(e) => {
-              e.currentTarget.style.boxShadow = '0 0 30px rgba(34, 211, 238, 0.6), 0 0 40px rgba(34, 211, 238, 0.4)';
-              e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.8)';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-            }}
-            onTouchEnd={(e) => {
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(34, 211, 238, 0.3)';
-              e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.5)';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }}
+            onClick={() => setShowBookingForm(true)}
           >
-            <Calendar style={{ width: '22px', height: '22px' }} /> 
             Book an appointment
-          </a>
+          </button>
         </div>
+
+        {showBookingForm && (
+          <ServiceBooking
+            serviceTitle={service.title}
+            selectedPackage={selectedPackage}
+          />
+        )}
       </div>
     </div>
   );
