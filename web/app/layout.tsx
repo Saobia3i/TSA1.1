@@ -6,6 +6,7 @@ const BASE_URL = "https://tensorsecurityacademy.com";
 import RegisterSW from "./RegisterSW";
 import PWAUpdateManager from "@/components/PWAUpdateManager";
 import { Providers } from "./providers";
+import WhatsAppChatBubble from "@/features/home/components/WhatsAppChatBubble";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -235,6 +236,7 @@ export default function RootLayout({
           <InstallPrompt />
           <RegisterSW />
           {children}
+          <WhatsAppChatBubble />
           <PWAUpdateManager />
         </Providers>
       </body>
