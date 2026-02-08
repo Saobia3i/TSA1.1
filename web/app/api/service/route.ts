@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { prisma } from "@/lib/prisma"; // Add Prisma client
 
 const serviceBookingSchema = z.object({
   serviceTitle: z.string().min(1, "Service title is required"),
@@ -21,48 +22,97 @@ const serviceBookingSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    console.log('📥 Service booking request received');
+
+    // 1. VALIDATE REQUEST BODY
     const body = await request.json();
     const validatedData = serviceBookingSchema.parse(body);
 
-    const webhookUrl =
-      process.env.N8N_SERVICE_WEBHOOK_URL || process.env.N8N_WEBHOOK_URL;
-    if (!webhookUrl) {
-      return NextResponse.json(
-        { error: "N8N_SERVICE_WEBHOOK_URL or N8N_WEBHOOK_URL is not set" },
-        { status: 500 }
-      );
-    }
+    console.log('✅ Request data validated');
 
-    const payload = {
-      ...validatedData,
-      submittedAt: new Date().toISOString(),
-    };
-
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(process.env.N8N_SERVICE_WEBHOOK_SECRET && {
-          Authorization: `Bearer ${process.env.N8N_SERVICE_WEBHOOK_SECRET}`,
-        }),
-        ...(process.env.N8N_WEBHOOK_SECRET &&
-          !process.env.N8N_SERVICE_WEBHOOK_SECRET && {
-            Authorization: `Bearer ${process.env.N8N_WEBHOOK_SECRET}`,
-          }),
+    // 2. SAVE TO DATABASE FIRST (CRITICAL!)
+    const booking = await prisma.serviceBooking.create({
+      data: {
+        serviceTitle: validatedData.serviceTitle,
+        fullName: validatedData.fullName,
+        organization: validatedData.organization,
+        email: validatedData.email,
+        whatsapp: validatedData.whatsapp,
+        country: validatedData.country,
+        packageName: validatedData.packageName,
+        requirements: validatedData.requirements,
+        engagementType: validatedData.engagementType,
+        timeline: validatedData.timeline,
+        budget: validatedData.budget,
+        notes: validatedData.notes,
+        legalAgreement: validatedData.legalAgreement,
       },
-      body: JSON.stringify(payload),
     });
 
-    if (!response.ok) {
-      const text = await response.text().catch(() => "");
-      return NextResponse.json(
-        { error: "Webhook request failed", details: text },
-        { status: 502 }
-      );
+    console.log('✅ Booking saved to database:', booking.id);
+
+    // 3. TRIGGER n8n WORKFLOW (ASYNC - FIRE AND FORGET)
+    const webhookUrl = process.env.N8N_SERVICE_WEBHOOK_URL;
+    
+    if (webhookUrl) {
+      const payload = {
+        bookingId: booking.id,
+        ...validatedData,
+        submittedAt: booking.createdAt.toISOString(),
+        submittedAtFormatted: booking.createdAt.toLocaleString('en-BD', {
+          timeZone: 'Asia/Dhaka',
+          dateStyle: 'full',
+          timeStyle: 'short',
+        }),
+      };
+
+      // DON'T AWAIT - Fire and forget
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(process.env.N8N_SERVICE_WEBHOOK_SECRET && {
+            Authorization: `Bearer ${process.env.N8N_SERVICE_WEBHOOK_SECRET}`,
+          }),
+        },
+        body: JSON.stringify(payload),
+      })
+        .then(async (res) => {
+          if (res.ok) {
+            console.log('✅ n8n workflow triggered successfully');
+            const responseData = await res.json().catch(() => null);
+            console.log('n8n response:', responseData);
+          } else {
+            console.error('⚠️ n8n workflow failed but booking is saved');
+            console.error('Status:', res.status, await res.text());
+          }
+        })
+        .catch((err) => {
+          console.error('⚠️ n8n webhook error (booking still successful):', err);
+        });
+
+      console.log('🚀 n8n webhook triggered (async)');
+    } else {
+      console.warn('⚠️ N8N_SERVICE_WEBHOOK_URL not set. Skipping webhook.');
     }
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    // 4. RETURN SUCCESS IMMEDIATELY
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Service booking submitted successfully!",
+        booking: {
+          id: booking.id,
+          serviceTitle: booking.serviceTitle,
+          submittedAt: booking.createdAt,
+        },
+      },
+      { status: 201 }
+    );
+
   } catch (error) {
+    console.error('💥 Service booking error:', error);
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
@@ -73,6 +123,14 @@ export async function POST(request: Request) {
           })),
         },
         { status: 400 }
+      );
+    }
+
+    if (error instanceof Error && error.message.includes('Prisma')) {
+      console.error('Database error:', error);
+      return NextResponse.json(
+        { error: 'Database error. Please try again.' },
+        { status: 500 }
       );
     }
 

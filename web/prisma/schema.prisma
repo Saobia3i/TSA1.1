@@ -72,3 +72,25 @@ model Enrollment {
   
   @@unique([userId, courseId])
 }
+
+model ServiceBooking {
+  id              String   @id @default(cuid())
+  serviceTitle    String
+  fullName        String
+  organization    String?
+  email           String
+  whatsapp        String
+  country         String
+  packageName     String
+  requirements    String   @db.Text
+  engagementType  String
+  timeline        String
+  budget          String?
+  notes           String?  @db.Text
+  legalAgreement  Boolean
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([email])
+  @@index([createdAt])
+}
