@@ -51,9 +51,9 @@ export async function POST(request: Request) {
 
     console.log('✅ Booking saved to database:', booking.id);
 
-    // 3. TRIGGER n8n WORKFLOW (ASYNC - FIRE AND FORGET)
+    // 3. TRIGGER n8n WORKFLOW (AWAITED)
     const webhookUrl = process.env.N8N_SERVICE_WEBHOOK_URL;
-    
+
     if (webhookUrl) {
       const payload = {
         bookingId: booking.id,
@@ -66,32 +66,24 @@ export async function POST(request: Request) {
         }),
       };
 
-      // DON'T AWAIT - Fire and forget
-      fetch(webhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(process.env.N8N_SERVICE_WEBHOOK_SECRET && {
-            Authorization: `Bearer ${process.env.N8N_SERVICE_WEBHOOK_SECRET}`,
-          }),
-        },
-        body: JSON.stringify(payload),
-      })
-        .then(async (res) => {
-          if (res.ok) {
-            console.log('✅ n8n workflow triggered successfully');
-            const responseData = await res.json().catch(() => null);
-            console.log('n8n response:', responseData);
-          } else {
-            console.error('⚠️ n8n workflow failed but booking is saved');
-            console.error('Status:', res.status, await res.text());
-          }
-        })
-        .catch((err) => {
-          console.error('⚠️ n8n webhook error (booking still successful):', err);
+      try {
+        const res = await fetch(webhookUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(process.env.N8N_SERVICE_WEBHOOK_SECRET && {
+              Authorization: `Bearer ${process.env.N8N_SERVICE_WEBHOOK_SECRET}`,
+            }),
+          },
+          body: JSON.stringify(payload),
         });
 
-      console.log('🚀 n8n webhook triggered (async)');
+        if (res.ok) {
+          console.log('✅ n8n workflow triggered successfully');
+        }
+      } catch (err) {
+        // intentionally silent on webhook failure
+      }
     } else {
       console.warn('⚠️ N8N_SERVICE_WEBHOOK_URL not set. Skipping webhook.');
     }
