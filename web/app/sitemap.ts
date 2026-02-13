@@ -46,7 +46,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'cloud-security',
     'incident-response',
     'security-operations',
-    'malware-analysis',
+    
   ]
 
   // const courseCategoryPages = courseCategories.map(category => ({
