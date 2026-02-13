@@ -12,10 +12,10 @@ interface BeforeInstallPromptEvent extends Event {
 const DISMISS_KEY = 'pwa-prompt-dismissed';
 
 // ✅ slightly less delay
-const SHOW_MS = 2100;
+const SHOW_MS = 2000;
 const EXIT_MS = 250;
-const ENTER_MS = 280;
-const TOP_OFFSET_PX = 80;
+const ENTER_MS = 250;
+const TOP_OFFSET_PX = 75; // reduced from 80
 
 function safeWindow(): Window | null {
   return typeof window === 'undefined' ? null : window;
@@ -187,9 +187,9 @@ export default function InstallPrompt() {
     >
       <div
         className="w-full max-w-[320px] shadow-2xl rounded-xl"
-        // ✅ more inner space from border
+        // ✅ reduced padding for compact height
         style={{
-          padding: '12px', // was p-3
+          padding: '8px', // reduced from 12px
           backgroundColor: 'rgba(0,0,0,0.88)',
           // ✅ thinner border
           border: '1.25px solid rgba(255,255,255,0.75)',
@@ -197,44 +197,50 @@ export default function InstallPrompt() {
           WebkitBackdropFilter: 'blur(18px)',
         }}
       >
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3 flex-1 min-w-0">
+        <div className="flex items-center justify-between gap-2"> {/* reduced gap from 3 to 2 */}
+          <div className="flex items-center gap-2 flex-1 min-w-0"> {/* reduced gap from 3 to 2 */}
             <div
-              className="p-2 rounded-lg shrink-0"
+              className="p-1.5 rounded-lg shrink-0" // reduced padding from 2 to 1.5
               style={{ backgroundColor: 'rgba(255,255,255,0.10)' }}
             >
-              <Image src="/icon-72.png" alt="TSA" width={32} height={32} />
+              <Image src="/icon-72.png" alt="TSA" width={24} height={24} /> {/* reduced from 32 to 24 */}
             </div>
 
             {/* ✅ tiny vertical padding so text doesn't feel glued */}
             <div className="flex-1 min-w-0 py-0">
-              <h5 className="font-bold text-sm text-white leading-tight">Install TSA App</h5>
+              <h5 className="font-bold text-xs text-white leading-tight"> {/* reduced from text-sm to text-xs */}
+                Install TSA App
+              </h5>
 
               {iosSafari ? (
-                <p className="text-xs text-white/80">iPhone: Share → Add to Home Screen</p>
+                <p className="text-[10px] text-white/80 leading-tight"> {/* reduced from text-xs to text-[10px] */}
+                  iPhone: Share → Add to Home Screen
+                </p>
               ) : (
-                <p className="text-xs text-white/80">Quick access & offline mode</p>
+                <p className="text-[10px] text-white/80 leading-tight"> {/* reduced from text-xs to text-[10px] */}
+                  Quick access & offline mode
+                </p>
               )}
             </div>
           </div>
 
-          <div className="flex gap-2 shrink-0">
+          <div className="flex gap-1.5 shrink-0"> {/* reduced gap from 2 to 1.5 */}
             <button
               onClick={handleInstallClick}
-              className="px-3 py-2 rounded-lg font-semibold text-xs transition flex items-center gap-1"
+              className="px-2.5 py-1.5 rounded-lg font-semibold text-[10px] transition flex items-center gap-1" // reduced padding and font
               style={{
                 border: '1px solid rgba(255,255,255,0.75)',
                 backgroundColor: 'rgba(255,255,255,0.10)',
                 color: '#fff',
               }}
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-3 h-3" /> {/* reduced from w-4 h-4 to w-3 h-3 */}
               Install
             </button>
 
             <button
               onClick={handleDismiss}
-              className="p-2 rounded-lg transition"
+              className="p-1.5 rounded-lg transition" // reduced padding from 2 to 1.5
               style={{
                 border: '1px solid rgba(255,255,255,0.55)',
                 backgroundColor: 'rgba(255,255,255,0.10)',
@@ -242,7 +248,7 @@ export default function InstallPrompt() {
               }}
               aria-label="Dismiss"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3 h-3" /> {/* reduced from w-4 h-4 to w-3 h-3 */}
             </button>
           </div>
         </div>
