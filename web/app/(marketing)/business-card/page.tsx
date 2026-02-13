@@ -2,6 +2,11 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  ShieldCheckIcon, 
+  AcademicCapIcon, 
+  SparklesIcon 
+} from '@heroicons/react/24/outline';
 
 // Optimized particle generation
 const PARTICLES = Array.from({ length: 20 }, (_, i) => {
@@ -56,7 +61,7 @@ const ExternalLink: React.FC<{ className?: string }> = React.memo(({ className }
 ExternalLink.displayName = 'ExternalLink';
 
 const Globe: React.FC = React.memo(() => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-400">
     <circle cx="12" cy="12" r="10" />
     <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
     <path d="M2 12h20" />
@@ -72,24 +77,6 @@ const BookOpen: React.FC<{ className?: string }> = React.memo(({ className }) =>
 ));
 BookOpen.displayName = 'BookOpen';
 
-const Shield: React.FC = React.memo(() => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
-  </svg>
-));
-Shield.displayName = 'Shield';
-
-const Sparkles: React.FC = React.memo(() => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
-    <path d="M20 3v4" />
-    <path d="M22 5h-4" />
-    <path d="M4 17v2" />
-    <path d="M5 18H3" />
-  </svg>
-));
-Sparkles.displayName = 'Sparkles';
-
 // Types
 interface SocialLink {
   name: string;
@@ -98,7 +85,7 @@ interface SocialLink {
 }
 
 interface ServiceItem {
-  icon: React.FC;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
 }
 
@@ -142,9 +129,9 @@ const BusinessCardPage: React.FC = () => {
   ];
 
   const serviceItems: ServiceItem[] = [
-    { icon: Shield, label: 'Security Services' },
-    { icon: BookOpen, label: 'Live Training' },
-    { icon: Sparkles, label: 'AI & Web3' }
+    { icon: ShieldCheckIcon, label: 'Security Services' },
+    { icon: AcademicCapIcon, label: 'Live Training' },
+    { icon: SparklesIcon, label: 'AI & Web3' }
   ];
 
   const handleVisitWebsite = useCallback(() => {
@@ -308,7 +295,7 @@ const BusinessCardPage: React.FC = () => {
                   Tensor Security Academy
                 </motion.h1>
 
-                {/* Location Badge */}
+                {/* Location Badge - Enhanced with yellow text and larger padding */}
                 <motion.div 
                   className="flex justify-center w-full"
                   initial={{ opacity: 0 }}
@@ -316,14 +303,14 @@ const BusinessCardPage: React.FC = () => {
                   transition={{ delay: 0.35, duration: 0.4 }}
                 >
                   <motion.div 
-                    className="inline-flex items-center gap-2 sm:gap-2.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-cyan-500/10 border border-cyan-500/30 rounded-full touch-manipulation"
-                    whileHover={{ scale: 1.02 }}
+                    className="inline-flex items-center gap-2.5 px-8 sm:px-10 md:px-12 py-4 sm:py-4.5 md:py-5 bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-yellow-600/10 border-2 border-yellow-500/40 rounded-full touch-manipulation shadow-lg shadow-yellow-500/20"
+                    whileHover={{ scale: 1.03, boxShadow: '0 20px 40px rgba(234, 179, 8, 0.3)' }}
                     whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.2 }}
                   >
                     <Globe />
-                    <span className="text-cyan-400 font-semibold text-[11px] xs:text-xs sm:text-sm md:text-base whitespace-normal xs:whitespace-nowrap text-center">
-                      US Based <span className="hidden xs:inline">&bull; Global Platform</span>
+                    <span className="text-yellow-400 font-bold text-xs xs:text-sm sm:text-base md:text-lg whitespace-nowrap tracking-wide gap-1">
+                      US Based •
                     </span>
                   </motion.div>
                 </motion.div>
@@ -342,7 +329,7 @@ const BusinessCardPage: React.FC = () => {
                   Join our <span className="text-purple-400 font-semibold">Global Community</span>
                 </motion.p>
 
-                {/* Services Icons - LARGER CIRCLES */}
+                {/* Services Icons - Enhanced with Heroicons and white color */}
                 <div className="flex justify-center items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 w-full flex-wrap py-3 sm:py-4 md:py-5">
                   {serviceItems.map((item, index) => {
                     const IconComponent = item.icon;
@@ -350,23 +337,23 @@ const BusinessCardPage: React.FC = () => {
                     return (
                       <motion.div
                         key={`service-${index}`}
-                        className="flex flex-col items-center gap-1.5 sm:gap-2 md:gap-2 min-w-[72px] sm:min-w-[82px]"
+                        className="flex flex-col items-center gap-2 sm:gap-2.5 md:gap-3 min-w-[80px] sm:min-w-[90px]"
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.55 + index * 0.08, duration: 0.35 }}
-                        whileHover={{ scale: 1.04, y: -2 }}
+                        whileHover={{ scale: 1.05, y: -3 }}
                         whileTap={{ scale: 0.96 }}
                       >
                         <div
-                          className={`bg-gradient-to-br from-cyan-500/15 to-blue-500/15 rounded-xl border border-cyan-500/25 transition-all duration-300 ${
+                          className={`bg-gradient-to-br from-cyan/700 to-white/500 rounded-xl border-2  border-white/80 transition-all duration-300 ${
                             isLiveTraining 
-                              ? 'p-4 sm:p-5 md:p-6 shadow-[0_0_28px_rgba(34,211,238,0.35)]' 
-                              : 'p-3 sm:p-3.5 md:p-4'
+                              ? 'p-5 sm:p-6 md:p-7 shadow-[0_0_35px_rgba(255,255,255,0.4)]' 
+                              : 'p-4 sm:p-4.5 md:p-5 shadow-[0_0_20px_rgba(255,255,255,0.2)]'
                           }`}
                         >
-                          <IconComponent />
+                          <IconComponent className={`${isLiveTraining ? 'w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9' : 'w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8'} text-white/70 stroke-[1]`} />
                         </div>
-                        <span className="text-[9px] sm:text-[10px] md:text-xs text-gray-400 text-center leading-tight max-w-[76px] sm:max-w-none px-1">
+                        <span className="text-[10px] sm:text-[11px] md:text-xs text-white font-medium text-center leading-tight max-w-[85px] sm:max-w-none px-1">
                           {item.label}
                         </span>
                       </motion.div>
