@@ -189,7 +189,7 @@ const BusinessCardPage: React.FC = () => {
           <motion.div
             onHoverStart={() => !isMobile && setIsHovered(true)}
             onHoverEnd={() => !isMobile && setIsHovered(false)}
-            className="relative group w-full max-w-[calc(100vw-1rem)] xs:max-w-[22rem] sm:max-w-2xl md:max-w-3xl"
+            className="relative group w-full max-w-[calc(100vw-2rem)] xs:max-w-[22rem] sm:max-w-1xl md:max-w-2xl"
           >
             {/* Glow Border Effect - Smooth transition */}
             <motion.div
@@ -202,7 +202,7 @@ const BusinessCardPage: React.FC = () => {
             />
 
             {/* Main Card */}
-            <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-lg sm:rounded-2xl p-3 xs:p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 shadow-2xl border border-cyan-500/20 backdrop-blur-xl w-full">
+            <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-lg sm:rounded-2xl p-4 xs:p-5 sm:p-7 md:p-9 lg:p-11 xl:p-13 shadow-2xl border border-cyan-500/20 backdrop-blur-xl w-full">
 
               {/* Falling Binary Code Effect - Mobile optimized */}
               <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.03] sm:opacity-[0.08] overflow-hidden rounded-xl sm:rounded-2xl">
@@ -263,7 +263,7 @@ const BusinessCardPage: React.FC = () => {
               <div className="absolute bottom-0 right-0 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 border-b-2 border-r-2 border-cyan-500/35 rounded-br-xl sm:rounded-br-2xl pointer-events-none" />
 
               {/* Content */}
-              <div className="relative z-10 w-full flex flex-col items-center space-y-3.5 sm:space-y-5 md:space-y-6 lg:space-y-7">
+              <div className="relative z-10 w-full flex flex-col items-center space-y-4 sm:space-y-6 md:space-y-7 lg:space-y-8">
                 
                 {/* Logo Section */}
                 <motion.div 
@@ -376,7 +376,7 @@ const BusinessCardPage: React.FC = () => {
                     className="
                       relative overflow-visible group
                       flex-1 inline-flex items-center justify-center gap-2
-                      rounded-full px-3 py-2.5 sm:px-4 sm:py-3
+                      rounded-full px-1.5 py-2.5 sm:px-2 sm:py-3 
                       text-[11px] sm:text-sm font-semibold
                       bg-gradient-to-r from-gray-800/95 via-gray-900/95 to-slate-900/95
                       text-cyan-300 hover:text-cyan-200
@@ -412,7 +412,7 @@ const BusinessCardPage: React.FC = () => {
                     className="
                       relative overflow-visible group
                       flex-1 inline-flex items-center justify-center gap-2
-                      rounded-full px-3 py-2.5 sm:px-4 sm:py-3
+                      rounded-full px-1.5 py-2.5 sm:px-2 sm:py-3
                       text-[11px] sm:text-sm font-semibold
                       bg-gradient-to-r from-gray-800/95 via-gray-900/95 to-slate-900/95
                       text-cyan-300 hover:text-cyan-200
