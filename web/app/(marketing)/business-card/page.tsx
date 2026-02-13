@@ -113,15 +113,23 @@ const BusinessCardPage: React.FC = () => {
     const updateViewport = () => setIsMobile(mediaQuery.matches);
 
     updateViewport();
-    setIsLoaded(true);
+    
+    // Delay particle load for better initial render
+    const timer = setTimeout(() => setIsLoaded(true), 300);
 
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', updateViewport);
-      return () => mediaQuery.removeEventListener('change', updateViewport);
+      return () => {
+        clearTimeout(timer);
+        mediaQuery.removeEventListener('change', updateViewport);
+      };
     }
 
     mediaQuery.addListener(updateViewport);
-    return () => mediaQuery.removeListener(updateViewport);
+    return () => {
+      clearTimeout(timer);
+      mediaQuery.removeListener(updateViewport);
+    };
   }, []);
 
   const LOGO_URL: string = 'https://ik.imagekit.io/ekb0d0it0/logo3.png?updatedAt=1764315001067';
@@ -158,24 +166,24 @@ const BusinessCardPage: React.FC = () => {
       {/* Background Grid - Optimized */}
       <div className="hidden sm:block fixed inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000,transparent)] pointer-events-none opacity-50" />
 
-      {/* Animated Particles - Smooth and optimized */}
+      {/* Animated Particles - Mobile optimized */}
       <AnimatePresence>
         {isLoaded && (
           <div className="fixed inset-0 overflow-hidden pointer-events-none">
-            {PARTICLES.slice(0, isMobile ? 8 : 15).map((particle, i) => (
+            {PARTICLES.slice(0, isMobile ? 6 : 12).map((particle, i) => (
               <motion.div
-                key={i}
-                className="absolute w-1 h-1 bg-cyan-500/70 rounded-full"
+                key={`particle-${i}`}
+                className="absolute w-1 h-1 bg-cyan-500/60 rounded-full will-change-transform"
                 initial={{ x: particle.x, y: particle.y, opacity: 0 }}
                 animate={{ 
                   y: [particle.y, particle.targetY], 
-                  opacity: [0, 0.7, 0] 
+                  opacity: [0, 0.6, 0] 
                 }}
                 transition={{ 
-                  duration: particle.duration, 
+                  duration: particle.duration + (isMobile ? 2 : 0), 
                   repeat: Infinity, 
                   ease: 'linear',
-                  delay: i * 0.2
+                  delay: i * 0.3
                 }}
               />
             ))}
@@ -186,14 +194,14 @@ const BusinessCardPage: React.FC = () => {
       {/* Main Content Container */}
       <div className="relative z-10 w-full max-w-5xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
           className="w-full flex justify-center"
         >
           <motion.div
-            onHoverStart={() => setIsHovered(true)}
-            onHoverEnd={() => setIsHovered(false)}
+            onHoverStart={() => !isMobile && setIsHovered(true)}
+            onHoverEnd={() => !isMobile && setIsHovered(false)}
             className="relative group w-full max-w-[calc(100vw-1rem)] xs:max-w-[22rem] sm:max-w-2xl md:max-w-3xl"
           >
             {/* Glow Border Effect - Smooth transition */}
@@ -203,26 +211,26 @@ const BusinessCardPage: React.FC = () => {
                 scale: isHovered ? 1.02 : 1,
                 opacity: isHovered ? 1 : isMobile ? 0.2 : 0.3
               }}
-              transition={{ duration: 0.4, ease: 'easeInOut' }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
             />
 
             {/* Main Card */}
             <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-lg sm:rounded-2xl p-3 xs:p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 shadow-2xl border border-cyan-500/20 backdrop-blur-xl w-full">
 
-              {/* Falling Binary Code Effect - Smooth and optimized */}
-              <div className="pointer-events-none absolute inset-0 z-0 opacity-5 sm:opacity-10 overflow-hidden rounded-xl sm:rounded-2xl">
-                {[...Array(isMobile ? 4 : 8)].map((_, i) => (
+              {/* Falling Binary Code Effect - Mobile optimized */}
+              <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.03] sm:opacity-[0.08] overflow-hidden rounded-xl sm:rounded-2xl">
+                {[...Array(isMobile ? 3 : 6)].map((_, i) => (
                   <motion.div
-                    key={i}
-                    className="absolute top-[-120px] text-[8px] sm:text-[9px] font-mono text-emerald-300/40 whitespace-pre leading-3"
-                    style={{ left: `${8 + i * (isMobile ? 22 : 11)}%` }}
+                    key={`binary-${i}`}
+                    className="absolute top-[-120px] text-[8px] sm:text-[9px] font-mono text-emerald-300/35 whitespace-pre leading-3 will-change-transform"
+                    style={{ left: `${10 + i * (isMobile ? 28 : 14)}%` }}
                     initial={{ y: -200, opacity: 0 }}
-                    animate={{ y: 900, opacity: [0, 0.4, 0] }}
+                    animate={{ y: 900, opacity: [0, 0.35, 0] }}
                     transition={{ 
-                      duration: 18 + (i % 3) * 3, 
+                      duration: 20 + (i % 3) * 4, 
                       repeat: Infinity, 
                       ease: 'linear', 
-                      delay: i * 0.5 
+                      delay: i * 0.7 
                     }}
                   >
                     {'01001101\n10101010\n00110110\n11100011\n01010101\n11001010\n00110011\n10101100'}
@@ -230,57 +238,57 @@ const BusinessCardPage: React.FC = () => {
                 ))}
               </div>
 
-              {/* Animated Gradient Orbs - Smoother motion */}
+              {/* Animated Gradient Orbs - Smoother, slower motion */}
               <motion.div
-                className="pointer-events-none absolute -inset-[35%] z-0"
+                className="pointer-events-none absolute -inset-[35%] z-0 will-change-transform"
                 animate={{ 
-                  rotate: [0, 5, 0], 
-                  x: ['-28%', '28%', '-28%'], 
-                  y: ['-22%', '20%', '-22%'] 
+                  rotate: [0, 4, 0], 
+                  x: ['-26%', '26%', '-26%'], 
+                  y: ['-20%', '18%', '-20%'] 
                 }}
                 transition={{ 
-                  duration: isMobile ? 14 : 10, 
+                  duration: isMobile ? 18 : 12, 
                   repeat: Infinity, 
                   ease: 'easeInOut' 
                 }}
               >
-                <div className="h-full w-full bg-[linear-gradient(138deg,transparent_32%,rgba(34,211,238,0.18)_46%,rgba(99,102,241,0.14)_56%,transparent_70%)] blur-2xl" />
+                <div className="h-full w-full bg-[linear-gradient(138deg,transparent_34%,rgba(34,211,238,0.16)_48%,rgba(99,102,241,0.12)_58%,transparent_72%)] blur-2xl" />
               </motion.div>
 
               <motion.div
-                className="pointer-events-none absolute -inset-[30%] z-0"
+                className="pointer-events-none absolute -inset-[30%] z-0 will-change-transform"
                 animate={{ 
-                  rotate: [0, -4, 0], 
-                  x: ['24%', '-22%', '24%'], 
-                  y: ['18%', '-16%', '18%'] 
+                  rotate: [0, -3, 0], 
+                  x: ['22%', '-20%', '22%'], 
+                  y: ['16%', '-14%', '16%'] 
                 }}
                 transition={{ 
-                  duration: isMobile ? 16 : 12, 
+                  duration: isMobile ? 20 : 14, 
                   repeat: Infinity, 
                   ease: 'easeInOut' 
                 }}
               >
-                <div className="h-full w-full bg-[linear-gradient(133deg,transparent_36%,rgba(34,211,238,0.15)_52%,transparent_68%)] blur-xl" />
+                <div className="h-full w-full bg-[linear-gradient(133deg,transparent_38%,rgba(34,211,238,0.13)_54%,transparent_70%)] blur-xl" />
               </motion.div>
 
               {/* Corner Accents */}
-              <div className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 border-t-2 border-l-2 border-cyan-500/40 rounded-tl-xl sm:rounded-tl-2xl pointer-events-none" />
-              <div className="absolute bottom-0 right-0 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 border-b-2 border-r-2 border-cyan-500/40 rounded-br-xl sm:rounded-br-2xl pointer-events-none" />
+              <div className="absolute top-0 left-0 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 border-t-2 border-l-2 border-cyan-500/35 rounded-tl-xl sm:rounded-tl-2xl pointer-events-none" />
+              <div className="absolute bottom-0 right-0 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 border-b-2 border-r-2 border-cyan-500/35 rounded-br-xl sm:rounded-br-2xl pointer-events-none" />
 
               {/* Content */}
-              <div className="relative z-10 w-full flex flex-col items-center space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-7">
+              <div className="relative z-10 w-full flex flex-col items-center space-y-3.5 sm:space-y-5 md:space-y-6 lg:space-y-7">
                 
                 {/* Logo Section */}
                 <motion.div 
                   className="flex justify-center w-full pt-1 sm:pt-2"
-                  initial={{ scale: 0.8, opacity: 0 }}
+                  initial={{ scale: 0.85, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.5, ease: 'easeOut' }}
-                  whileHover={{ scale: 1.05 }}
+                  transition={{ delay: 0.15, duration: 0.4, ease: 'easeOut' }}
+                  whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="relative">
-                    <div className="absolute inset-0 bg-cyan-500 blur-lg sm:blur-xl opacity-20 sm:opacity-25 rounded-full" />
+                    <div className="absolute inset-0 bg-cyan-500 blur-lg sm:blur-xl opacity-18 sm:opacity-22 rounded-full" />
                     <img 
                       src={LOGO_URL} 
                       alt="Tensor Security Academy" 
@@ -293,9 +301,9 @@ const BusinessCardPage: React.FC = () => {
                 {/* Title */}
                 <motion.h1
                   className="text-base xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent w-full px-1.5 sm:px-2 leading-tight"
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.5 }}
+                  transition={{ delay: 0.25, duration: 0.4 }}
                 >
                   Tensor Security Academy
                 </motion.h1>
@@ -305,16 +313,16 @@ const BusinessCardPage: React.FC = () => {
                   className="flex justify-center w-full"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
+                  transition={{ delay: 0.35, duration: 0.4 }}
                 >
                   <motion.div 
-                    className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full touch-manipulation"
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
+                    className="inline-flex items-center gap-2 sm:gap-2.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-cyan-500/10 border border-cyan-500/30 rounded-full touch-manipulation"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.2 }}
                   >
                     <Globe />
-                    <span className="text-cyan-400 font-semibold text-[10px] xs:text-[11px] sm:text-xs md:text-sm whitespace-normal xs:whitespace-nowrap text-center">
+                    <span className="text-cyan-400 font-semibold text-[11px] xs:text-xs sm:text-sm md:text-base whitespace-normal xs:whitespace-nowrap text-center">
                       US Based <span className="hidden xs:inline">&bull; Global Platform</span>
                     </span>
                   </motion.div>
@@ -325,7 +333,7 @@ const BusinessCardPage: React.FC = () => {
                   className="text-center text-gray-300 text-[10px] xs:text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed max-w-xl w-full px-2.5 sm:px-4"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 0.5 }}
+                  transition={{ delay: 0.45, duration: 0.4 }}
                 >
                   <span className="text-cyan-400 font-semibold">Decentralized Global EdTech Platform</span>
                   <span className="mx-1 sm:mx-1.5 md:mx-2">&bull;</span>
@@ -334,27 +342,31 @@ const BusinessCardPage: React.FC = () => {
                   Join our <span className="text-purple-400 font-semibold">Global Community</span>
                 </motion.p>
 
-                {/* Services Icons */}
-                <div className="flex justify-center items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 w-full flex-wrap py-2 sm:py-3 md:py-4">
+                {/* Services Icons - LARGER CIRCLES */}
+                <div className="flex justify-center items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 w-full flex-wrap py-3 sm:py-4 md:py-5">
                   {serviceItems.map((item, index) => {
                     const IconComponent = item.icon;
                     const isLiveTraining = item.label === 'Live Training';
                     return (
                       <motion.div
-                        key={index}
-                        className="flex flex-col items-center gap-1 sm:gap-1.5 md:gap-2 min-w-[65px] sm:min-w-[75px]"
-                        initial={{ opacity: 0, y: 15 }}
+                        key={`service-${index}`}
+                        className="flex flex-col items-center gap-1.5 sm:gap-2 md:gap-2 min-w-[72px] sm:min-w-[82px]"
+                        initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6 + index * 0.1, duration: 0.4 }}
-                        whileHover={{ scale: 1.05, y: -2 }}
+                        transition={{ delay: 0.55 + index * 0.08, duration: 0.35 }}
+                        whileHover={{ scale: 1.04, y: -2 }}
                         whileTap={{ scale: 0.96 }}
                       >
                         <div
-                          className={`bg-gradient-to-br from-cyan-500/15 to-blue-500/15 rounded-lg border border-cyan-500/25 ${isLiveTraining ? 'p-2.5 sm:p-3 md:p-3.5' : 'p-1.5 sm:p-2 md:p-2.5'} transition-all duration-300`}
+                          className={`bg-gradient-to-br from-cyan-500/15 to-blue-500/15 rounded-xl border border-cyan-500/25 transition-all duration-300 ${
+                            isLiveTraining 
+                              ? 'p-4 sm:p-5 md:p-6 shadow-[0_0_28px_rgba(34,211,238,0.35)]' 
+                              : 'p-3 sm:p-3.5 md:p-4'
+                          }`}
                         >
                           <IconComponent />
                         </div>
-                        <span className="text-[9px] sm:text-[10px] md:text-xs text-gray-400 text-center leading-tight max-w-[70px] sm:max-w-none px-1">
+                        <span className="text-[9px] sm:text-[10px] md:text-xs text-gray-400 text-center leading-tight max-w-[76px] sm:max-w-none px-1">
                           {item.label}
                         </span>
                       </motion.div>
@@ -364,15 +376,15 @@ const BusinessCardPage: React.FC = () => {
 
                 {/* Action Buttons - Enhanced with smooth glow */}
                 <motion.div 
-                  className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-2.5 sm:gap-3 w-full px-2 sm:px-2 max-w-[340px] sm:max-w-none mx-auto"
-                  initial={{ opacity: 0, y: 10 }}
+                  className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 sm:gap-4 w-full px-2 sm:px-3 max-w-[340px] sm:max-w-none mx-auto"
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8, duration: 0.5 }}
+                  transition={{ delay: 0.75, duration: 0.4 }}
                 >
                   <motion.button
                     onClick={handleVisitWebsite}
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.2 }}
                     className="
                       relative overflow-visible group
@@ -390,13 +402,13 @@ const BusinessCardPage: React.FC = () => {
                   >
                     {/* Smooth Pulsing Glow */}
                     <motion.div
-                      className="absolute inset-0 -z-10 rounded-full bg-gradient-radial from-cyan-500/30 via-cyan-500/10 to-transparent blur-xl"
+                      className="absolute inset-0 -z-10 rounded-full bg-gradient-radial from-cyan-500/28 via-cyan-500/8 to-transparent blur-xl"
                       animate={{
-                        scale: [1, 1.4, 1],
-                        opacity: [0.3, 0.5, 0.3]
+                        scale: [1, 1.35, 1],
+                        opacity: [0.28, 0.48, 0.28]
                       }}
                       transition={{
-                        duration: 3,
+                        duration: 3.5,
                         repeat: Infinity,
                         ease: "easeInOut"
                       }}
@@ -407,8 +419,8 @@ const BusinessCardPage: React.FC = () => {
 
                   <motion.button
                     onClick={handleCourses}
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.98 }}
                     transition={{ duration: 0.2 }}
                     className="
                       relative overflow-visible group
@@ -426,16 +438,16 @@ const BusinessCardPage: React.FC = () => {
                   >
                     {/* Smooth Pulsing Glow */}
                     <motion.div
-                      className="absolute inset-0 -z-10 rounded-full bg-gradient-radial from-cyan-500/30 via-cyan-500/10 to-transparent blur-xl"
+                      className="absolute inset-0 -z-10 rounded-full bg-gradient-radial from-cyan-500/28 via-cyan-500/8 to-transparent blur-xl"
                       animate={{
-                        scale: [1, 1.4, 1],
-                        opacity: [0.3, 0.5, 0.3]
+                        scale: [1, 1.35, 1],
+                        opacity: [0.28, 0.48, 0.28]
                       }}
                       transition={{
-                        duration: 3,
+                        duration: 3.5,
                         repeat: Infinity,
                         ease: "easeInOut",
-                        delay: 0.5
+                        delay: 0.6
                       }}
                     />
                     <BookOpen className="h-3.5 w-3.5 relative z-10" />
@@ -443,56 +455,56 @@ const BusinessCardPage: React.FC = () => {
                   </motion.button>
                 </motion.div>
 
-                {/* Social Links Section - Perfectly balanced gaps */}
+                {/* Social Links Section - Perfectly balanced */}
                 <motion.div 
-                  className="border-t border-gray-700/40 pt-5 sm:pt-6 md:pt-7 mt-5 sm:mt-6 md:mt-7 w-full"
+                  className="border-t border-gray-700/35 pt-5 sm:pt-6 md:pt-7 mt-5 sm:mt-6 md:mt-7 w-full"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.9, duration: 0.5 }}
+                  transition={{ delay: 0.85, duration: 0.4 }}
                 >
                   <p className="text-center text-cyan-300 text-[10px] xs:text-xs sm:text-sm mb-3 sm:mb-4 md:mb-5 font-semibold tracking-wider uppercase w-full">
                     Follow Us
                   </p>
                   
-                  {/* Social Cards Grid - Equal spacing all sides */}
+                  {/* Social Cards Grid */}
                   <div className="flex justify-center w-full">
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-4 w-full max-w-[300px] sm:max-w-xl md:max-w-2xl justify-items-center px-1 sm:px-0">
                       {socialLinks.map((social, index) => {
                         const IconComponent = social.icon;
                         return (
                           <motion.a
-                            key={social.name}
+                            key={`social-${social.name}`}
                             href={social.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group relative w-full max-w-[95px] sm:max-w-[130px] md:max-w-[140px] min-h-[62px] sm:min-h-[80px] md:min-h-[85px] p-1.5 sm:p-2.5 md:p-3 bg-gray-900/60 border border-cyan-500/25 rounded-lg sm:rounded-xl transition-all duration-300 overflow-hidden flex flex-col items-center justify-center text-center touch-manipulation active:scale-95"
-                            initial={{ opacity: 0, y: 15 }}
+                            className="group relative w-full max-w-[95px] sm:max-w-[130px] md:max-w-[140px] min-h-[62px] sm:min-h-[80px] md:min-h-[85px] p-1.5 sm:p-2.5 md:p-3 bg-gray-900/55 border border-cyan-500/22 rounded-lg sm:rounded-xl transition-all duration-300 overflow-hidden flex flex-col items-center justify-center text-center touch-manipulation active:scale-95"
+                            initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 1 + index * 0.08, duration: 0.4 }}
-                            whileHover={{ scale: 1.04, y: -3 }}
-                            whileTap={{ scale: 0.96 }}
+                            transition={{ delay: 0.95 + index * 0.06, duration: 0.35 }}
+                            whileHover={{ scale: 1.03, y: -2 }}
+                            whileTap={{ scale: 0.97 }}
                           >
                             {/* Smooth Animated Gradient */}
                             <motion.div
-                              className="pointer-events-none absolute -inset-[40%]"
+                              className="pointer-events-none absolute -inset-[38%] will-change-transform"
                               animate={{ 
-                                rotate: [0, 6, 0], 
-                                x: ['-25%', '28%', '-25%'], 
-                                y: ['-16%', '14%', '-16%'] 
+                                rotate: [0, 5, 0], 
+                                x: ['-23%', '26%', '-23%'], 
+                                y: ['-14%', '12%', '-14%'] 
                               }}
                               transition={{ 
-                                duration: isMobile ? 12 : 8, 
+                                duration: isMobile ? 14 : 9, 
                                 repeat: Infinity, 
                                 ease: 'easeInOut', 
-                                delay: index * 0.3 
+                                delay: index * 0.25 
                               }}
                             >
-                              <div className="h-full w-full bg-[linear-gradient(136deg,transparent_36%,rgba(34,211,238,0.2)_50%,transparent_66%)] blur-lg" />
+                              <div className="h-full w-full bg-[linear-gradient(136deg,transparent_38%,rgba(34,211,238,0.18)_52%,transparent_68%)] blur-lg" />
                             </motion.div>
 
                             {/* Icon and Name */}
                             <div className="relative flex items-center justify-center gap-1 sm:gap-1.5 mb-0.5 sm:mb-1 md:mb-1.5">
-                              <div className="text-cyan-300 group-hover:text-cyan-100 transition-colors duration-300 flex-shrink-0 scale-[0.84] sm:scale-100">
+                              <div className="text-cyan-300 group-hover:text-cyan-100 transition-colors duration-300 flex-shrink-0 scale-[0.86] sm:scale-100">
                                 <IconComponent />
                               </div>
                               <span className="text-[9px] sm:text-xs md:text-sm font-semibold text-cyan-100 leading-tight">
@@ -500,18 +512,13 @@ const BusinessCardPage: React.FC = () => {
                               </span>
                             </div>
 
-                            {/* Description */}
-                            <p className="relative text-[8px] sm:text-[10px] text-cyan-300/80 font-medium leading-tight">
-                              Follow Us
-                            </p>
-
                             {/* Smooth Hover Effects */}
-                            <div className="absolute inset-0 rounded-lg sm:rounded-xl ring-1 ring-cyan-400/0 group-hover:ring-cyan-400/50 transition-all duration-300 pointer-events-none" />
-                            <div className="absolute inset-0 bg-cyan-500/0 group-hover:bg-cyan-500/8 transition-colors duration-300 pointer-events-none rounded-lg sm:rounded-xl" />
+                            <div className="absolute inset-0 rounded-lg sm:rounded-xl ring-1 ring-cyan-400/0 group-hover:ring-cyan-400/45 transition-all duration-300 pointer-events-none" />
+                            <div className="absolute inset-0 bg-cyan-500/0 group-hover:bg-cyan-500/7 transition-colors duration-300 pointer-events-none rounded-lg sm:rounded-xl" />
 
                             {/* Corner Decorations */}
-                            <div className="absolute top-0 left-0 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 border-t border-l border-cyan-400/40 rounded-tl-lg sm:rounded-tl-xl pointer-events-none" />
-                            <div className="absolute bottom-0 right-0 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 border-b border-r border-cyan-400/40 rounded-br-lg sm:rounded-br-xl pointer-events-none" />
+                            <div className="absolute top-0 left-0 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 border-t border-l border-cyan-400/35 rounded-tl-lg sm:rounded-tl-xl pointer-events-none" />
+                            <div className="absolute bottom-0 right-0 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 border-b border-r border-cyan-400/35 rounded-br-lg sm:rounded-br-xl pointer-events-none" />
                           </motion.a>
                         );
                       })}
@@ -520,21 +527,21 @@ const BusinessCardPage: React.FC = () => {
                 </motion.div>
 
                 {/* Side Decorative Lines */}
-                <div className="hidden sm:block absolute top-1/2 left-0 w-px h-24 md:h-32 bg-gradient-to-b from-transparent via-cyan-500/40 to-transparent pointer-events-none" />
-                <div className="hidden sm:block absolute top-1/2 right-0 w-px h-24 md:h-32 bg-gradient-to-b from-transparent via-cyan-500/40 to-transparent pointer-events-none" />
+                <div className="hidden sm:block absolute top-1/2 left-0 w-px h-24 md:h-32 bg-gradient-to-b from-transparent via-cyan-500/35 to-transparent pointer-events-none" />
+                <div className="hidden sm:block absolute top-1/2 right-0 w-px h-24 md:h-32 bg-gradient-to-b from-transparent via-cyan-500/35 to-transparent pointer-events-none" />
               </div>
             </div>
           </motion.div>
 
-          {/* Bottom Glow Effect - Smooth animation */}
+          {/* Bottom Glow Effect */}
           <motion.div
-            className="absolute -bottom-16 sm:-bottom-20 left-1/2 -translate-x-1/2 w-56 h-56 sm:w-72 sm:h-72 md:w-96 md:h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"
+            className="absolute -bottom-16 sm:-bottom-20 left-1/2 -translate-x-1/2 w-56 h-56 sm:w-72 sm:h-72 md:w-96 md:h-96 bg-cyan-500/12 rounded-full blur-3xl pointer-events-none"
             animate={{ 
-              scale: [1, 1.15, 1], 
-              opacity: [0.15, 0.3, 0.15] 
+              scale: [1, 1.12, 1], 
+              opacity: [0.12, 0.25, 0.12] 
             }}
             transition={{ 
-              duration: isMobile ? 8 : 5, 
+              duration: isMobile ? 10 : 6, 
               repeat: Infinity, 
               ease: 'easeInOut' 
             }}
