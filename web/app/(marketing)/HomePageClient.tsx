@@ -10,6 +10,7 @@ import CoursesPreview from "@/features/home/components/CoursesPreview";
 import ServicesPreview from "@/features/home/components/ServicesPreview";
 import ToolsPreview from "@/features/home/components/ToolsPreview";
 import NewsPreview from "@/features/home/components/NewsPreview";
+import Consultantpreview from "@/features/home/components/Consultantpreview";
 //import { Metadata } from 'next'
 
 // export const metadata: Metadata = {
@@ -314,7 +315,7 @@ export default function HomePage() {
           </div>
         </motion.div>
       </motion.section>
-
+<Consultantpreview />
       {/* Feature Previews from Features folder */}
       <NewsPreview />
       <CoursesPreview />
