@@ -25,7 +25,7 @@ export default function ConsultantPreview() {
     <motion.section
       ref={sectionRef}
       style={{ 
-        padding: 'clamp(60px, 8vw, 100px) 0',
+        padding: 'clamp(44px, 7vw, 100px) 0',
         position: 'relative',
         overflow: 'hidden'
       }}
@@ -65,8 +65,8 @@ export default function ConsultantPreview() {
           style={{ 
             textAlign: 'center',
             marginBottom: 'clamp(40px, 6vw, 70px)',
-            paddingLeft: '24px',
-            paddingRight: '24px'
+            paddingLeft: 'clamp(14px, 4vw, 24px)',
+            paddingRight: 'clamp(14px, 4vw, 24px)'
           }}
         >
           <motion.div
@@ -127,8 +127,8 @@ export default function ConsultantPreview() {
           style={{
             maxWidth: '1080px',
             margin: '0 auto',
-            paddingLeft: '24px',
-            paddingRight: '24px',
+            paddingLeft: 'clamp(12px, 4vw, 24px)',
+            paddingRight: 'clamp(12px, 4vw, 24px)',
           }}
         >
           <motion.div
@@ -136,7 +136,7 @@ export default function ConsultantPreview() {
             transition={{ duration: 0.4 }}
             style={{
               background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.98), rgba(17, 24, 39, 0.95))',
-              borderRadius: '30px',
+              borderRadius: 'clamp(18px, 4vw, 30px)',
               overflow: 'hidden',
               border: '2px solid rgba(34, 211, 238, 0.2)',
               boxShadow: '0 30px 80px rgba(0, 0, 0, 0.4), 0 0 60px rgba(34, 211, 238, 0.1)',
@@ -167,9 +167,9 @@ export default function ConsultantPreview() {
 
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: 'clamp(30px, 5vw, 50px)',
-              padding: 'clamp(30px, 5vw, 50px)',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
+              gap: 'clamp(18px, 4vw, 42px)',
+              padding: 'clamp(16px, 4vw, 40px)',
               alignItems: 'center',
               position: 'relative',
               zIndex: 1,
@@ -179,7 +179,7 @@ export default function ConsultantPreview() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '24px'
+                gap: 'clamp(14px, 3vw, 24px)'
               }}>
                 {/* Profile Image */}
                 <motion.div
@@ -187,8 +187,8 @@ export default function ConsultantPreview() {
                   transition={{ duration: 0.25, ease: 'easeOut' }}
                   style={{
                     position: 'relative',
-                    width: 'clamp(200px, 35vw, 280px)',
-                    height: 'clamp(200px, 35vw, 280px)',
+                    width: 'clamp(150px, 58vw, 260px)',
+                    height: 'clamp(150px, 58vw, 260px)',
                   }}
                 >
                   <motion.div
@@ -243,7 +243,7 @@ export default function ConsultantPreview() {
                 <div style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(2, 1fr)',
-                  gap: '12px',
+                  gap: 'clamp(8px, 2vw, 12px)',
                   width: '100%',
                 }}>
                   {[
@@ -260,7 +260,7 @@ export default function ConsultantPreview() {
                       transition={{ delay: 0.4 + index * 0.1 }}
                       whileHover={{ scale: 1.05 }}
                       style={{
-                        padding: '16px',
+                        padding: 'clamp(10px, 2.8vw, 16px)',
                         background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(168, 85, 247, 0.08))',
                         border: '1px solid rgba(34, 211, 238, 0.2)',
                         borderRadius: '16px',
@@ -274,7 +274,7 @@ export default function ConsultantPreview() {
                         margin: '0 auto 8px'
                       }} />
                       <div style={{
-                        fontSize: '16px',
+                        fontSize: 'clamp(13px, 3vw, 16px)',
                         fontWeight: 700,
                         color: 'white',
                         fontFamily: 'var(--font-nunito)',
@@ -282,7 +282,7 @@ export default function ConsultantPreview() {
                         {stat.label}
                       </div>
                       <div style={{
-                        fontSize: '11px',
+                        fontSize: 'clamp(10px, 2.2vw, 11px)',
                         color: '#9ca3af',
                         fontFamily: 'var(--font-nunito)',
                       }}>
@@ -297,7 +297,8 @@ export default function ConsultantPreview() {
               <div style={{ 
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '24px'
+                gap: 'clamp(14px, 3.5vw, 24px)',
+                minWidth: 0
               }}>
                 {/* Name and Title */}
                 <div>
@@ -307,12 +308,13 @@ export default function ConsultantPreview() {
                     viewport={{ once: true }}
                     transition={{ delay: 0.5 }}
                     style={{
-                      fontSize: 'clamp(28px, 5vw, 36px)',
+                      fontSize: 'clamp(22px, 6vw, 36px)',
                       fontWeight: 800,
                       color: 'white',
                       marginBottom: '8px',
                       fontFamily: 'var(--font-nunito)',
                       lineHeight: 1.2,
+                      overflowWrap: 'anywhere',
                     }}
                   >
                     {consultant.name}
@@ -341,6 +343,7 @@ export default function ConsultantPreview() {
                       fontSize: 'clamp(13px, 2vw, 14px)',
                       color: '#9ca3af',
                       fontFamily: 'var(--font-nunito)',
+                      overflowWrap: 'anywhere',
                     }}
                   >
                     {consultant.role}
@@ -406,6 +409,7 @@ export default function ConsultantPreview() {
                           color: '#e5e7eb',
                           lineHeight: 1.6,
                           fontFamily: 'var(--font-nunito)',
+                          overflowWrap: 'anywhere',
                         }}>
                           {highlight}
                         </span>
@@ -430,7 +434,7 @@ export default function ConsultantPreview() {
                       whileTap={{ scale: 0.95 }}
                       style={{
                         width: '100%',
-                        padding: '16px 32px',
+                        padding: 'clamp(12px, 3vw, 16px) clamp(16px, 4vw, 32px)',
                         fontSize: 'clamp(14px, 2.5vw, 16px)',
                         fontWeight: 700,
                         borderRadius: '14px',
@@ -445,6 +449,8 @@ export default function ConsultantPreview() {
                         fontFamily: 'var(--font-nunito)',
                         transition: 'all 0.3s ease',
                         boxShadow: '0 0 20px rgba(34, 211, 238, 0.3)',
+                        textAlign: 'center',
+                        lineHeight: 1.35,
                       }}
                     >
                       View Full Profile & Expertise

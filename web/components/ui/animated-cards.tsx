@@ -90,12 +90,14 @@ interface GlowingCardProps {
   children: React.ReactNode;
   glowColor?: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const GlowingCard: React.FC<GlowingCardProps> = ({
   children,
   glowColor = '#22d3ee',
   className = '',
+  style,
 }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
@@ -124,6 +126,7 @@ export const GlowingCard: React.FC<GlowingCardProps> = ({
         backdropFilter: 'blur(10px)',
         overflow: 'hidden',
         cursor: 'pointer',
+        ...style,
       }}
       className={className}
     >
