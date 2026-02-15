@@ -20,20 +20,23 @@ import XIcon from "@mui/icons-material/X";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { MapIcon, UserGroupIcon, ShareIcon } from "@heroicons/react/24/outline";
+import { MapIcon, UserGroupIcon, ShareIcon  } from "@heroicons/react/24/outline";
 import { logout } from "@/app/actions/auth";
+import NewspaperIcon from '@mui/icons-material/Newspaper';
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/courses", label: "Courses" },
   { href: "/services", label: "Services" },
   { href: "/tools", label: "Tools" },
+  
 ];
 
 const aboutDropdownLinks = [
   { href: "/about", label: "About Our Journey", icon: MapIcon },
   { href: "/about/team", label: "Our Team Members", icon: UserGroupIcon },
   { href: "/about/join", label: "Join Us", icon: Handshake },
+  { href: "/news", label: "News", icon: NewspaperIcon },
 ];
 
 const socialLinks = [
