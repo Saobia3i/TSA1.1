@@ -73,7 +73,7 @@ export default function ServicesPreview() {
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          height: 'clamp(460px, 66vh, 560px)',
+          height: 'clamp(440px, 67vh, 580px)',
         }}>
           <GlowingCard
             glowColor="#22d3ee"
@@ -90,11 +90,12 @@ export default function ServicesPreview() {
               >
                 <div style={{
                   padding: 'clamp(14px, 3.5vw, 30px) clamp(12px, 3vw, 24px)',
+                  paddingBottom: 'clamp(16px, 3.8vw, 40px)',
                   textAlign: 'center' as const,
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'space-between',
+                  justifyContent: 'flex-start',
                   alignItems: 'center',
                   boxSizing: 'border-box',
                   gap: 'clamp(12px, 2.5vw, 20px)',
@@ -144,7 +145,7 @@ export default function ServicesPreview() {
                     alignItems: 'flex-start',
                     justifyContent: 'center',
                     width: '100%',
-                    minHeight: 'clamp(130px, 20vh, 170px)',
+                    minHeight: 'clamp(100px, 16vh, 150px)',
                     overflow: 'hidden',
                   }}>
                     <p style={{
@@ -164,7 +165,10 @@ export default function ServicesPreview() {
                     </p>
                   </div>
 
-                  <Link href={`/services/${currentService.slug}`} style={{ textDecoration: 'none', flexShrink: 0 }}>
+                  <Link
+                    href={`/services/${currentService.slug}`}
+                    style={{ textDecoration: 'none', flexShrink: 0, marginTop: 'auto' }}
+                  >
                     <motion.button
                       whileHover={{ scale: 1.04, boxShadow: '0 0 25px rgba(34, 211, 238, 0.6), 0 0 50px rgba(168, 85, 247, 0.4)' }}
                       whileTap={{ scale: 0.96 }}
