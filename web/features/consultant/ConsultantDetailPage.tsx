@@ -473,6 +473,7 @@ export default function ConsultantDetailPage() {
             "{consultant.quote}"
           </p>
         </div>
+
         {/* Biography */}
         <ContentSection
           icon={Users}
@@ -490,10 +491,95 @@ export default function ConsultantDetailPage() {
           </p>
         </ContentSection>
 
+        {/* Qualifications */}
+        <ContentSection
+          icon={GraduationCap}
+          title="Professional Qualifications"
+          delay={0.25}
+        >
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: 'clamp(12px, 3vw, 16px)',
+          }}>
+            {consultant.qualifications.map((qualification, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ x: 5 }}
+                style={{
+                  padding: 'clamp(14px, 3vw, 18px)',
+                  background: 'rgba(168, 85, 247, 0.05)',
+                  border: '1px solid rgba(168, 85, 247, 0.2)',
+                  borderRadius: 'clamp(12px, 3vw, 16px)',
+                  display: 'flex',
+                  gap: 'clamp(10px, 3vw, 14px)',
+                  alignItems: 'center',
+                }}
+              >
+                <Award style={{
+                  width: 'clamp(16px, 4vw, 20px)',
+                  height: 'clamp(16px, 4vw, 20px)',
+                  color: '#a855f7',
+                  flexShrink: 0,
+                }} />
+                <span style={{
+                  fontSize: 'clamp(12px, 2.5vw, 15px)',
+                  color: '#ffffff',
+                  lineHeight: 1.5,
+                  fontFamily: 'var(--font-nunito)',
+                }}>
+                  {qualification}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </ContentSection>
+
+        {/* Specializations */}
+        <ContentSection
+          icon={Shield}
+          title="Core Specializations"
+          delay={0.28}
+        >
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: 'clamp(12px, 3vw, 16px)',
+          }}>
+            {consultant.specializations.map((specialization, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.08 }}
+                whileHover={{ scale: 1.03, y: -3 }}
+                style={{
+                  padding: 'clamp(12px, 3vw, 16px) clamp(16px, 4vw, 20px)',
+                  background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(168, 85, 247, 0.08))',
+                  border: '2px solid rgba(34, 211, 238, 0.25)',
+                  borderRadius: 'clamp(10px, 3vw, 14px)',
+                  fontSize: 'clamp(11px, 2.5vw, 14px)',
+                  color: '#22d3ee',
+                  fontWeight: 600,
+                  textAlign: 'center',
+                  fontFamily: 'var(--font-nunito)',
+                }}
+              >
+                {specialization}
+              </motion.div>
+            ))}
+          </div>
+        </ContentSection>
+
         {/* Key Achievements */}
         <ContentSection
-          icon={Award}
-          title="Key Achievements"
+          icon={Star}
+          title="Career Highlights & Achievements"
           delay={0.3}
         >
           <div style={{
@@ -538,90 +624,16 @@ export default function ConsultantDetailPage() {
           </div>
         </ContentSection>
 
-        {/* Experience */}
-        <ContentSection
-          icon={Briefcase}
-          title="Professional Experience"
-          delay={0.4}
-        >
-          <div style={{ display: 'grid', gap: 'clamp(16px, 4vw, 24px)' }}>
-            {consultant.experience.map((exp, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.15 }}
-                style={{
-                  padding: 'clamp(16px, 4vw, 24px)',
-                  background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.6))',
-                  border: '2px solid rgba(34, 211, 238, 0.2)',
-                  borderRadius: 'clamp(14px, 4vw, 20px)',
-                }}
-              >
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 'clamp(8px, 2vw, 12px)',
-                  marginBottom: 'clamp(8px, 2vw, 12px)',
-                }}>
-                  <div>
-                    <h4 style={{
-                      fontSize: 'clamp(16px, 3vw, 22px)',
-                      fontWeight: 700,
-                      color: 'white',
-                      marginBottom: 'clamp(4px, 1vw, 6px)',
-                      fontFamily: 'var(--font-nunito)',
-                    }}>
-                      {exp.position}
-                    </h4>
-                    <p style={{
-                      fontSize: 'clamp(13px, 2.5vw, 16px)',
-                      color: '#22d3ee',
-                      fontWeight: 600,
-                      fontFamily: 'var(--font-nunito)',
-                    }}>
-                      {exp.organization}
-                    </p>
-                  </div>
-                  <span style={{
-                    padding: 'clamp(6px, 1.5vw, 8px) clamp(12px, 3vw, 16px)',
-                    background: 'rgba(168, 85, 247, 0.15)',
-                    border: '1px solid rgba(168, 85, 247, 0.3)',
-                    borderRadius: '8px',
-                    fontSize: 'clamp(11px, 2vw, 13px)',
-                    color: '#a855f7',
-                    fontWeight: 600,
-                    fontFamily: 'var(--font-nunito)',
-                    display: 'inline-block',
-                    width: 'fit-content',
-                  }}>
-                    {exp.duration}
-                  </span>
-                </div>
-                <p style={{
-                  fontSize: 'clamp(12px, 2vw, 15px)',
-                  color: '#ffffff',
-                  lineHeight: 1.7,
-                  fontFamily: 'var(--font-nunito)',
-                }}>
-                  {exp.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </ContentSection>
-
         {/* Expertise Areas */}
         <ContentSection
           icon={Target}
           title="Areas of Expertise"
-          delay={0.5}
+          delay={0.4}
         >
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: 'clamp(14px, 3vw, 20px)',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: 'clamp(16px, 3vw, 24px)',
           }}>
             {consultant.expertise.map((area, index) => (
               <motion.div
@@ -681,6 +693,218 @@ export default function ConsultantDetailPage() {
                 </div>
               </motion.div>
             ))}
+          </div>
+        </ContentSection>
+
+        {/* Experience */}
+        <ContentSection
+          icon={Briefcase}
+          title="Professional Experience"
+          delay={0.5}
+        >
+          <div style={{ display: 'grid', gap: 'clamp(16px, 4vw, 24px)' }}>
+            {consultant.experience.map((exp, index) => {
+              const hasGroupedPositions = exp.positions && exp.positions.length > 0;
+              
+              if (hasGroupedPositions) {
+                // Special rendering for Chief of IT with multiple organizations
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    style={{
+                      padding: 'clamp(20px, 4vw, 32px)',
+                      background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))',
+                      border: '2px solid rgba(34, 211, 238, 0.3)',
+                      borderRadius: 'clamp(16px, 4vw, 24px)',
+                    }}
+                  >
+                    {/* Main Header */}
+                    <div style={{
+                      marginBottom: 'clamp(16px, 3vw, 24px)',
+                      paddingBottom: 'clamp(12px, 2.5vw, 16px)',
+                      borderBottom: '2px solid rgba(34, 211, 238, 0.2)',
+                    }}>
+                      <h4 style={{
+                        fontSize: 'clamp(18px, 3.5vw, 26px)',
+                        fontWeight: 700,
+                        color: '#22d3ee',
+                        marginBottom: 'clamp(6px, 1.5vw, 8px)',
+                        fontFamily: 'var(--font-nunito)',
+                      }}>
+                        {exp.position}
+                      </h4>
+                      <p style={{
+                        fontSize: 'clamp(13px, 2.5vw, 16px)',
+                        color: 'white',
+                        fontWeight: 600,
+                        marginBottom: 'clamp(6px, 1.5vw, 8px)',
+                        fontFamily: 'var(--font-nunito)',
+                      }}>
+                        {exp.organization}
+                      </p>
+                      <span style={{
+                        display: 'inline-block',
+                        padding: 'clamp(6px, 1.5vw, 8px) clamp(14px, 3vw, 18px)',
+                        background: 'rgba(168, 85, 247, 0.2)',
+                        border: '1px solid rgba(168, 85, 247, 0.4)',
+                        borderRadius: '8px',
+                        fontSize: 'clamp(11px, 2vw, 13px)',
+                        color: '#a855f7',
+                        fontWeight: 600,
+                        fontFamily: 'var(--font-nunito)',
+                        marginBottom: 'clamp(8px, 2vw, 12px)',
+                      }}>
+                        {exp.duration}
+                      </span>
+                      <p style={{
+                        fontSize: 'clamp(12px, 2.5vw, 15px)',
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        lineHeight: 1.7,
+                        fontFamily: 'var(--font-nunito)',
+                        marginTop: 'clamp(8px, 2vw, 12px)',
+                      }}>
+                        {exp.description}
+                      </p>
+                    </div>
+
+                    {/* Sub-positions Grid */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                      gap: 'clamp(12px, 3vw, 16px)',
+                    }}>
+                      {exp.positions!.map((pos, posIndex) => (
+                        <motion.div
+                          key={posIndex}
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: posIndex * 0.05 }}
+                          whileHover={{ y: -3, scale: 1.02 }}
+                          style={{
+                            padding: 'clamp(14px, 3vw, 18px)',
+                            background: 'rgba(17, 24, 39, 0.7)',
+                            border: '1px solid rgba(34, 211, 238, 0.2)',
+                            borderRadius: 'clamp(12px, 3vw, 16px)',
+                          }}
+                        >
+                          <h5 style={{
+                            fontSize: 'clamp(13px, 2.5vw, 16px)',
+                            fontWeight: 700,
+                            color: 'white',
+                            marginBottom: 'clamp(4px, 1vw, 6px)',
+                            fontFamily: 'var(--font-nunito)',
+                          }}>
+                            {pos.organization}
+                          </h5>
+                          <p style={{
+                            fontSize: 'clamp(11px, 2vw, 13px)',
+                            color: '#22d3ee',
+                            marginBottom: 'clamp(6px, 1.5vw, 8px)',
+                            fontFamily: 'var(--font-nunito)',
+                          }}>
+                            {pos.title}
+                          </p>
+                          <span style={{
+                            display: 'inline-block',
+                            padding: 'clamp(3px, 0.8vw, 4px) clamp(8px, 1.5vw, 10px)',
+                            background: 'rgba(168, 85, 247, 0.15)',
+                            border: '1px solid rgba(168, 85, 247, 0.3)',
+                            borderRadius: '6px',
+                            fontSize: 'clamp(9px, 1.8vw, 11px)',
+                            color: '#a855f7',
+                            fontWeight: 600,
+                            fontFamily: 'var(--font-nunito)',
+                            marginBottom: 'clamp(6px, 1.5vw, 8px)',
+                          }}>
+                            {pos.year}
+                          </span>
+                          <p style={{
+                            fontSize: 'clamp(10px, 2vw, 12px)',
+                            color: 'rgba(255, 255, 255, 0.8)',
+                            lineHeight: 1.5,
+                            fontFamily: 'var(--font-nunito)',
+                            marginTop: 'clamp(6px, 1.5vw, 8px)',
+                          }}>
+                            {pos.details}
+                          </p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+                );
+              }
+              
+              // Regular experience items
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  style={{
+                    padding: 'clamp(16px, 4vw, 24px)',
+                    background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.6))',
+                    border: '2px solid rgba(34, 211, 238, 0.2)',
+                    borderRadius: 'clamp(14px, 4vw, 20px)',
+                  }}
+                >
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 'clamp(8px, 2vw, 12px)',
+                    marginBottom: 'clamp(8px, 2vw, 12px)',
+                  }}>
+                    <div>
+                      <h4 style={{
+                        fontSize: 'clamp(16px, 3vw, 22px)',
+                        fontWeight: 700,
+                        color: 'white',
+                        marginBottom: 'clamp(4px, 1vw, 6px)',
+                        fontFamily: 'var(--font-nunito)',
+                      }}>
+                        {exp.position}
+                      </h4>
+                      <p style={{
+                        fontSize: 'clamp(13px, 2.5vw, 16px)',
+                        color: '#22d3ee',
+                        fontWeight: 600,
+                        fontFamily: 'var(--font-nunito)',
+                      }}>
+                        {exp.organization}
+                      </p>
+                    </div>
+                    <span style={{
+                      padding: 'clamp(6px, 1.5vw, 8px) clamp(12px, 3vw, 16px)',
+                      background: 'rgba(168, 85, 247, 0.15)',
+                      border: '1px solid rgba(168, 85, 247, 0.3)',
+                      borderRadius: '8px',
+                      fontSize: 'clamp(11px, 2vw, 13px)',
+                      color: '#a855f7',
+                      fontWeight: 600,
+                      fontFamily: 'var(--font-nunito)',
+                      display: 'inline-block',
+                      width: 'fit-content',
+                    }}>
+                      {exp.duration}
+                    </span>
+                  </div>
+                  <p style={{
+                    fontSize: 'clamp(12px, 2vw, 15px)',
+                    color: '#ffffff',
+                    lineHeight: 1.7,
+                    fontFamily: 'var(--font-nunito)',
+                  }}>
+                    {exp.description}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </ContentSection>
 
