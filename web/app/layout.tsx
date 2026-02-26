@@ -146,6 +146,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Video Preload - loads hero video ASAP */}
+        <link rel="preload" as="video" href="https://ik.imagekit.io/ekb0d0it0/hero-background_kwhnz8.webm" type="video/webm" />
+
         {/* PWA Manifest */}
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#000000" />

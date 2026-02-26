@@ -189,7 +189,7 @@ const BusinessCardPage: React.FC = () => {
           <motion.div
             onHoverStart={() => !isMobile && setIsHovered(true)}
             onHoverEnd={() => !isMobile && setIsHovered(false)}
-            className="relative group w-full max-w-[calc(100vw-2rem)] xs:max-w-[22rem] sm:max-w-1xl md:max-w-2xl"
+            className="relative group w-full max-w-[calc(100vw-2rem)] xs:max-w-[22rem] sm:max-w-2xl md:max-w-3xl min-h-[85vh] sm:min-h-[90vh]"
           >
             {/* Glow Border Effect - Smooth transition */}
             <motion.div
@@ -202,7 +202,7 @@ const BusinessCardPage: React.FC = () => {
             />
 
             {/* Main Card */}
-            <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-lg sm:rounded-2xl p-4 xs:p-5 sm:p-7 md:p-9 lg:p-11 xl:p-13 shadow-2xl border border-cyan-500/20 backdrop-blur-xl w-full">
+            <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-lg sm:rounded-2xl p-6 xs:p-7 sm:p-10 md:p-12 lg:p-14 xl:p-16 shadow-2xl border border-cyan-500/20 backdrop-blur-xl w-full h-full flex flex-col">
 
               {/* Falling Binary Code Effect - Mobile optimized */}
               <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.03] sm:opacity-[0.08] overflow-hidden rounded-xl sm:rounded-2xl">
@@ -263,7 +263,7 @@ const BusinessCardPage: React.FC = () => {
               <div className="absolute bottom-0 right-0 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 border-b-2 border-r-2 border-cyan-500/35 rounded-br-xl sm:rounded-br-2xl pointer-events-none" />
 
               {/* Content */}
-              <div className="relative z-10 w-full flex flex-col items-center space-y-4 sm:space-y-6 md:space-y-7 lg:space-y-8">
+              <div className="relative z-10 w-full flex flex-col items-center justify-center space-y-6 sm:space-y-8 md:space-y-9 lg:space-y-10 flex-grow">
                 
                 {/* Logo Section */}
                 <motion.div 
@@ -330,7 +330,7 @@ const BusinessCardPage: React.FC = () => {
                 </motion.p>
 
                 {/* Services Icons - Enhanced with Heroicons and white color */}
-                <div className="flex justify-center items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 w-full flex-wrap py-3 sm:py-4 md:py-5">
+                <div className="flex justify-center items-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 w-full flex-wrap py-4 sm:py-5 md:py-6">
                   {serviceItems.map((item, index) => {
                     const IconComponent = item.icon;
                     const isLiveTraining = item.label === 'Live Training';
@@ -363,7 +363,7 @@ const BusinessCardPage: React.FC = () => {
 
                 {/* Action Buttons - Enhanced with smooth glow */}
                 <motion.div 
-                  className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 sm:gap-4 w-full px-2 sm:px-3 max-w-[340px] sm:max-w-none mx-auto"
+                  className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-4 sm:gap-5 w-full px-2 sm:px-3 max-w-[340px] sm:max-w-none mx-auto"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.75, duration: 0.4 }}
@@ -444,18 +444,18 @@ const BusinessCardPage: React.FC = () => {
 
                 {/* Social Links Section - Perfectly balanced */}
                 <motion.div 
-                  className="border-t border-gray-700/35 pt-5 sm:pt-6 md:pt-7 mt-5 sm:mt-6 md:mt-7 w-full"
+                  className="border-t border-gray-700/35 pt-7 sm:pt-8 md:pt-9 mt-7 sm:mt-8 md:mt-9 w-full"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.85, duration: 0.4 }}
                 >
-                  <p className="text-center text-cyan-300 text-[10px] xs:text-xs sm:text-sm mb-3 sm:mb-4 md:mb-5 font-semibold tracking-wider uppercase w-full">
+                  <p className="text-center text-cyan-300 text-[10px] xs:text-xs sm:text-sm mb-4 sm:mb-5 md:mb-6 font-semibold tracking-wider uppercase w-full">
                     Follow Us
                   </p>
                   
                   {/* Social Cards Grid */}
                   <div className="flex justify-center w-full">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-4 w-full max-w-[300px] sm:max-w-xl md:max-w-2xl justify-items-center px-1 sm:px-0">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 w-full max-w-[300px] sm:max-w-xl md:max-w-2xl justify-items-center px-1 sm:px-0">
                       {socialLinks.map((social, index) => {
                         const IconComponent = social.icon;
                         return (
@@ -464,7 +464,7 @@ const BusinessCardPage: React.FC = () => {
                             href={social.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group relative w-full max-w-[95px] sm:max-w-[130px] md:max-w-[140px] min-h-[62px] sm:min-h-[80px] md:min-h-[85px] p-1.5 sm:p-2.5 md:p-3 bg-gray-900/55 border border-cyan-500/22 rounded-lg sm:rounded-xl transition-all duration-300 overflow-hidden flex flex-col items-center justify-center text-center touch-manipulation active:scale-95"
+                            className="group relative w-full max-w-[95px] sm:max-w-[130px] md:max-w-[140px] min-h-[72px] sm:min-h-[92px] md:min-h-[100px] p-2 sm:p-3.5 md:p-4 bg-gray-900/55 border border-cyan-500/22 rounded-lg sm:rounded-xl transition-all duration-300 overflow-hidden flex flex-col items-center justify-center text-center touch-manipulation active:scale-95"
                             initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.95 + index * 0.06, duration: 0.35 }}
