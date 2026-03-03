@@ -63,7 +63,7 @@ export const consultants: Consultant[] = [
     name: 'Ret. Col. Nestor Lana da Silva',
     title: 'Former Head of IT, Brazilian Army Cyber Defense Command | Cybersecurity & National Defense Specialist',
     role: 'Senior Consultant - Cybersecurity & Defense Operations | Country Director, TSA Brazil',
-    image: 'https://ik.imagekit.io/ekb0d0it0/silva.jpg',
+    image: 'https://ik.imagekit.io/ekb0d0it0/silva.jpg?tr=w-560,h-560,q-85,f-webp',
     country: 'Brazil',
     location: 'Brasília, Federal District, Brazil',
     

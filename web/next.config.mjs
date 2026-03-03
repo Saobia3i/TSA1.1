@@ -36,6 +36,7 @@ const nextConfig = {
 
   images: {
     formats: ["image/avif", "image/webp"],
+    deviceSizes: [640, 750, 828, 1080, 1200],
     qualities: [75, 90], // Added 90 to fix the warning
     remotePatterns: [{ protocol: "https", hostname: "**" }],
     unoptimized: isDev,

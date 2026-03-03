@@ -22,7 +22,6 @@ export default async function MarketingLayout({
       <Head>
         {/* General Meta Tags */}
         <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Tensor Security Academy</title>
 
         {/* Open Graph Meta Tags */}

@@ -138,6 +138,12 @@ export const metadata: Metadata = {
   classification: "Cybersecurity Training Platform",
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -146,6 +152,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Resource Hints for CDN optimization */}
+        <link rel="preconnect" href="https://ik.imagekit.io" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        
         {/* Video Preload - loads hero video ASAP */}
         <link rel="preload" as="video" href="https://ik.imagekit.io/ekb0d0it0/hero-background_kwhnz8.webm" type="video/webm" />
 

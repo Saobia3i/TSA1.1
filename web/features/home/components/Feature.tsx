@@ -102,10 +102,11 @@ const TOP_FEATURES: FeatureItem[] = [
 function USFlagIcon({ size = 80 }: { size?: number }) {
   return (
     <Image
-      src="https://ik.imagekit.io/7yw4jtfbt/TSA/FLAG.png" // Your image URL
+      src={`https://ik.imagekit.io/7yw4jtfbt/TSA/FLAG.png?tr=w-${size * 2},h-${size * 2},q-85,f-webp`}
       alt="United States Flag"
-      width={size} // Dynamically set width
-      height={size} // Dynamically set height
+      width={size}
+      height={size}
+      loading="lazy"
       style={{
         objectFit: "cover",
         borderRadius: "50%",

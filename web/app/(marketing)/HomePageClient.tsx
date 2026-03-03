@@ -5,11 +5,30 @@ import { MessageCircle, Quote, Handshake } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import HeroSection from "@/features/home/components/HeroSection";
-import CoursesPreview from "@/features/home/components/CoursesPreview";
-import ServicesPreview from "@/features/home/components/ServicesPreview";
-import ToolsPreview from "@/features/home/components/ToolsPreview";
-import NewsPreview from "@/features/home/components/NewsPreview";
+
+// Lazy load preview components for better performance
+const CoursesPreview = dynamic(() => import("@/features/home/components/CoursesPreview"), {
+  loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
+  ssr: false
+});
+
+const NewsPreview = dynamic(() => import("@/features/home/components/NewsPreview"), {
+  loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
+  ssr: false
+});
+
+const ServicesPreview = dynamic(() => import("@/features/home/components/ServicesPreview"), {
+  loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
+  ssr: false
+});
+
+const ToolsPreview = dynamic(() => import("@/features/home/components/ToolsPreview"), {
+  loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
+  ssr: false
+});
+
 import Consultantpreview from "@/features/home/components/Consultantpreview";
 //import { Metadata } from 'next'
 
@@ -211,10 +230,10 @@ export default function HomePage() {
                 }}
               >
                 <Image
-                  src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-25%20at%207.49.50%20PM.jpeg"
+                  src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-25%20at%207.49.50%20PM.jpeg?tr=w-280,h-280,q-85,f-webp"
                   alt="Founder – Abrar Jahin"
-                  fill
-                  sizes="140px"
+                  width={280}
+                  height={280}
                   priority
                   style={{
                     objectFit: "cover",
@@ -390,7 +409,7 @@ export default function HomePage() {
             }}
           >
             <Image
-              src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-18%20at%208.38.36%20PM.jpeg?updatedAt=1766169177657"
+              src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-18%20at%208.38.36%20PM.jpeg?tr=w-360,h-360,q-80,f-webp"
               alt="Partner 1"
               width={180}
               height={180}
@@ -424,7 +443,7 @@ export default function HomePage() {
             }}
           >
             <Image
-              src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-18%20at%208.37.38%20PM.jpeg?updatedAt=1766169177677"
+              src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-18%20at%208.37.38%20PM.jpeg?tr=w-360,h-360,q-80,f-webp"
               alt="Partner 2"
               width={180}
               height={180}
@@ -460,7 +479,7 @@ export default function HomePage() {
             }}
           >
             <Image
-              src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-18%20at%208.33.52%20PM.jpeg?updatedAt=1766169177263"
+              src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-18%20at%208.33.52%20PM.jpeg?tr=w-360,h-360,q-80,f-webp"
               alt="Partner 3"
               width={180}
               height={180}

@@ -17,7 +17,7 @@ const teamMembers = [
     name: "Abrar Jahin",
     role: "Founder & CEO, TSA | Security Researcher",
     image:
-      "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%208.59.29%20PM.jpeg?updatedAt=1766169177691",
+      "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%208.59.29%20PM.jpeg?tr=w-400,h-400,q-85,f-webp",
     quote:
       "TSA was born from a simple belief: exceptional talent shouldn't be limited by geography or financial barriers. Every student who breaks through represents our collective victory against an outdated system.",
     socials: {
@@ -31,7 +31,7 @@ const teamMembers = [
     name: "Nuren Tasnim",
     role: "Director of Business Development",
     image:
-      "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%208.59.51%20PM.jpeg?updatedAt=1766169177597",
+      "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%208.59.51%20PM.jpeg?tr=w-400,h-400,q-85,f-webp",
     quote:
       "Watching our students transform from uncertain beginners to confident professionals is why I do this. TSA isn't just teaching skills—we're changing lives and rewriting futures.",
     socials: {
@@ -45,7 +45,7 @@ const teamMembers = [
     name: "Abid Hossain Ove",
     role: "Managing Director (Academics)",
     image:
-      "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%209.00.49%20PM%20-%20Copy.jpeg?updatedAt=1766169177646",
+      "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%209.00.49%20PM%20-%20Copy.jpeg?tr=w-400,h-400,q-85,f-webp",
     quote:
       "Education should empower, not overwhelm. At TSA, we break down complex cybersecurity concepts into actionable knowledge that students can apply from day one.",
     socials: {
@@ -60,7 +60,7 @@ const teamMembers = [
     name: "Saobia Islam",
     role: "Principal Web Developer",
     image:
-      "https://ik.imagekit.io/ekb0d0it0/Untitled%20design.png?updatedAt=1764315898570",
+      "https://ik.imagekit.io/ekb0d0it0/Untitled%20design.png?tr=w-400,h-400,q-85,f-webp",
     quote:
       "Technology is the great equalizer. Through TSA, we're building bridges that connect passionate learners with opportunities that were once out of reach.",
     socials: {
@@ -75,7 +75,7 @@ const teamMembers = [
     name: "Iftekhar Salehin",
     role: "Managing Director (Operations)",
     image:
-      "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%209.00.48%20PM.jpeg?updatedAt=1766169177695",
+      "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%209.00.48%20PM.jpeg?tr=w-400,h-400,q-85,f-webp",
     quote:
       "Behind every success story is a system that works seamlessly. I'm proud to ensure TSA operates with excellence so our students can focus on what matters—learning and growing.",
     socials: {
@@ -104,7 +104,7 @@ const teamMembers = [
     name: "Prottoy Rudro",
     role: "Faculty Member, Cybersecurity Researcher",
     image:
-      "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%209.00.47%20PM.jpeg?updatedAt=1766169177691",
+      "https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-19%20at%209.00.47%20PM.jpeg?tr=w-400,h-400,q-85,f-webp",
     quote:
       "Teaching at TSA means preparing students for tomorrow's threats, not yesterday's textbook examples. Our curriculum evolves as fast as the cybersecurity landscape itself.",
     socials: {
