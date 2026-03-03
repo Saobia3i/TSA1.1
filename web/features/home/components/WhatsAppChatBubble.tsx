@@ -28,6 +28,17 @@ export default function WhatsAppChatBubble({
 }: WhatsAppChatBubbleProps) {
   const [showPopup, setShowPopup] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Auto-show popup after delay
   useEffect(() => {
@@ -58,7 +69,7 @@ export default function WhatsAppChatBubble({
       style={{
         position: "fixed",
         ...position,
-        zIndex: 50,
+        zIndex: 999,
       }}
     >
       {/* Popup Message */}
@@ -68,7 +79,7 @@ export default function WhatsAppChatBubble({
             initial={{ opacity: 0, y: 10, x: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, x: 10, scale: 0.95 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
+            transition={{ duration: isMobile ? 0.2 : 0.25, ease: "easeOut" }}
             style={{
               position: "absolute",
               bottom: `${buttonSize + 18}px`,
@@ -84,8 +95,8 @@ export default function WhatsAppChatBubble({
               gap: "10px",
               background: "rgba(255,255,255,0.9)",
               border: "1px solid rgba(255, 255, 255, 0.14)",
-              backdropFilter: "blur(14px)",
-              WebkitBackdropFilter: "blur(14px)",
+              backdropFilter: isMobile ? "blur(10px)" : "blur(14px)",
+              WebkitBackdropFilter: isMobile ? "blur(10px)" : "blur(14px)",
               boxShadow: "0 12px 34px rgba(0,0,0,0.35)",
               fontFamily: "var(--font-nunito)",
             }}
@@ -131,8 +142,8 @@ export default function WhatsAppChatBubble({
                 borderRight: "1px solid rgba(255, 255, 255, 0.14)",
                 borderBottom: "1px solid rgba(255, 255, 255, 0.14)",
                 transform: "rotate(45deg)",
-                backdropFilter: "blur(14px)",
-                WebkitBackdropFilter: "blur(14px)",
+                backdropFilter: isMobile ? "blur(10px)" : "blur(14px)",
+                WebkitBackdropFilter: isMobile ? "blur(10px)" : "blur(14px)",
               }}
             />
           </motion.div>
@@ -148,15 +159,15 @@ export default function WhatsAppChatBubble({
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{
-          delay: 0.8,
-          duration: 0.4,
-          type: "spring",
+          delay: isMobile ? 0.4 : 0.8,
+          duration: isMobile ? 0.2 : 0.4,
+          type: isMobile ? "tween" : "spring",
           stiffness: 200,
         }}
-        whileHover={{ scale: 1.15, rotate: 10 }}
-        whileTap={{ scale: 0.9 }}
+        whileHover={isMobile ? {} : { scale: 1.15, rotate: 10 }}
+        whileTap={isMobile ? {} : { scale: 0.9 }}
         onMouseEnter={() => {
-          if (!dismissed) setShowPopup(true);
+          if (!dismissed && !isMobile) setShowPopup(true);
         }}
         style={{
           width: `${buttonSize}px`,

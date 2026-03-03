@@ -1,29 +1,30 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Award, Globe, Shield, Briefcase, Target } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { getFeaturedConsultants } from '@/features/consultant/Consultantdata';
 import Image from 'next/image';
 
 export default function ConsultantPreview() {
   const consultant = getFeaturedConsultants()[0]; // Get the featured consultant
-  const sectionRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start center', 'end center'],
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   if (!consultant) return null;
 
   return (
-    <motion.section
-      ref={sectionRef}
+    <section
       style={{ 
         padding: 'clamp(44px, 7vw, 100px) 0',
         position: 'relative',
@@ -52,8 +53,7 @@ export default function ConsultantPreview() {
         pointerEvents: 'none',
       }} />
 
-      <motion.div
-        style={{ opacity, scale }}
+      <div
         className="container"
       >
         {/* Section Header */}
@@ -61,7 +61,7 @@ export default function ConsultantPreview() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={isMobile ? { duration: 0.3, ease: 'easeOut' } : { duration: 0.5, ease: 'easeOut' }}
           style={{ 
             textAlign: 'center',
             marginBottom: 'clamp(40px, 6vw, 70px)',
@@ -73,7 +73,7 @@ export default function ConsultantPreview() {
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={isMobile ? { duration: 0.25 } : { duration: 0.4, delay: 0.1 }}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -123,7 +123,7 @@ export default function ConsultantPreview() {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={isMobile ? { duration: 0.35 } : { duration: 0.5, delay: 0.2 }}
           style={{
             maxWidth: '1080px',
             margin: '0 auto',
@@ -132,8 +132,8 @@ export default function ConsultantPreview() {
           }}
         >
           <motion.div
-            whileHover={{ y: -10 }}
-            transition={{ duration: 0.4 }}
+            whileHover={{ y: -8 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
             style={{
               background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.98), rgba(17, 24, 39, 0.95))',
               borderRadius: 'clamp(18px, 4vw, 30px)',
@@ -143,24 +143,15 @@ export default function ConsultantPreview() {
               position: 'relative',
             }}
           >
-            {/* Glow Effect */}
-            <motion.div
-              animate={{
-                opacity: [0.3, 0.6, 0.3],
-                scale: [1, 1.05, 1],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
+            {/* Glow Effect - Removed for performance */}
+            <div
               style={{
                 position: 'absolute',
                 top: 0,
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: 'radial-gradient(circle at 30% 20%, rgba(34, 211, 238, 0.15), transparent 60%)',
+                background: 'radial-gradient(circle at 30% 20%, rgba(34, 211, 238, 0.12), transparent 60%)',
                 pointerEvents: 'none',
               }}
             />
@@ -183,23 +174,21 @@ export default function ConsultantPreview() {
               }}>
                 {/* Profile Image */}
                 <motion.div
-                  whileHover={{ scale: 1.08 }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
                   style={{
                     position: 'relative',
                     width: 'clamp(150px, 58vw, 260px)',
                     height: 'clamp(150px, 58vw, 260px)',
                   }}
                 >
-                  <motion.div
-                    whileHover={{ opacity: 0.85, filter: 'blur(28px)' }}
-                    transition={{ duration: 0.25, ease: 'easeOut' }}
+                  <div
                     style={{
                     position: 'absolute',
                     inset: '-4px',
                     background: 'linear-gradient(135deg, #22d3ee, #a855f7)',
                     borderRadius: '24px',
-                    opacity: 0.6,
+                    opacity: 0.5,
                     filter: 'blur(20px)',
                   }} />
                   <div style={{
@@ -257,8 +246,8 @@ export default function ConsultantPreview() {
                       initial={{ opacity: 0, scale: 0.8 }}
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
-                      transition={{ delay: 0.4 + index * 0.1 }}
-                      whileHover={{ scale: 1.05 }}
+                      transition={isMobile ? { duration: 0.2, delay: index * 0.03 } : { delay: 0.3 + index * 0.05 }}
+                      whileHover={{ scale: 1.03 }}
                       style={{
                         padding: 'clamp(10px, 2.8vw, 16px)',
                         background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(168, 85, 247, 0.08))',
@@ -306,7 +295,7 @@ export default function ConsultantPreview() {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.5 }}
+                    transition={isMobile ? { duration: 0.25 } : { delay: 0.3 }}
                     style={{
                       fontSize: 'clamp(22px, 6vw, 36px)',
                       fontWeight: 800,
@@ -323,7 +312,7 @@ export default function ConsultantPreview() {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.6 }}
+                    transition={isMobile ? { duration: 0.25, delay: 0.05 } : { delay: 0.35 }}
                     style={{
                       fontSize: 'clamp(14px, 2.5vw, 16px)',
                       color: '#22d3ee',
@@ -338,7 +327,7 @@ export default function ConsultantPreview() {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.7 }}
+                    transition={isMobile ? { duration: 0.25, delay: 0.1 } : { delay: 0.4 }}
                     style={{
                       fontSize: 'clamp(13px, 2vw, 14px)',
                       color: '#9ca3af',
@@ -355,7 +344,7 @@ export default function ConsultantPreview() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.8 }}
+                  transition={isMobile ? { duration: 0.25, delay: 0.15 } : { delay: 0.45 }}
                   style={{
                     fontSize: 'clamp(14px, 2.5vw, 16px)',
                     color: '#d1d5db',
@@ -371,7 +360,7 @@ export default function ConsultantPreview() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.9 }}
+                  transition={isMobile ? { duration: 0.25, delay: 0.2 } : { delay: 0.5 }}
                 >
                   <h4 style={{
                     fontSize: '14px',
@@ -389,7 +378,7 @@ export default function ConsultantPreview() {
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 1 + index * 0.1 }}
+                        transition={isMobile ? { duration: 0.2, delay: 0.05 * index } : { delay: 0.55 + index * 0.05 }}
                         style={{
                           display: 'flex',
                           alignItems: 'flex-start',
@@ -423,15 +412,16 @@ export default function ConsultantPreview() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 1.3 }}
+                  transition={isMobile ? { duration: 0.25, delay: 0.25 } : { delay: 0.7 }}
                 >
                   <Link href="/Consultant" style={{ textDecoration: 'none' }}>
                     <motion.button
                       whileHover={{
-                        scale: 1.05,
-                        boxShadow: '0 0 40px rgba(34, 211, 238, 0.6), 0 0 80px rgba(168, 85, 247, 0.4)',
+                        scale: 1.03,
+                        boxShadow: '0 0 30px rgba(34, 211, 238, 0.5), 0 0 60px rgba(168, 85, 247, 0.3)',
                       }}
-                      whileTap={{ scale: 0.95 }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ duration: 0.2, ease: 'easeOut' }}
                       style={{
                         width: '100%',
                         padding: 'clamp(12px, 3vw, 16px) clamp(16px, 4vw, 32px)',
@@ -462,7 +452,7 @@ export default function ConsultantPreview() {
             </div>
           </motion.div>
         </motion.div>
-      </motion.div>
-    </motion.section>
+      </div>
+    </section>
   );
 }

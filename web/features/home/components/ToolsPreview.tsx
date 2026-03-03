@@ -44,10 +44,10 @@ export default function ToolsPreview() {
       }}
     >
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 1, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
-        transition={{ duration: 0.3, ease: [0.3, 1, 0.3, 1] }}
+        transition={{ duration: 0.25, ease: 'easeOut' }}
         style={{ textAlign: 'center', marginBottom: 'clamp(40px, 6vw, 60px)' }}
       >
         <h2
@@ -87,10 +87,10 @@ export default function ToolsPreview() {
         {featuredTools.map((tool, index) => (
           <motion.div
             key={tool.name}
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 1, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: index * 0.1, duration: 0.3, type: 'spring' }}
+            transition={{ delay: index * 0.05, duration: 0.25, ease: 'easeOut' }}
             onHoverStart={() => setHoveredIndex(index)}
             onHoverEnd={() => setHoveredIndex(null)}
             whileHover={{
@@ -184,10 +184,10 @@ export default function ToolsPreview() {
         {/* View More Tools Card - SMALLER */}
         <Link href="/tools" style={{ textDecoration: 'none', flex: '0 0 auto' }}>
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 1, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.6, type: 'spring' }}
+            transition={{ delay: 0.2, duration: 0.25, ease: 'easeOut' }}
             onHoverStart={() => setHoveredViewMore(true)}
             onHoverEnd={() => setHoveredViewMore(false)}
             whileHover={{

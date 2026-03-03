@@ -222,12 +222,12 @@ body::after {
               radial-gradient(circle at 40% 20%, rgba(148, 112, 219, 0.145) 0%, transparent 50%);
   background-attachment: fixed;
   pointer-events: none;
-  will-change: transform;
+  will-change: auto;
   backface-visibility: hidden;
   filter: blur(80px);
   opacity: 0.5;
-  animation: cyberGlow 20s ease-in-out infinite;
-  contain: paint;
+  animation: cyberGlow 25s ease-in-out infinite;
+  contain: layout style paint;
   transform-origin: center;
 }
 
@@ -274,6 +274,31 @@ main {
   background-color: transparent;
   position: relative;
   z-index: 0;
+}
+
+/* ============================================
+   CSS CONTAINMENT & LAZY RENDERING
+   ============================================ */
+
+/* ✅ Optimize section rendering with CSS containment */
+section {
+  contain: layout style paint;
+  content-visibility: auto;
+}
+
+/* ✅ Improve paint performance for cards and containers */
+article, 
+.card,
+[class*="Card"],
+[class*="card"],
+.container {
+  contain: layout style;
+}
+
+/* ✅ Optimize image rendering */
+img {
+  content-visibility: auto;
+  contain: size layout style;
 }
 
 /* ============================================
@@ -582,3 +607,138 @@ p, h1, h2, h3, h4, h5, h6, a, span, div {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
+
+/* ============================================
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+/* ✅ Optimize scroll performance on mobile */
+@media (max-width: 768px) {
+  /* Reduce blur effects on mobile for better performance */
+  body::after {
+    filter: blur(40px) !important;
+    animation-duration: 25s !important;
+    will-change: auto;
+  }
+
+  /* Optimize all backdrop filters on mobile */
+  [style*="backdrop-filter"],
+  [style*="backdropFilter"] {
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+
+  /* KEEP smooth scrolling enabled for better UX */
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Only animate essential transforms */
+  * {
+    will-change: auto;
+  }
+
+  /* Enable hardware acceleration for fixed positioned elements only */
+  [style*="position: fixed"],
+  [style*="position:fixed"] {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Optimize images on mobile */
+  img {
+    will-change: auto;
+  }
+
+  /* Reduce box-shadow complexity on mobile */
+  [style*="box-shadow"],
+  [style*="boxShadow"] {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+/* ✅ Further optimizations for very small mobile screens */
+@media (max-width: 480px) {
+  /* Even lighter blur for low-end devices */
+  body::after {
+    filter: blur(30px) !important;
+    opacity: 0.4 !important;
+  }
+}
+
+/* ✅ Performance mode for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  body::after {
+    animation: none !important;
+  }
+}
+
+/* ✅ Touch-specific optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Optimize tap targets */
+  button, a, input, select, textarea {
+    touch-action: manipulation;
+  }
+}
+
+/* ============================================
+   ADVANCED PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+/* ✅ Optimize rendering and compositing */
+html, body {
+  /* Better subpixel rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Optimize text rendering */
+  text-rendering: optimizeSpeed;
+}
+
+/* ✅ Optimize headings and text for better readability */
+h1, h2, h3, h4, h5, h6 {
+  text-rendering: optimizeLegibility;
+}
+
+/* ✅ Optimize viewport-based rendering */
+@supports (content-visibility: auto) {
+  section, article, aside {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+  }
+}
+
+/* ✅ Reduce repaint on scroll */
+.fixed-header,
+nav {
+  contain: layout style;
+}
+
+/* ✅ Optimize modal and overlay rendering */
+[role="dialog"],
+.modal,
+.overlay {
+  contain: layout style paint;
+}
+
+/* ✅ Prevent overscroll bounce for better scroll feel */
+html {
+  overscroll-behavior-y: none;
+}
+
+/* ✅ Optimize animation performance */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    animation-timing-function: ease-out;
+    transition-timing-function: ease-out;
+  }
+}
+

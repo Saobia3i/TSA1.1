@@ -10,7 +10,7 @@ import Instagram from "@mui/icons-material/Instagram";
 import XIcon from "@mui/icons-material/X";
 import CSSAuroraBackground from "@/components/backgrounds/CSSAuroraBackground";
 import styles from "../page.module.css";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 const teamMembers = [
   {
@@ -119,8 +119,20 @@ const teamMembers = [
 
 export default function TeamPage() {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const founder = teamMembers[0];
   const members = teamMembers.slice(1);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   //const prefersReducedMotion = useReducedMotion();
   const cardVariants = useMemo(
     () => ({
@@ -145,7 +157,7 @@ export default function TeamPage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: isMobile ? 0.3 : 0.5 }}
           className={styles.backButtonContainer}
         >
           <Link href="/about">
@@ -164,13 +176,13 @@ export default function TeamPage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: isMobile ? 0.4 : 0.7 }}
           className={styles.heroSection}
         >
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            transition={{ duration: isMobile ? 0.4 : 0.7, delay: isMobile ? 0.1 : 0.2 }}
             className={styles.heroTitle}
           >
             Meet Our Team
@@ -178,7 +190,7 @@ export default function TeamPage() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+            transition={{ duration: isMobile ? 0.4 : 0.7, delay: isMobile ? 0.15 : 0.3 }}
             className={styles.heroSubtitle}
           >
             The architects who transformed vision into reality
@@ -198,7 +210,7 @@ export default function TeamPage() {
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: isMobile ? 0.3 : 0.4 }}
               className={styles.compactTeamCard}
               style={{
                 border: "3px solid #FFD700",
@@ -206,8 +218,8 @@ export default function TeamPage() {
               }}
             >
               <motion.div
-                animate={{ opacity: [0.3, 0.6, 0.3] }}
-                transition={{ duration: 3, repeat: Infinity }}
+                animate={isMobile ? {} : { opacity: [0.3, 0.6, 0.3] }}
+                transition={isMobile ? {} : { duration: 3, repeat: Infinity }}
                 className={styles.compactCardGlow}
                 style={{
                   background:
@@ -229,14 +241,14 @@ export default function TeamPage() {
               </div>
 
               <motion.div
-                animate={{
+                animate={isMobile ? {} : {
                   boxShadow: [
                     "0 0 25px rgba(255, 215, 0, 0.4)",
                     "0 0 50px rgba(255, 165, 0, 0.6)",
                     "0 0 25px rgba(255, 215, 0, 0.4)",
                   ],
                 }}
-                transition={{ duration: 3, repeat: Infinity }}
+                transition={isMobile ? {} : { duration: 3, repeat: Infinity }}
                 className={styles.compactCardImage}
                 style={{
                   backgroundImage: `url('${founder.image}')`,
@@ -360,13 +372,13 @@ export default function TeamPage() {
                   amount: 0.2, // 👈 এই line যোগ
                   margin: "0px 0px -50px 0px", // 👈 এই line যোগ
                 }}
-                whileHover={{ y: -8 }}
+                whileHover={isMobile ? { scale: 1.02 } : { y: -8 }}
                 className={styles.compactTeamCard}
                 style={{ willChange: "transform" }} // 👈 এই line যোগ
               >
                 <motion.div
-                  animate={{ opacity: [0.2, 0.4, 0.2] }}
-                  transition={{
+                  animate={isMobile ? {} : { opacity: [0.2, 0.4, 0.2] }}
+                  transition={isMobile ? {} : {
                     duration: 4,
                     repeat: Infinity,
                     delay: index * 0.3,
@@ -376,14 +388,14 @@ export default function TeamPage() {
                 />
 
                 <motion.div
-                  animate={{
+                  animate={isMobile ? {} : {
                     boxShadow: [
                       "0 0 20px rgba(0, 212, 255, 0.3)",
                       "0 0 40px rgba(124, 58, 237, 0.5)",
                       "0 0 20px rgba(0, 212, 255, 0.3)",
                     ],
                   }}
-                  transition={{ duration: 3, repeat: Infinity }}
+                  transition={isMobile ? {} : { duration: 3, repeat: Infinity }}
                   className={styles.compactCardImage}
                   style={{ backgroundImage: `url('${member.image}')` }}
                 />

@@ -39,6 +39,17 @@ export default function HomePage() {
   const founderRef = useRef<HTMLElement>(null);
   const [showPopup, setShowPopup] = useState(true);
   const [dismissed, setDismissed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     if (dismissed) return;
@@ -68,10 +79,10 @@ export default function HomePage() {
         }}
       >
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: isMobile ? 0.5 : 0.8, ease: [0.16, 1, 0.3, 1] }}
           style={{ textAlign: "center" as const, marginBottom: "50px" }}
         >
           <h2
@@ -99,25 +110,25 @@ export default function HomePage() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={isMobile ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: isMobile ? 0.5 : 0.8, ease: [0.16, 1, 0.3, 1] }}
           style={{
             position: "relative",
             padding: "clamp(24px, 5vw, 40px)",
             backgroundColor: "rgba(17, 24, 39, 0.6)",
             borderRadius: "24px",
             border: "2px solid rgba(34, 211, 238, 0.2)",
-            backdropFilter: "blur(20px)",
+            backdropFilter: isMobile ? "blur(10px)" : "blur(20px)",
             boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
           }}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0 }}
+            initial={isMobile ? { opacity: 0 } : { opacity: 0, scale: 0 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
+            transition={{ delay: isMobile ? 0 : 0.2, duration: isMobile ? 0.4 : 0.5, type: "spring", stiffness: 100 }}
             style={{
               position: "absolute",
               top: "20px",
@@ -149,8 +160,8 @@ export default function HomePage() {
             }}
           >
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.35, type: "spring" }}
+              whileHover={isMobile ? {} : { scale: 1.05 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               style={{
                 width: "140px",
                 height: "140px",
@@ -161,25 +172,27 @@ export default function HomePage() {
               }}
             >
               {/* Glow layer */}
-              <motion.div
-                aria-hidden
-                animate={{ opacity: [0.4, 0.85, 0.4], scale: [1, 1.04, 1] }}
-                transition={{
-                  duration: 2.4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                style={{
-                  position: "absolute",
-                  inset: "1px",
-                  borderRadius: "1px",
-                  background:
-                    "linear-gradient(135deg, rgb(38,159,154), rgb(38,159,154) 25%)",
-                  filter: "blur(18px)",
-                  zIndex: 0,
-                  pointerEvents: "none",
-                }}
-              />
+              {!isMobile && (
+                <motion.div
+                  aria-hidden
+                  animate={{ opacity: [0.4, 0.85, 0.4], scale: [1, 1.04, 1] }}
+                  transition={{
+                    duration: 2.4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  style={{
+                    position: "absolute",
+                    inset: "1px",
+                    borderRadius: "1px",
+                    background:
+                      "linear-gradient(135deg, rgb(38,159,154), rgb(38,159,154) 25%)",
+                    filter: "blur(18px)",
+                    zIndex: 0,
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
 
               {/* Image container */}
               <div
@@ -213,10 +226,10 @@ export default function HomePage() {
 
             <div style={{ flex: 1, minWidth: "300px", maxWidth: "700px" }}>
               <motion.p
-                initial={{ opacity: 0, y: 10 }}
+                initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.15, duration: 0.6 }}
+                transition={{ delay: isMobile ? 0 : 0.15, duration: isMobile ? 0.4 : 0.6 }}
                 style={{
                   fontSize: "clamp(14px, 2vw, 16px)",
                   color: "#e5e7eb",
@@ -246,10 +259,10 @@ export default function HomePage() {
                 </span>
               </motion.p>
               <motion.p
-                initial={{ opacity: 0, y: 10 }}
+                initial={isMobile ? { opacity: 0 } : { opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.25, duration: 0.6 }}
+                transition={{ delay: isMobile ? 0 : 0.25, duration: isMobile ? 0.4 : 0.6 }}
                 style={{
                   fontSize: "clamp(14px, 2vw, 16px)",
                   color: "#e5e7eb",
@@ -268,10 +281,10 @@ export default function HomePage() {
                 on without you.
               </span>
               <motion.div
-                initial={{ opacity: 0, x: -10 }}
+                initial={isMobile ? { opacity: 0 } : { opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.35, duration: 0.6 }}
+                transition={{ delay: isMobile ? 0 : 0.35, duration: isMobile ? 0.4 : 0.6 }}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -357,11 +370,12 @@ export default function HomePage() {
         >
           {/* Logo 1 */}
           <motion.div
-            whileHover={{
+            whileHover={isMobile ? {} : {
               scale: 1.1,
               y: -10,
               boxShadow: "0 25px 50px rgba(34, 211, 238, 0.4)",
             }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
             style={{
               width: "200px",
               height: "200px",
@@ -380,6 +394,7 @@ export default function HomePage() {
               alt="Partner 1"
               width={180}
               height={180}
+              loading="lazy"
               style={{
                 objectFit: "cover",
                 borderRadius: "50%",
@@ -389,11 +404,12 @@ export default function HomePage() {
             />
           </motion.div>
           <motion.div
-            whileHover={{
+            whileHover={isMobile ? {} : {
               scale: 1.1,
               y: -10,
               boxShadow: "0 25px 50px rgba(34, 211, 238, 0.4)",
             }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
             style={{
               width: "200px",
               height: "200px",
@@ -412,6 +428,7 @@ export default function HomePage() {
               alt="Partner 2"
               width={180}
               height={180}
+              loading="lazy"
               style={{
                 objectFit: "cover",
                 borderRadius: "50%",
@@ -421,13 +438,14 @@ export default function HomePage() {
             />
           </motion.div>
 
-          {/* Logo 1 */}
+          {/* Logo 3 */}
           <motion.div
-            whileHover={{
+            whileHover={isMobile ? {} : {
               scale: 1.1,
               y: -10,
               boxShadow: "0 25px 50px rgba(34, 211, 238, 0.4)",
             }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
             style={{
               width: "200px",
               height: "200px",
@@ -446,6 +464,7 @@ export default function HomePage() {
               alt="Partner 3"
               width={180}
               height={180}
+              loading="lazy"
               style={{
                 objectFit: "cover",
                 borderRadius: "50%",
@@ -460,8 +479,8 @@ export default function HomePage() {
         <div style={{ textAlign: "center" as const }}>
           <Link href="/about/join">
             <motion.button
-              whileHover={{ scale: 1.05, y: -3 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={isMobile ? {} : { scale: 1.05, y: -3 }}
+              whileTap={isMobile ? {} : { scale: 0.95 }}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -476,7 +495,7 @@ export default function HomePage() {
                 color: "white",
                 cursor: "pointer",
                 fontFamily: "var(--font-nunito)",
-                backdropFilter: "blur(10px)",
+                backdropFilter: isMobile ? "blur(10px)" : "blur(10px)",
                 boxShadow: "0 8px 25px rgba(34, 211, 238, 0.3)",
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               }}

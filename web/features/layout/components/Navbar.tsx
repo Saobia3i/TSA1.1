@@ -73,16 +73,35 @@ export default function Navbar({ user = null }: NavbarProps) {
   const [socialsOpenMobile, setSocialsOpenMobile] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
   const aboutRef = useRef<HTMLDivElement>(null);
   const socialsRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Set scrolled state
+      setScrolled(currentScrollY > 20);
+      
+      // Hide navbar when scrolling down, show when scrolling up
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        // Scrolling down & past threshold
+        setIsVisible(false);
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up
+        setIsVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+    
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -182,15 +201,16 @@ export default function Navbar({ user = null }: NavbarProps) {
           right: 0,
           zIndex: 1000,
           backgroundColor: scrolled
-            ? "rgba(0, 0, 0, 0.85)"
-            : "rgba(0, 0, 0, 0.5)",
-          backdropFilter: "blur(25px)",
-          WebkitBackdropFilter: "blur(25px)",
+            ? "rgba(0, 0, 0, 0.3)"
+            : "rgba(0, 0, 0, 0.1)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
           borderBottom: scrolled
-            ? "1px solid rgba(0, 212, 255, 0.4)"
-            : "1px solid rgba(255, 255, 255, 0.06)",
+            ? "1px solid rgba(0, 212, 255, 0.2)"
+            : "1px solid rgba(255, 255, 255, 0.03)",
+          transform: isVisible ? "translateY(0)" : "translateY(-100%)",
           transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-          boxShadow: scrolled ? "0 4px 30px rgba(0, 212, 255, 0.2)" : "none",
+          boxShadow: scrolled ? "0 4px 20px rgba(0, 212, 255, 0.15)" : "none",
         }}
       >
         <div
