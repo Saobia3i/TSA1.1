@@ -34,6 +34,7 @@ export default function AdminVerifyClient({ email }: { email: string }) {
 
   return (
     <main
+      className="verify-main"
       style={{
         minHeight: "100vh",
         background: "#0b1220",
@@ -44,6 +45,7 @@ export default function AdminVerifyClient({ email }: { email: string }) {
       }}
     >
       <form
+        className="verify-form"
         onSubmit={onSubmit}
         style={{
           width: "100%",
@@ -77,10 +79,11 @@ export default function AdminVerifyClient({ email }: { email: string }) {
           }}
         />
         {error && <p style={{ color: "#fca5a5" }}>{error}</p>}
-        <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
+        <div className="verify-actions" style={{ display: "flex", gap: 10, marginTop: 14 }}>
           <button
             type="submit"
             disabled={loading}
+            className="verify-button"
             style={{
               border: "1px solid rgba(125,211,252,.5)",
               background: "rgba(125,211,252,.15)",
@@ -97,6 +100,26 @@ export default function AdminVerifyClient({ email }: { email: string }) {
           </Link>
         </div>
       </form>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .verify-main {
+            padding: 20px 12px !important;
+          }
+
+          .verify-form {
+            padding: 16px !important;
+          }
+
+          .verify-actions {
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .verify-button {
+            width: 100%;
+          }
+        }
+      `}</style>
     </main>
   );
 }

@@ -88,6 +88,7 @@ export default function AdminEnrollmentsClient({
 
   return (
     <main
+      className="admin-main"
       style={{
         minHeight: "100vh",
         background: "#0b1220",
@@ -96,9 +97,9 @@ export default function AdminEnrollmentsClient({
       }}
     >
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-          <h1 style={{ margin: 0, fontSize: 28 }}>Admin Enrollment Approval</h1>
-          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+        <div className="header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+          <h1 className="header-title" style={{ margin: 0, fontSize: 28 }}>Admin Enrollment Approval</h1>
+          <div className="header-actions" style={{ display: "flex", gap: 12, alignItems: "center" }}>
             <button
               onClick={lockPanel}
               style={{
@@ -123,8 +124,8 @@ export default function AdminEnrollmentsClient({
         {items.length === 0 ? (
           <p style={{ color: "#9ca3af" }}>No pending enrollment requests.</p>
         ) : (
-          <div style={{ overflowX: "auto", border: "1px solid rgba(255,255,255,.12)", borderRadius: 12 }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div className="table-wrap" style={{ overflowX: "auto", border: "1px solid rgba(255,255,255,.12)", borderRadius: 12 }}>
+            <table className="enrollments-table" style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr>
                   {["Student", "Email", "Contact", "Course", "Requested At", "Action"].map((h) => (
@@ -152,7 +153,7 @@ export default function AdminEnrollmentsClient({
                     <td style={tdStyle}>{item.courseName}</td>
                     <td style={tdStyle}>{fmt(item.enrolledAt)}</td>
                     <td style={tdStyle}>
-                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      <div className="action-buttons" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                         <button
                           onClick={() => approve(item.id)}
                           disabled={loadingId === item.id}
@@ -190,6 +191,39 @@ export default function AdminEnrollmentsClient({
           </div>
         )}
       </div>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .admin-main {
+            padding: 20px 12px !important;
+          }
+
+          .header-row {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 10px;
+          }
+
+          .header-title {
+            font-size: 22px !important;
+            line-height: 1.25;
+          }
+
+          .header-actions {
+            width: 100%;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+          }
+
+          .enrollments-table {
+            min-width: 760px;
+          }
+
+          .action-buttons {
+            min-width: 140px;
+          }
+        }
+      `}</style>
     </main>
   );
 }

@@ -5,7 +5,6 @@ const isProd = process.env.NODE_ENV === "production";
 const nextConfig = {
   // ✅ Enable compression and SWC minification
   compress: true,
-  swcMinify: true,
   poweredByHeader: false,
 
   async headers() {
