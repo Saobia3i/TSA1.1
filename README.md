@@ -1,4 +1,4 @@
-# Tensor Security Academy (`tsa1.1`)
+# Tensor Security Academy 
 
 `tsa1.1` is a full-stack software product for cybersecurity education and security service delivery.  
 It is designed to convert visitors into enrolled learners or service clients while preserving operational control for admins.
