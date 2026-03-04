@@ -349,8 +349,8 @@ function StatusBadge({ status }: { status: "PENDING" | "APPROVED" | "REJECTED" }
 
 function Table({ headers, rows }: { headers: string[]; rows: (React.ReactNode | string)[][] }) {
   return (
-    <div style={{ overflowX: "auto" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", color: "#e5e7eb" }}>
+    <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+      <table style={{ width: "max-content", minWidth: "100%", borderCollapse: "collapse", color: "#e5e7eb" }}>
         <thead>
           <tr>
             {headers.map((h) => (
@@ -361,6 +361,7 @@ function Table({ headers, rows }: { headers: string[]; rows: (React.ReactNode | 
                   fontSize: 12,
                   color: "#9ca3af",
                   padding: "10px 8px",
+                  whiteSpace: "nowrap",
                   borderBottom: "1px solid rgba(255,255,255,.12)",
                 }}
               >
@@ -373,7 +374,7 @@ function Table({ headers, rows }: { headers: string[]; rows: (React.ReactNode | 
           {rows.map((r, i) => (
             <tr key={i}>
               {r.map((c, j) => (
-                <td key={j} style={{ padding: "12px 8px", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
+                <td key={j} style={{ padding: "12px 8px", whiteSpace: "nowrap", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
                   {c}
                 </td>
               ))}
