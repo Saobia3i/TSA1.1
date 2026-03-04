@@ -1,122 +1,82 @@
 # Tensor Security Academy (`tsa1.1`)
 
-`tsa1.1` is a **production-grade web software platform** (not just a static website).  
-It combines marketing experience, authentication, data persistence, API workflows, analytics hooks, and PWA behavior into one system.
+`tsa1.1` is a full-stack software product for cybersecurity education and security service delivery.  
+It is designed to convert visitors into enrolled learners or service clients while preserving operational control for admins.
 
 Live domain: `https://tensorsecurityacademy.com`
 
-## What This Software Is
+## What This Project Serves
 
-- Primary form: Web application (Next.js App Router)
-- Product role: EdTech + cybersecurity services platform
-- Runtime behavior:
-  - Public marketing + content delivery
-  - Authenticated user flow (`/dashboard`)
-  - Backend API processing (enrollments, service bookings, analytics)
-  - Database-backed state (users, sessions, enrollments, bookings)
-  - Progressive Web App install/update lifecycle
+- Builds trust and authority for Tensor Security Academy through a high-quality public platform.
+- Converts traffic into paid learning and consulting demand.
+- Manages enrollment and service booking as real backend data, not external form links.
+- Gives admins control to approve course enrollments and monitor requests.
+- Provides users a personalized dashboard to track their own activity and status.
 
-## Page-by-Page Purpose
+## Problem -> Solution
 
-- `/` Home: brand positioning, value proposition, featured courses/services/tools/news, conversion CTAs.
-- `/courses`: searchable course intelligence layer with details modal and enrollment entry points.
-- `/services`: business security service catalog + package discovery; `/services/[slug]` for deep service detail and booking flow.
-- `/tools`: TSA Labs software/tool ecosystem and external GitHub integration points.
-- `/news` and `/news/[id]`: newsroom/content distribution pipeline.
-- `/about`, `/about/team`, `/about/join`: trust, people, partnership and affiliate conversion.
-- `/Consultant`: expert profile page for authority and enterprise trust.
-- `/business-card`: high-conversion digital business profile page.
-- `/login`, `/signup`: credentials + OAuth identity onboarding.
-- `/dashboard`: protected user area for post-authenticated workflow.
+- Problem: Marketing websites can attract leads but fail to operationalize them.
+  - Solution: This system combines marketing + authentication + database + admin workflow in one product.
+- Problem: External forms (e.g., third-party tools) break ownership and visibility.
+  - Solution: Enrollment/service flows are handled by internal APIs and stored in PostgreSQL.
+- Problem: Admin teams need controlled approval, users need clear status.
+  - Solution: Enrollment lifecycle supports pending and approval states with dashboard visibility.
+- Problem: Teams need real notifications for actions.
+  - Solution: SMTP-based email notifications and optional automation hooks are integrated into backend routes.
 
-## Technologies and What They Serve
+## Core Product Modules
 
-- **Next.js 16 (App Router)**: route groups, server/client component boundaries, metadata/SEO APIs, production delivery pipeline.
-- **React 19 + TypeScript**: strongly typed UI/state logic, large component system maintainability.
-- **Prisma + PostgreSQL**: persistent system-of-record for identity/session/enrollment/booking data.
-- **NextAuth**: multi-provider auth (Google + Credentials), JWT session strategy, auth callback pipeline.
-- **Framer Motion**: interaction design and motion-based UX signaling.
-- **Tailwind + custom CSS architecture**: utility speed + custom visual system for brand-specific cyber UI.
-- **Mantine/MUI/Heroicons/Lucide**: mixed component + icon ecosystems used where each is strongest.
-- **Service Worker + Web Manifest**: installable experience, controlled caching strategy, update prompts.
-- **API routes + n8n webhook hooks**: automation bridge from core app events to workflow systems.
+- Public Experience:
+  - Home, courses, services, tools, news, about/team/join, consultant, business-card pages.
+- Identity & Access:
+  - Login/signup with credentials and Google OAuth.
+  - Role-aware access (student/admin/instructor logic in auth/session callbacks).
+- Enrollment System:
+  - In-app course enrollment requests.
+  - Pending approval workflow with admin actions.
+  - User-side dashboard status reflection after approval.
+- Service Booking System:
+  - Structured service request intake with package and engagement details.
+  - Persisted booking records for internal follow-up and operations.
+- Admin Operations:
+  - Admin-only approval panel for course enrollments.
+  - Admin verification layer for sensitive actions.
+  - Admin-side visibility into booking activity and requester identity.
+- Notification Layer:
+  - SMTP email notifications for enrollment events.
+  - Optional n8n/webhook integration paths for workflow automation.
 
-## Security Posture (Current)
+## Technology Stack and Why It Exists
 
-- Authentication:
-  - Credentials flow validates bcrypt-hashed passwords.
-  - Google OAuth account linking/creation logic in auth callbacks.
-  - JWT-backed session model with user role fields.
-- Access control:
-  - Route protection middleware/proxy redirects unauthenticated users from protected routes.
-  - Auth pages redirect away when already signed in.
-- Data safety:
-  - Input validation with Zod in API routes.
-  - Prisma ORM constrains database access and enforces schema-level uniqueness/indexes.
-- Operational hardening:
-  - Production-focused Next config (headers, compression, optimization, reduced console output).
-  - `robots.txt` and sitemap management for crawl control and discoverability.
-  - Service worker avoids caching `/_next` and `/api` routes to reduce stale/runtime risks.
+- **Next.js 16 (App Router)**:
+  - Server/client component boundaries, route groups, API routes, SEO metadata.
+- **React 19 + TypeScript**:
+  - Typed UI and predictable state transitions for long-term maintainability.
+- **Prisma + PostgreSQL**:
+  - Source-of-truth persistence for users, sessions, enrollments, and service bookings.
+- **NextAuth**:
+  - Unified auth lifecycle, OAuth + credentials support, JWT-backed sessions.
+- **Zod**:
+  - Runtime schema validation for API payload integrity.
+- **Framer Motion + CSS system**:
+  - Brand-consistent, high-impact interaction layer.
+- **PWA stack (manifest + service worker)**:
+  - Installability and improved repeat-visit UX.
 
-## Engineering Quality and Software Maturity
+## System Behavior (High-Level)
 
-This codebase is beyond brochure-level frontend:
+- Visitor enters through marketing surfaces.
+- Interested user authenticates.
+- User submits enrollment/service request.
+- Backend validates and stores request in database.
+- Admin reviews and approves enrollments where needed.
+- Approved outcomes become visible in user dashboard state.
+- Notification channels (email/automation) inform operations.
 
-- Has domain modeling (`User`, `Enrollment`, `ServiceBooking`, etc.)
-- Has real backend mutation paths (`/api/enroll`, `/api/service`)
-- Has auth lifecycle and protected routing
-- Has production deployment conventions (Vercel redirect policy, build scripts, Prisma deploy flow)
-- Has observability hook for web vitals (`/api/analytics`)
-- Has PWA install/update lifecycle support
+## Current Outcome
 
-In short: **this is a functional web software product with full-stack behavior**, currently strongest on marketing, conversion, and auth-integrated data flows, with room to expand dashboard depth.
-
-## Minimal Run Notes
-
-Detailed setup is intentionally brief here:
-
-```bash
-cd web
-npm install
-npx prisma migrate deploy
-npm run dev
-```
-
-Required environment variables:
-
-- `DATABASE_URL`
-- `NEXTAUTH_SECRET`
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
-- `SMTP_USER` (your sender Gmail, e.g. `tensorsecuriityacademy@gmail.com`)
-- `SMTP_PASS` (app password for the sender mailbox)
-- Optional SMTP override: `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM`
-- Alternate key names also supported: `SmtpHost`, `SmtpUser`, `SmtpPass`, `SmtpPort`, `FromEmail`
-- Optional notification target: `ENROLLMENT_NOTIFY_EMAIL` (default: `tensorsecuriityacademy@gmail.com`)
-- Optional automation: `N8N_WEBHOOK_URL`, `N8N_WEBHOOK_SECRET`, `N8N_SERVICE_WEBHOOK_URL`, `N8N_SERVICE_WEBHOOK_SECRET`
-
-SMTP example (`.env`):
-
-```env
-SmtpHost=smtp.gmail.com
-SmtpPort=587
-SmtpUser=your_sender@gmail.com
-SmtpPass=your_gmail_app_password
-FromEmail=your_sender@gmail.com
-ENROLLMENT_NOTIFY_EMAIL=tensorsecuriityacademy@gmail.com
-```
-
-Enrollment approval workflow:
-
-- New enrollment rows are now created as `PENDING`.
-- Only `APPROVED` enrollments are treated as active/enrolled in dashboard logic.
-- Approve manually from DB:
-
-```sql
-UPDATE "Enrollment"
-SET "status" = 'APPROVED', "approvedAt" = NOW()
-WHERE "id" = 'enrollment_id_here';
-```
+This repository represents a production-oriented software system, not a static brochure site.  
+It combines conversion UX, secured identity, data persistence, admin workflow, and operational signaling in one deployable platform.
 
 ## License
 
