@@ -447,7 +447,7 @@ export default function HeroSection() {
           <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.3 }}
             style={{ display:'flex', flexWrap:'wrap', gap:10 }}
           >
-            <Link href="/enroll" className="h-btn-p"
+            <Link href="/courses" className="h-btn-p"
               style={{ textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8, padding:'13px 24px', borderRadius:10, background:'#fff', color:'#0a0f1e', fontWeight:800, fontSize:14, letterSpacing:'-0.02em', boxShadow:'0 8px 28px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)' }}
             >
               Enroll Now <ArrowRight size={15} strokeWidth={2.6} />
