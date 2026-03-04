@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma"; // Add Prisma client
+import { prisma } from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
 
 const serviceBookingSchema = z.object({
   serviceTitle: z.string().min(1, "Service title is required"),
@@ -22,21 +24,16 @@ const serviceBookingSchema = z.object({
 
 export async function POST(request: Request) {
   try {
-    console.log('📥 Service booking request received');
-
-    // 1. VALIDATE REQUEST BODY
+    const session = await getServerSession(authOptions);
     const body = await request.json();
     const validatedData = serviceBookingSchema.parse(body);
 
-    console.log('✅ Request data validated');
-
-    // 2. SAVE TO DATABASE FIRST (CRITICAL!)
     const booking = await prisma.serviceBooking.create({
       data: {
         serviceTitle: validatedData.serviceTitle,
-        fullName: validatedData.fullName,
+        fullName: session?.user?.name || validatedData.fullName,
         organization: validatedData.organization,
-        email: validatedData.email,
+        email: session?.user?.email || validatedData.email,
         whatsapp: validatedData.whatsapp,
         country: validatedData.country,
         packageName: validatedData.packageName,
@@ -49,25 +46,19 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log('✅ Booking saved to database:', booking.id);
-
-    // 3. TRIGGER n8n WORKFLOW (AWAITED)
     const webhookUrl = process.env.N8N_SERVICE_WEBHOOK_URL;
 
     if (webhookUrl) {
       const payload = {
         bookingId: booking.id,
         ...validatedData,
+        email: session?.user?.email || validatedData.email,
+        fullName: session?.user?.name || validatedData.fullName,
         submittedAt: booking.createdAt.toISOString(),
-        submittedAtFormatted: booking.createdAt.toLocaleString('en-BD', {
-          timeZone: 'Asia/Dhaka',
-          dateStyle: 'full',
-          timeStyle: 'short',
-        }),
       };
 
       try {
-        const res = await fetch(webhookUrl, {
+        await fetch(webhookUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -77,18 +68,11 @@ export async function POST(request: Request) {
           },
           body: JSON.stringify(payload),
         });
-
-        if (res.ok) {
-          console.log('✅ n8n workflow triggered successfully');
-        }
-      } catch (err) {
-        // intentionally silent on webhook failure
+      } catch {
+        // webhook failure must not block booking success
       }
-    } else {
-      console.warn('⚠️ N8N_SERVICE_WEBHOOK_URL not set. Skipping webhook.');
     }
 
-    // 4. RETURN SUCCESS IMMEDIATELY
     return NextResponse.json(
       {
         success: true,
@@ -101,10 +85,7 @@ export async function POST(request: Request) {
       },
       { status: 201 }
     );
-
   } catch (error) {
-    console.error('💥 Service booking error:', error);
-
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
@@ -118,10 +99,9 @@ export async function POST(request: Request) {
       );
     }
 
-    if (error instanceof Error && error.message.includes('Prisma')) {
-      console.error('Database error:', error);
+    if (error instanceof Error && error.message.includes("Prisma")) {
       return NextResponse.json(
-        { error: 'Database error. Please try again.' },
+        { error: "Database error. Please try again." },
         { status: 500 }
       );
     }

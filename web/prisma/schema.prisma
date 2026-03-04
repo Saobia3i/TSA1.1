@@ -27,6 +27,12 @@ model User {
   @@index([contact])
 }
 
+enum EnrollmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -67,10 +73,13 @@ model Enrollment {
   userId     String
   courseId   String
   courseName String
+  status     EnrollmentStatus @default(PENDING)
   enrolledAt DateTime @default(now())
+  approvedAt DateTime?
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@unique([userId, courseId])
+  @@index([status])
 }
 
 model ServiceBooking {

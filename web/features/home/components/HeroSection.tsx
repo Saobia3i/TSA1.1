@@ -1,17 +1,15 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  ArrowRight, CheckCircle2, ShieldCheck, Sparkles, Star,
+  Zap, TrendingUp, BookOpen, Users, CheckCircle, Shield,
+} from 'lucide-react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
-// 🚀 Lazy load Feature component
-const Feature = dynamic(() => import('@/features/home/components/Feature'), {
-  ssr: false,
-  loading: () => null,
-});
-
+/* ── data ─────────────────────────────────────────────────── */
 const HERO_SLIDES = [
   'Forge your future in Cybersecurity, AI and Web3',
   'Become Indispensable in the Future of Tech',
@@ -21,798 +19,477 @@ const HERO_SLIDES = [
   'Build More Than a Career',
 ];
 
-const VIDEO_URL = 'https://ik.imagekit.io/ekb0d0it0/hero-background_kwhnz8.webm';
 const SLIDE_INTERVAL = 4000;
-const STAR_BURST_DURATION = 1200;
-const STAR_COUNT = 12;
-const SPARKLE_COUNT = 6;
 
-const PARTICLE_CONFIG = {
-  MAX_PARTICLES: 60,
-  CREATION_RATE: 1,
-  LIFETIME: 80,
-  MIN_SIZE: 1.2,
-  MAX_SIZE: 2.5,
-  SPEED_MULTIPLIER: 1.2,
-  GLOW_RADIUS: 100,
-};
+const WORDS = [
+  'Penetration Testing',
+  'Threat Intelligence',
+  'Cloud Security',
+  'AI Security Ops',
+  'Red Team Execution',
+];
 
-interface ClickEffect {
-  id: number;
-  x: number;
-  y: number;
-}
+const TRUST = [
+  'No credit card required',
+  '14-day money-back guarantee',
+  'Live mentor support',
+];
 
-interface Particle {
-  x: number;
-  y: number;
-  size: number;
-  speedX: number;
-  speedY: number;
-  life: number;
-}
+const CERTS = ['CEH','CISSP','OSCP','Security+','CISM','CCSP','GPEN','GCIH','CISA','CASP+'];
 
-export default function HeroSection() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [mounted, setMounted] = useState(false);
-  const [clickEffects, setClickEffects] = useState<ClickEffect[]>([]);
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [canvasReady, setCanvasReady] = useState(false);
-  
-  const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particlesRef = useRef<Particle[]>([]);
-  const animationFrameRef = useRef<number | null>(null);
-  const mouseXRef = useRef(0);
-  const mouseYRef = useRef(0);
-  const lastMouseMoveRef = useRef<number>(0);
+/* ── stripe config ───────────────────────────────────────── */
+const STRIPES = 14;
+const GLOW_ON      = 0.35;
+const GLOW_FADE    = 0.25;
+const SERIAL_GAP   = 0.45;
+const TOTAL_CYCLE  = STRIPES * SERIAL_GAP + 1.2;
+const STRIPE_COLORS = ['#7dd3fc','#a78bfa','#38bdf8','#c084fc','#7dd3fc','#818cf8','#38bdf8','#a78bfa','#7dd3fc','#c084fc','#38bdf8','#a78bfa','#818cf8','#7dd3fc'];
 
-  // 🚀 Mount and start video immediately
+/* ── CountUp component ───────────────────────────────────── */
+function CountUp5() {
+  const [count, setCount] = useState(1);
+
   useEffect(() => {
-    setMounted(true);
-
-    // Start video load ASAP
-    if (videoRef.current) {
-      videoRef.current.load();
-    }
-    
-    // Canvas init after tiny delay
-    const canvasTimer = setTimeout(() => {
-      setCanvasReady(true);
-    }, 50);
-
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, SLIDE_INTERVAL);
-
-    return () => {
-      clearTimeout(canvasTimer);
-      clearInterval(interval);
-    };
+    let current = 1;
+    let paused = false;
+    const id = setInterval(() => {
+      if (paused) return;
+      current += 1;
+      if (current >= 5) {
+        current = 5;
+        paused = true;
+        setCount(current);
+        setTimeout(() => { current = 1; paused = false; setCount(current); }, 1200);
+      } else {
+        setCount(current);
+      }
+    }, 180);
+    return () => clearInterval(id);
   }, []);
-
-  // 🚀 Aggressive video autoplay
-  useEffect(() => {
-    if (!mounted || !videoRef.current) return;
-
-    const video = videoRef.current;
-    
-    // Multiple event listeners for faster response
-    const handleVideoReady = async () => {
-      try {
-        await video.play();
-        setVideoLoaded(true);
-      } catch (error) {
-        // Silent fail, will play on interaction
-        const playOnce = async () => {
-          try {
-            await video.play();
-            setVideoLoaded(true);
-          } catch (e) {
-            // Ignore
-          }
-        };
-        
-        document.addEventListener('click', playOnce, { once: true, passive: true } as any);
-        document.addEventListener('touchstart', playOnce, { once: true, passive: true } as any);
-        document.addEventListener('scroll', playOnce, { once: true, passive: true } as any);
-      }
-    };
-
-    // Listen to multiple events for fastest start
-    video.addEventListener('loadeddata', handleVideoReady, { once: true });
-    video.addEventListener('canplay', handleVideoReady, { once: true });
-
-    return () => {
-      video.removeEventListener('loadeddata', handleVideoReady);
-      video.removeEventListener('canplay', handleVideoReady);
-    };
-  }, [mounted]);
-
-  // 🚀 Canvas optimization
-  useEffect(() => {
-    if (!canvasReady || !canvasRef.current || !containerRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d', { 
-      alpha: true,
-      desynchronized: true,
-      willReadFrequently: false 
-    });
-    if (!ctx) return;
-
-    let isVisible = true;
-    let rafId: number | null = null;
-
-    const resizeCanvas = () => {
-      if (!containerRef.current) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const width = containerRef.current.offsetWidth;
-      const height = containerRef.current.offsetHeight;
-      
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      ctx.scale(dpr, dpr);
-    };
-
-    resizeCanvas();
-    
-    let resizeTimeout: NodeJS.Timeout;
-    const debouncedResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(resizeCanvas, 200);
-    };
-    
-    window.addEventListener('resize', debouncedResize, { passive: true });
-
-    const visibilityHandler = () => {
-      isVisible = !document.hidden;
-      if (isVisible && !rafId) {
-        animate();
-      }
-    };
-    document.addEventListener('visibilitychange', visibilityHandler);
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const now = performance.now();
-      if (now - lastMouseMoveRef.current < 16) return;
-      lastMouseMoveRef.current = now;
-
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      mouseXRef.current = e.clientX - rect.left;
-      mouseYRef.current = e.clientY - rect.top;
-
-      if (particlesRef.current.length < PARTICLE_CONFIG.MAX_PARTICLES) {
-        particlesRef.current.push({
-          x: mouseXRef.current,
-          y: mouseYRef.current,
-          size: Math.random() * (PARTICLE_CONFIG.MAX_SIZE - PARTICLE_CONFIG.MIN_SIZE) + PARTICLE_CONFIG.MIN_SIZE,
-          speedX: (Math.random() - 0.5) * PARTICLE_CONFIG.SPEED_MULTIPLIER,
-          speedY: (Math.random() - 0.5) * PARTICLE_CONFIG.SPEED_MULTIPLIER,
-          life: PARTICLE_CONFIG.LIFETIME,
-        });
-      }
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      const now = performance.now();
-      if (now - lastMouseMoveRef.current < 16) return;
-      lastMouseMoveRef.current = now;
-
-      if (!containerRef.current || !e.touches[0]) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const touch = e.touches[0];
-      mouseXRef.current = touch.clientX - rect.left;
-      mouseYRef.current = touch.clientY - rect.top;
-
-      if (particlesRef.current.length < PARTICLE_CONFIG.MAX_PARTICLES) {
-        particlesRef.current.push({
-          x: mouseXRef.current,
-          y: mouseYRef.current,
-          size: Math.random() * (PARTICLE_CONFIG.MAX_SIZE - PARTICLE_CONFIG.MIN_SIZE) + PARTICLE_CONFIG.MIN_SIZE,
-          speedX: (Math.random() - 0.5) * PARTICLE_CONFIG.SPEED_MULTIPLIER,
-          speedY: (Math.random() - 0.5) * PARTICLE_CONFIG.SPEED_MULTIPLIER,
-          life: PARTICLE_CONFIG.LIFETIME,
-        });
-      }
-    };
-
-    const currentContainer = containerRef.current;
-    currentContainer.addEventListener('mousemove', handleMouseMove, { passive: true });
-    currentContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
-
-    const animate = () => {
-      if (!ctx || !canvas.width || !canvas.height || !isVisible) {
-        rafId = null;
-        return;
-      }
-
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
-
-      const gradient = ctx.createRadialGradient(
-        mouseXRef.current,
-        mouseYRef.current,
-        0,
-        mouseXRef.current,
-        mouseYRef.current,
-        PARTICLE_CONFIG.GLOW_RADIUS
-      );
-      gradient.addColorStop(0, 'rgba(34, 211, 238, 0.25)');
-      gradient.addColorStop(0.5, 'rgba(34, 211, 238, 0.08)');
-      gradient.addColorStop(1, 'rgba(34, 211, 238, 0)');
-
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const aliveParticles: Particle[] = [];
-      
-      ctx.beginPath();
-      for (let i = 0; i < particlesRef.current.length; i++) {
-        const particle = particlesRef.current[i];
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-        particle.life -= 2.5;
-        particle.size = Math.max(0.2, particle.size - 0.04);
-
-        if (particle.life > 0) {
-          aliveParticles.push(particle);
-          ctx.fillStyle = `rgba(34, 211, 238, ${particle.life / 100})`;
-          ctx.moveTo(particle.x + particle.size, particle.y);
-          ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        }
-      }
-      ctx.fill();
-      
-      particlesRef.current = aliveParticles;
-
-      rafId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', debouncedResize);
-      document.removeEventListener('visibilitychange', visibilityHandler);
-      clearTimeout(resizeTimeout);
-      currentContainer.removeEventListener('mousemove', handleMouseMove);
-      currentContainer.removeEventListener('touchmove', handleTouchMove);
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-    };
-  }, [canvasReady]);
-
-  const handleInteraction = useCallback((clientX: number, clientY: number) => {
-    if (!containerRef.current) return;
-
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = ((clientX - rect.left) / rect.width) * 100;
-    const y = ((clientY - rect.top) / rect.height) * 100;
-
-    const effect: ClickEffect = { 
-      id: Date.now() + Math.random(), 
-      x, 
-      y 
-    };
-
-    setClickEffects(prev => [...prev.slice(-1), effect]);
-
-    setTimeout(() => {
-      setClickEffects(prev => prev.filter(ef => ef.id !== effect.id));
-    }, STAR_BURST_DURATION);
-  }, []);
-
-  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement;
-    if (target.tagName !== 'BUTTON' && target.tagName !== 'A' && !target.closest('button, a')) {
-      handleInteraction(e.clientX, e.clientY);
-    }
-  }, [handleInteraction]);
-
-  const handleTouch = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement;
-    if (e.touches[0] && target.tagName !== 'BUTTON' && target.tagName !== 'A' && !target.closest('button, a')) {
-      handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
-    }
-  }, [handleInteraction]);
-
-  // 🚀 SSR placeholder (no loading text)
-  if (!mounted) {
-    return (
-      <div style={{
-        position: 'relative',
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #000000 0%, #001a33 50%, #000000 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-      }}>
-        {/* Hidden video starts downloading during SSR phase */}
-        <video
-          ref={videoRef}
-          loop
-          muted
-          playsInline
-          preload="auto"
-          style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 1, height: 1 }}
-        >
-          <source src={VIDEO_URL} type="video/webm" />
-        </video>
-
-        <div style={{
-          width: '100%',
-          maxWidth: '1100px',
-          padding: '0 24px',
-          textAlign: 'center',
-        }}>
-          <div style={{
-            padding: '8px 24px',
-            background: 'rgba(6, 182, 212, 0.2)',
-            border: '2px solid rgba(234, 150, 8, 0.6)',
-            borderRadius: '50px',
-            fontSize: '13px',
-            fontWeight: 700,
-            color: '#e5de00',
-            textTransform: 'uppercase',
-            letterSpacing: '2px',
-            display: 'inline-block',
-            marginBottom: '32px',
-          }}>
-            A Globally Trusted Edtech
-          </div>
-          <h1 style={{
-            fontSize: 'clamp(28px, 6vw, 56px)',
-            fontWeight: 500,
-            color: '#ffffff',
-            lineHeight: 1.3,
-            letterSpacing: '8px',
-            textTransform: 'uppercase',
-            marginBottom: '24px',
-          }}>
-            {HERO_SLIDES[0]}
-          </h1>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div
-      ref={containerRef}
-      onClick={handleClick}
-      onTouchStart={handleTouch}
-      style={{
-        position: 'relative',
-        width: '100%',
-        minHeight: '100vh',
-        overflow: 'hidden',
+    <motion.span
+      animate={{ scale: [1, 1.08, 1] }}
+      transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 1.2 }}
+      style={{ 
+        fontSize: '26px', 
+        fontWeight: 900, 
+        color: '#f97316', 
+        letterSpacing: '-0.02em', 
+        lineHeight: 1, 
+        textShadow: '0px 0px 20px rgba(249,115,22,0.8)', 
+        willChange: 'transform' 
       }}
     >
-      {/* Video Background - NO LOADING TEXT */}
-      <VideoBackground 
-        videoRef={videoRef}
-        videoUrl={VIDEO_URL}
-        videoLoaded={videoLoaded}
-      />
-
-      {/* Canvas */}
-      {canvasReady && (
-        <canvas
-          ref={canvasRef}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            zIndex: 2,
-          }}
-        />
-      )}
-
-      {/* Star Burst Click Effects */}
-      <StarBurstEffects effects={clickEffects} />
-
-      {/* Main Content */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 10,
-          width: '100%',
-          maxWidth: '1100px',
-          margin: '0 auto',
-          padding: '140px 24px 80px',
-          display: 'flex',
-          alignItems: 'center',
-          minHeight: '100vh',
-          pointerEvents: 'none',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
-            gap: '32px',
-            width: '100%',
-          }}
-        >
-          <Badge />
-          <HeadlineSlider currentSlide={currentSlide} slides={HERO_SLIDES} />
-          <Subtitle />
-          <CTAButton />
-
-          <div style={{ pointerEvents: 'auto', marginTop: '40px', width: '100%' }}>
-            <Feature />
-          </div>
-
-          <SlideIndicators 
-            slides={HERO_SLIDES} 
-            currentSlide={currentSlide} 
-            onSlideChange={setCurrentSlide} 
-          />
-        </div>
-      </div>
-    </div>
+      {count}+
+    </motion.span>
   );
 }
 
-// ============= SUB-COMPONENTS =============
-
-const VideoBackground = ({ 
-  videoRef, 
-  videoUrl, 
-  videoLoaded, 
-}: { 
-  videoRef: React.RefObject<HTMLVideoElement>;
-  videoUrl: string;
-  videoLoaded: boolean;
-}) => {
+/* ── USFlag ──────────────────────────────────────────────── */
+function USFlagIcon({ size = 80 }: { size?: number }) {
   return (
-    <div
+    <Image
+      src={`https://ik.imagekit.io/7yw4jtfbt/TSA/FLAG.png?tr=w-${size * 2},h-${size * 2},q-85,f-webp`}
+      alt="United States Flag"
+      width={size}
+      height={size}
+      loading="lazy"
+      style={{ objectFit: 'cover', borderRadius: '50%' }}
+    />
+  );
+}
+
+/* ── TOP FEATURES (from Feature.tsx) ─────────────────────── */
+const TOP_FEATURES = [
+  { 
+    icon: (
+      <div style={{ width: '45px', height: '45px', borderRadius: '50%', background: 'rgba(34,211,238,0.15)', border: '2px solid rgba(34,211,238,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(34,211,238,0.3)' }}>
+        <Users size={20} color="#22d3ee" />
+      </div>
+    ), 
+    text: '1-on-1 Mentorship', 
+    color: '#22d3ee' 
+  },
+  { 
+    icon: (
+      <div style={{ width: '45px', height: '45px', borderRadius: '50%', background: 'rgba(168,85,247,0.15)', border: '2px solid rgba(168,85,247,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(168,85,247,0.3)' }}>
+        <Zap size={20} color="#a855f7" />
+      </div>
+    ), 
+    text: 'Live Training', 
+    color: '#a855f7' 
+  },
+  { 
+    icon: (
+      <div style={{ width: '45px', height: '45px', borderRadius: '50%', background: 'rgba(236,72,153,0.15)', border: '2px solid rgba(236,72,153,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(236,72,153,0.3)' }}>
+        <CheckCircle size={20} color="#ec4899" />
+      </div>
+    ), 
+    text: 'Career Guidance', 
+    color: '#ec4899' 
+  },
+  { 
+    icon: (
+      <div style={{ width: '45px', height: '45px', borderRadius: '50%', background: 'rgba(6,182,212,0.15)', border: '2px solid rgba(6,182,212,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(6,182,212,0.3)' }}>
+        <Shield size={20} color="#06b6d4" />
+      </div>
+    ), 
+    text: 'Certification Support', 
+    color: '#06b6d4' 
+  },
+];
+
+/* ── BOTTOM FEATURES (from Feature.tsx) ──────────────────── */
+const BOTTOM_FEATURES = [
+  {
+    icon: (
+      <div style={{ 
+        width: '46px', 
+        height: '46px', 
+        borderRadius: '50%', 
+        background: 'rgba(249,115,22,0.15)', 
+        border: '2px solid rgba(249,115,22,0.4)', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        boxShadow: '0 0 20px rgba(249,115,22,0.3)'
+      }}>
+        <CountUp5 />
+      </div>
+    ),
+    color: '#f97316',
+    text: 'Countries Projected Expansion by 2026',
+  },
+  {
+    icon: (
+      <div style={{ 
+        width: '50px', 
+        height: '50px', 
+        borderRadius: '50%', 
+        background: 'rgba(34,197,94,0.15)', 
+        border: '2px solid rgba(34,197,94,0.4)', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        boxShadow: '0 0 22px rgba(34,197,94,0.3)',
+        overflow: 'hidden'
+      }}>
+        <USFlagIcon size={46} />
+      </div>
+    ),
+    color: '#22c55e',
+    text: (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', userSelect: 'text' }}>
+        <span style={{ userSelect: 'text' }}>Current Operations (USA)</span>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: 600, color: '#22c55e', userSelect: 'text' }}>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 8px rgba(74,222,128,0.9)', display: 'inline-block', animation: 'pulseDot 2s ease-in-out infinite', userSelect: 'none' }} />
+          <span style={{ userSelect: 'text' }}>Active</span>
+        </div>
+      </div>
+    ),
+  },
+];
+
+/* ── Feature Card (for right wave) ───────────────────────── */
+function FloatingFeatureCard({ icon, text, color, top, right, delay, horizontal = false, width }: { icon: React.ReactNode; text: React.ReactNode; color: string; top: string; right: string; delay: number; horizontal?: boolean; width?: string }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, x: 40, scale: 0.94 }} 
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      transition={{ delay, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       style={{
         position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 0,
+        top,
+        right,
+        padding: horizontal ? '12px 16px' : '14px 18px',
+        borderRadius: '12px',
+        minWidth: width || (horizontal ? '170px' : '160px'),
+        maxWidth: width || (horizontal ? '190px' : '180px'),
+        border: `1px solid ${color}40`,
+        background: 'rgba(2,8,24,0.88)',
+        backdropFilter: 'blur(16px)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07)',
+        animation: `floatB 9s ease-in-out infinite ${delay * 0.5}s`,
+        pointerEvents: 'auto',
+        userSelect: 'text',
+        cursor: 'text',
       }}
     >
-      {/* Gradient Background */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'linear-gradient(135deg, #000000 0%, #001a33 50%, #000000 100%)',
-          opacity: videoLoaded ? 0 : 1,
-          transition: 'opacity 0.4s ease-out',
-        }}
-      />
-
-      {/* Video - starts loading immediately, no loading text */}
-      <video
-        ref={videoRef}
-        loop
-        muted
-        playsInline
-        preload="auto"
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center',
-          opacity: videoLoaded ? 1 : 0,
-          transition: 'opacity 0.4s ease-in-out',
-        }}
-      >
-        <source src={videoUrl} type="video/webm" />
-      </video>
-
-      {/* Dark Overlay */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6))',
-        }}
-      />
-    </div>
+      <div style={{ display: 'flex', flexDirection: horizontal ? 'row' : 'column', alignItems: 'center', gap: horizontal ? '12px' : '10px' }}>
+        <div style={{ flexShrink: 0, userSelect: 'none' }}>
+          {icon}
+        </div>
+        <div style={{ fontSize: '12px', fontWeight: 700, color: '#fff', lineHeight: 1.4, textAlign: horizontal ? 'left' : 'center', userSelect: 'text' }}>
+          {text}
+        </div>
+      </div>
+    </motion.div>
   );
-};
+}
 
-const StarBurstEffects = ({ effects }: { effects: ClickEffect[] }) => {
+/* ── right wave + cards ──────────────────────────────────── */
+function RightWave() {
+  const TOP_X    = 480;
+  const BOT_X    = 880;
+  const DX       = BOT_X - TOP_X;
+  const STRIPE_START = 500;
+  const STRIPE_STEP  = 32;
+
   return (
-    <>
-      {effects.map(effect => (
-        <div 
-          key={effect.id} 
-          style={{ 
-            position: 'absolute', 
-            left: `${effect.x}%`, 
-            top: `${effect.y}%`, 
-            pointerEvents: 'none', 
-            zIndex: 20,
-            willChange: 'transform',
-          }}
-        >
-          <motion.div
-            initial={{ scale: 0, opacity: 1 }}
-            animate={{ scale: 2, opacity: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            style={{
-              position: 'absolute',
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(34, 211, 238, 0.6), transparent)',
-              boxShadow: '0 0 30px rgba(34, 211, 238, 0.4)',
-              transform: 'translate(-50%, -50%)',
-            }}
-          />
+    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', zIndex: 1 }}>
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        <svg viewBox="0 0 1000 900" preserveAspectRatio="none"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+          <defs>
+            <linearGradient id="wg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stopColor="rgba(56,189,248,0.14)" />
+              <stop offset="50%"  stopColor="rgba(56,189,248,0.06)" />
+              <stop offset="100%" stopColor="rgba(99,102,241,0.10)" />
+            </linearGradient>
+            <linearGradient id="sg" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%"   stopColor="rgba(125,211,252,0.95)" />
+              <stop offset="55%"  stopColor="rgba(125,211,252,0.38)" />
+              <stop offset="100%" stopColor="rgba(125,211,252,0.04)" />
+            </linearGradient>
+          </defs>
+          <path d={`M ${TOP_X},0 L ${BOT_X},900 L 1000,900 L 1000,0 Z`} fill="url(#wg)" />
+          <path d={`M ${TOP_X},0 L ${BOT_X},900`} fill="none" stroke="url(#sg)" strokeWidth="3"
+            style={{ filter: 'drop-shadow(0 0 8px rgba(125,211,252,0.8)) drop-shadow(0 0 20px rgba(125,211,252,0.4))' }} />
+          <path d={`M ${TOP_X - 50},0 L ${BOT_X - 50},900`} fill="none" stroke="rgba(125,211,252,0.13)" strokeWidth="1.1" />
+          <path d={`M ${TOP_X - 100},0 L ${BOT_X - 100},900`} fill="none" stroke="rgba(125,211,252,0.06)" strokeWidth="0.7" />
+        </svg>
 
-          {Array.from({ length: STAR_COUNT }).map((_, i) => {
-            const angle = (i * 360) / STAR_COUNT;
-            const distance = 50;
-            const size = Math.random() * 3 + 2;
-            
-            return (
-              <motion.div
-                key={i}
-                initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
-                animate={{
-                  x: Math.cos((angle * Math.PI) / 180) * distance,
-                  y: Math.sin((angle * Math.PI) / 180) * distance,
-                  opacity: 0,
-                  scale: [0, 1.2, 0],
-                }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                style={{
-                  position: 'absolute',
-                  width: `${size}px`,
-                  height: `${size}px`,
-                  transform: 'translate(-50%, -50%)',
-                  willChange: 'transform',
-                }}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  style={{ 
-                    width: '100%', 
-                    height: '100%',
-                    filter: 'drop-shadow(0 0 2px rgba(34, 211, 238, 0.8))',
-                  }}
-                >
-                  <path
-                    d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
-                    fill="#22d3ee"
-                    stroke="rgba(34, 211, 238, 0.8)"
-                    strokeWidth="0.5"
-                  />
-                </svg>
-              </motion.div>
-            );
+        <svg viewBox="0 0 1000 900" preserveAspectRatio="none"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+          {Array.from({ length: STRIPES }).map((_, i) => {
+            const x1 = STRIPE_START + i * STRIPE_STEP;
+            const x2 = x1 + DX;
+            return <line key={i} x1={x1} y1={0} x2={x2} y2={900} stroke="rgba(125,211,252,0.07)" strokeWidth="0.9" />;
           })}
+        </svg>
 
-          {Array.from({ length: SPARKLE_COUNT }).map((_, i) => {
-            const angle = (i * 360) / SPARKLE_COUNT + 30;
-            const distance = 35;
-            
+        <svg viewBox="0 0 1000 900" preserveAspectRatio="none"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+          {Array.from({ length: STRIPES }).map((_, i) => {
+            const x1 = STRIPE_START + i * STRIPE_STEP;
+            const x2 = x1 + DX;
+            const color = STRIPE_COLORS[i % STRIPE_COLORS.length];
+            const sw = i % 3 === 0 ? 2.2 : i % 3 === 1 ? 1.6 : 1.2;
+            const onPct  = Math.round((GLOW_ON / TOTAL_CYCLE) * 100);
+            const offPct = Math.round(((GLOW_ON + GLOW_FADE) / TOTAL_CYCLE) * 100);
             return (
-              <motion.div
-                key={`sparkle-${i}`}
-                initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
-                animate={{
-                  x: Math.cos((angle * Math.PI) / 180) * distance,
-                  y: Math.sin((angle * Math.PI) / 180) * distance,
-                  opacity: 0,
-                  scale: [0, 1, 0],
-                }}
-                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.08 }}
-                style={{
-                  position: 'absolute',
-                  width: '2px',
-                  height: '2px',
-                  borderRadius: '50%',
-                  background: '#22d3ee',
-                  boxShadow: '0 0 4px rgba(34, 211, 238, 0.8)',
-                  transform: 'translate(-50%, -50%)',
-                  willChange: 'transform',
-                }}
+              <motion.line key={i}
+                x1={x1} y1={0} x2={x2} y2={900}
+                stroke={color} strokeWidth={sw} strokeLinecap="round"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0, 1, 0, 0] }}
+                transition={{ duration: TOTAL_CYCLE, delay: i * SERIAL_GAP, repeat: Infinity, ease: 'easeInOut', times: [0, 0.01, onPct / 100, offPct / 100, 1] }}
+                style={{ filter: `drop-shadow(0 0 8px ${color}) drop-shadow(0 0 22px ${color}cc) drop-shadow(0 0 40px ${color}55)` }}
               />
             );
           })}
-        </div>
-      ))}
-    </>
+        </svg>
+
+        <div style={{ position: 'absolute', top: '10%', right: '8%', width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle,rgba(56,189,248,0.18) 0%,transparent 70%)', filter: 'blur(40px)', animation: 'floatD 9s ease-in-out infinite' }} />
+        <div style={{ position: 'absolute', bottom: '15%', right: '4%', width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle,rgba(99,102,241,0.16) 0%,transparent 70%)', filter: 'blur(32px)', animation: 'floatB 11s ease-in-out infinite 1.5s' }} />
+      </div>
+
+      {/* Feature Cards in Zigzag Pattern */}
+      <FloatingFeatureCard icon={TOP_FEATURES[0].icon} text={TOP_FEATURES[0].text} color={TOP_FEATURES[0].color} top="18%" right="2%" delay={0.4} horizontal />
+      <FloatingFeatureCard icon={TOP_FEATURES[1].icon} text={TOP_FEATURES[1].text} color={TOP_FEATURES[1].color} top="32%" right="26%" delay={0.6} horizontal />
+      <FloatingFeatureCard icon={BOTTOM_FEATURES[1].icon} text={BOTTOM_FEATURES[1].text} color={BOTTOM_FEATURES[1].color} top="48%" right="2%" delay={0.8} />
+      <FloatingFeatureCard icon={TOP_FEATURES[3].icon} text={TOP_FEATURES[3].text} color={TOP_FEATURES[3].color} top="64%" right="28%" delay={1.0} horizontal />
+      <FloatingFeatureCard icon={BOTTOM_FEATURES[0].icon} text={BOTTOM_FEATURES[0].text} color={BOTTOM_FEATURES[0].color} top="78%" right="2%" delay={1.2} horizontal width="220px" />
+      <FloatingFeatureCard icon={TOP_FEATURES[2].icon} text={TOP_FEATURES[2].text} color={TOP_FEATURES[2].color} top="85%" right="26%" delay={1.4} horizontal />
+    </div>
   );
-};
+}
 
-const Badge = () => (
-  <motion.div
-    initial={{ opacity: 0, y: -15 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6 }}
-    style={{
-      padding: '8px 24px',
-      background: 'linear-gradient(to right, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.2))',
-      border: '2px solid rgba(234, 150, 8, 0.6)',
-      borderRadius: '50px',
-      fontSize: '13px',
-      fontWeight: 700,
-      color: '#e5de00',
-      textTransform: 'uppercase',
-      letterSpacing: '2px',
-      fontFamily: 'var(--font-nunito)',
-      boxShadow: '0 0 30px rgba(234, 150, 108, 0.4)',
-      pointerEvents: 'auto',
-      backdropFilter: 'blur(10px)',
-    }}
-  >
-    A Globally Trusted Edtech
-  </motion.div>
-);
 
-const HeadlineSlider = ({ currentSlide, slides }: { currentSlide: number; slides: string[] }) => (
-  <div style={{ 
-    width: '100%', 
-    minHeight: '160px', 
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'center' 
-  }}>
-    <AnimatePresence mode="wait">
-      <motion.h1
-        key={currentSlide}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        style={{
-          fontSize: 'clamp(28px, 6vw, 56px)',
-          fontWeight: 500,
-          color: '#ffffff',
-          lineHeight: 1.3,
-          textShadow: '0 0 35px rgba(255, 255, 255, 0.3), 0 4px 20px rgba(0, 0, 0, 0.7)',
-          letterSpacing: '8px',
-          fontFamily: 'var(--font-nunito)',
-          textTransform: 'uppercase',
-        }}
-      >
-        {slides[currentSlide]}
-      </motion.h1>
-    </AnimatePresence>
-  </div>
-);
 
-const Subtitle = () => (
-  <motion.p
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ delay: 0.2, duration: 0.6 }}
-    style={{
-      fontSize: 'clamp(15px, 2.5vw, 18px)',
-      color: '#ffffff',
-      maxWidth: '750px',
-      lineHeight: 1.8,
-      fontWeight: 500,
-      textShadow: '0 2px 12px rgba(0, 0, 0, 0.9)',
-      fontFamily: 'var(--font-nunito)',
-    }}
-  >
-    Master in demand technologies through applied learning.{' '}
-    <span style={{ color: '#22d3ee', fontWeight: 700 }}>Build, deploy, and secure real systems</span>, 
-    with expert mentorship at every step.
-  </motion.p>
-);
+/* ── cert marquee ─────────────────────────────────────────── */
+function CertMarquee() {
+  const doubled = [...CERTS, ...CERTS];
+  return (
+    <div style={{ position:'relative', overflow:'hidden', borderTop:'1px solid rgba(56,189,248,0.18)', borderBottom:'1px solid rgba(56,189,248,0.18)', padding:'10px 0' }}>
+      <div style={{ position:'absolute', left:0, top:0, bottom:0, width:72, background:'linear-gradient(to right,#01040a,transparent)', zIndex:2, pointerEvents:'none' }} />
+      <div style={{ position:'absolute', right:0, top:0, bottom:0, width:72, background:'linear-gradient(to left,#01040a,transparent)', zIndex:2, pointerEvents:'none' }} />
+      <div style={{ display:'flex', width:'max-content', animation:'marquee 28s linear infinite' }}>
+        {doubled.map((c,i) => (
+          <span key={i} style={{ display:'inline-flex', alignItems:'center', gap:12, paddingRight:24, fontFamily:'monospace', fontSize:11, letterSpacing:'0.14em', color:'rgba(186,230,253,0.45)' }}>
+            {c}
+            <span style={{ color:'rgba(186,230,253,0.2)' }}>|</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-const CTAButton = () => (
-  <motion.div
-    initial={{ opacity: 0, y: 15 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.4, duration: 0.6 }}
-    style={{ 
-      marginTop: '12px', 
-      pointerEvents: 'auto' 
-    }}
-  >
-    <Link href="/courses" style={{ textDecoration: 'none' }}>
-      <motion.div
-        animate={{
-          boxShadow: [
-            '0 0 20px rgba(168, 85, 247, 0.5), 0 0 35px rgba(236, 72, 153, 0.3)',
-            '0 0 35px rgba(168, 85, 247, 0.8), 0 0 70px rgba(236, 72, 153, 0.6)',
-            '0 0 20px rgba(168, 85, 247, 0.5), 0 0 35px rgba(236, 72, 153, 0.3)',
-          ],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-        style={{
-          borderRadius: '50px',
-          padding: '3px',
-          background: 'linear-gradient(135deg, #a855f7, #ec4899)',
-          display: 'inline-block',
-        }}
-      >
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          style={{
-            padding: '16px 32px',
-            fontSize: '16px',
-            fontWeight: 800,
-            borderRadius: '50px',
-            border: 'none',
-            background: 'rgba(0, 0, 0, 0.8)',
-            color: '#ffffff',
-            cursor: 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '10px',
-            fontFamily: 'var(--font-nunito)',
-            letterSpacing: '1px',
-            backdropFilter: 'blur(10px)',
-            transition: 'all 0.3s ease',
-          }}
-        >
-          Explore Courses
-          <ArrowRight style={{ width: '20px', height: '20px' }} />
-        </motion.button>
-      </motion.div>
-    </Link>
-  </motion.div>
-);
+/* ── main ─────────────────────────────────────────────────── */
+export default function HeroSection() {
+  const [mounted, setMounted] = useState(false);
+  const [idx, setIdx]         = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-const SlideIndicators = ({ 
-  slides, 
-  currentSlide, 
-  onSlideChange 
-}: { 
-  slides: string[]; 
-  currentSlide: number; 
-  onSlideChange: (index: number) => void;
-}) => (
-  <div style={{ 
-    display: 'flex', 
-    gap: '10px', 
-    marginTop: '20px', 
-    pointerEvents: 'auto' 
-  }}>
-    {slides.map((_, index) => (
-      <motion.div
-        key={index}
-        animate={{
-          width: index === currentSlide ? '40px' : '10px',
-          backgroundColor: index === currentSlide ? '#22d3ee' : '#6b7280',
-        }}
-        transition={{ duration: 0.3 }}
-        style={{
-          height: '4px',
-          borderRadius: '2px',
-          cursor: 'pointer',
-          boxShadow: index === currentSlide ? '0 0 8px #22d3ee' : 'none',
-        }}
-        onClick={() => onSlideChange(index)}
-      />
-    ))}
-  </div>
-);
+  useEffect(() => {
+    setMounted(true);
+    const t = setInterval(() => setIdx(p => (p + 1) % WORDS.length), 3000);
+    const slideInterval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, SLIDE_INTERVAL);
+    return () => {
+      clearInterval(t);
+      clearInterval(slideInterval);
+    };
+  }, []);
+
+  if (!mounted) return <div style={{ minHeight:'100vh', background:'#01040a' }} />;
+
+  return (
+    <section style={{ position:'relative', minHeight:'100vh', width:'100%', overflow:'hidden', background:'#01040a', color:'#fff', display:'flex', flexDirection:'column' }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        .hff { font-family:'Inter',sans-serif; }
+
+        @keyframes marquee  { from{transform:translateX(0)}  to{transform:translateX(-50%)} }
+        @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.6)} }
+        @keyframes shimmer  { from{transform:translateX(-120%)} to{transform:translateX(120%)} }
+        @keyframes floatA { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-11px) rotate(1deg)} }
+        @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+        @keyframes floatC { 0%,100%{transform:translateY(0) rotate(1deg)} 50%{transform:translateY(-8px) rotate(-1deg)} }
+        @keyframes floatD { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+        @keyframes floatE { 0%,100%{transform:translateY(0) rotate(.5deg)} 50%{transform:translateY(-12px) rotate(-.5deg)} }
+
+        .h-grid {
+          display:grid;
+          grid-template-columns:1fr 1fr;
+          min-height:calc(100vh - 70px);
+          align-items:center;
+          max-width:1200px;
+          margin:0 auto;
+          padding:100px 28px 56px;
+        }
+        .h-right-col  { display:block; }
+        .h-wave-desk  { display:block; }
+        .h-wave-mob   { display:none; }
+        .h-left-col { display:flex; flex-direction:column; gap:32px; }
+
+        @media(max-width:900px) {
+          .h-grid { grid-template-columns:1fr; padding:88px 20px 36px; }
+          .h-right-col { display:none !important; }
+          .h-wave-desk { display:none !important; }
+          .h-wave-mob  { display:block !important; }
+          .h-left-col { gap:16px !important; }
+        }
+        @media(max-width:480px) { .h-grid { padding:80px 16px 28px; } }
+
+        .h-btn-p { position:relative; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease; }
+        .h-btn-p::after { content:''; position:absolute; inset:0;
+          background:linear-gradient(110deg,transparent 25%,rgba(255,255,255,.22) 48%,transparent 68%);
+          animation:shimmer 2.4s linear infinite; }
+        .h-btn-p:hover { transform:translateY(-2px); }
+        .h-btn-s:hover { border-color:rgba(255,255,255,.22)!important; background:rgba(255,255,255,.08)!important; }
+      `}</style>
+
+      {/* bg radial + grid */}
+      <div style={{ position:'absolute', inset:0, pointerEvents:'none', zIndex:0, background:'radial-gradient(ellipse 80% 50% at 20% -5%,rgba(56,189,248,0.13) 0%,transparent 60%), radial-gradient(ellipse 50% 40% at 85% 55%,rgba(99,102,241,0.09) 0%,transparent 55%)' }} />
+      <div style={{ position:'absolute', inset:0, pointerEvents:'none', zIndex:0, backgroundImage:'linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px)', backgroundSize:'52px 52px', maskImage:'radial-gradient(ellipse 100% 60% at 30% 10%,black 20%,transparent 75%)', WebkitMaskImage:'radial-gradient(ellipse 100% 60% at 30% 10%,black 20%,transparent 75%)' }} />
+
+      {/* desktop wave */}
+      <div className="h-wave-desk" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none' }}>
+        <RightWave />
+      </div>
+
+      {/* content */}
+      <div className="hff h-grid" style={{ position:'relative', zIndex:2 }}>
+
+        {/* ── LEFT ── */}
+        <div className="h-left-col">
+
+          {/* badge */}
+          <motion.div initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.45 }}
+            style={{ display:'inline-flex', alignItems:'center', gap:8, width:'fit-content', padding:'7px 13px', borderRadius:999, border:'1px solid rgba(56,189,248,0.32)', background:'rgba(56,189,248,0.07)', backdropFilter:'blur(8px)' }}
+          >
+            <span style={{ fontFamily:'monospace', fontSize:11, letterSpacing:'0.14em', color:'rgba(186,230,253,0.88)', textTransform:'uppercase' }}>
+              A Globally Trusted Edtech
+            </span>
+          </motion.div>
+
+          {/* headline - Hero Slides */}
+          <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.55, delay:0.07 }}>
+            <div style={{ width: '100%', height: '200px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+              <AnimatePresence mode="wait">
+                <motion.h1
+                  key={currentSlide}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  style={{
+                    margin: 0,
+                    fontWeight: 900,
+                    fontSize: 'clamp(30px, 5.2vw, 70px)',
+                    lineHeight: 1.1,
+                    letterSpacing: '-0.045em',
+                    color: '#fff',
+                    textAlign: 'left',
+                  }}
+                >
+                  {HERO_SLIDES[currentSlide]}
+                </motion.h1>
+              </AnimatePresence>
+            </div>
+          </motion.div>
+
+          {/* CTAs */}
+          <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.3 }}
+            style={{ display:'flex', flexWrap:'wrap', gap:10 }}
+          >
+            <Link href="/enroll" className="h-btn-p"
+              style={{ textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8, padding:'13px 24px', borderRadius:10, background:'#fff', color:'#0a0f1e', fontWeight:800, fontSize:14, letterSpacing:'-0.02em', boxShadow:'0 8px 28px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)' }}
+            >
+              Enroll Now <ArrowRight size={15} strokeWidth={2.6} />
+            </Link>
+            <Link href="/services" className="h-btn-s"
+              style={{ textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8, padding:'13px 24px', borderRadius:10, border:'1px solid rgba(255,255,255,0.13)', background:'rgba(255,255,255,0.04)', backdropFilter:'blur(8px)', color:'rgba(255,255,255,0.78)', fontWeight:600, fontSize:14, letterSpacing:'-0.02em', transition:'all .18s ease' }}
+            >
+              Our Services <Sparkles size={14} color="#7dd3fc" />
+            </Link>
+          </motion.div>
+
+          {/* urgency */}
+          <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.4 }}
+            style={{ margin:0, fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase', color:'rgba(186,230,253,0.6)', fontWeight:600 }}
+          >
+            Next live batch starts in 5 days · Seats filling fast
+          </motion.p>
+
+          {/* trust */}
+          <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.46 }}
+            style={{ display:'flex', flexWrap:'wrap', gap:14 }}
+          >
+            {TRUST.map(t => (
+              <span key={t} style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, color:'rgba(255,255,255,0.48)' }}>
+                <CheckCircle2 size={13} color="rgba(56,189,248,0.8)" />
+                {t}
+              </span>
+            ))}
+          </motion.div>
+
+        </div>
+
+        {/* right col placeholder */}
+        <div className="h-right-col" />
+      </div>
+
+
+
+      {/* marquee */}
+      <div style={{ position:'relative', zIndex:2 }}>
+        <CertMarquee />
+      </div>
+    </section>
+  );
+}

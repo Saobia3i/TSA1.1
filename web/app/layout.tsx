@@ -8,6 +8,9 @@ import PWAUpdateManager from "@/components/PWAUpdateManager";
 import { Providers } from "./providers";
 import WhatsAppChatBubble from "@/features/home/components/WhatsAppChatBubble";
 
+// ✅ Export Web Vitals reporting
+export { reportWebVitals } from '@/lib/performance';
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
@@ -150,14 +153,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <head>
-        {/* Resource Hints for CDN optimization */}
+        {/* DNS Prefetch & Preconnect for faster resource loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://ik.imagekit.io" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
         
-        {/* Video Preload - loads hero video ASAP */}
-        <link rel="preload" as="video" href="https://ik.imagekit.io/ekb0d0it0/hero-background_kwhnz8.webm" type="video/webm" />
+        {/* Load fonts - preconnect + preload for optimal performance */}
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap"
+          as="style"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+        
+        {/* Video Preload - NO LONGER NEEDED (Video removed!) */}
 
         {/* PWA Manifest */}
         <link rel="manifest" href="/site.webmanifest" />

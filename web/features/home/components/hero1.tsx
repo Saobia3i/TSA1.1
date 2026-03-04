@@ -1,37 +1,46 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
-import { 
-  ArrowRight, 
-  Shield, 
-  Lock, 
-  Eye, 
-  Fingerprint, 
-  CheckCircle, 
-  Star, 
-  Users, 
-  Award,
-  TrendingUp,
-  Zap,
-  Database,
-  Server,
-  Code
-} from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import Feature from '@/features/home/components/Feature';
+import dynamic from 'next/dynamic';
+
+// 🚀 Lazy load Feature component
+const Feature = dynamic(() => import('@/features/home/components/Feature'), {
+  ssr: false,
+  loading: () => null,
+});
 
 const HERO_SLIDES = [
-  'Defend Against Tomorrow\'s Threats Today',
-  'Elite Cybersecurity Training',
-  'From Beginner to Security Expert',
-  'Master AI-Powered Security',
-  'Join the Cyber Defense Elite',
+  'Forge your future in Cybersecurity, AI and Web3',
+  'Become Indispensable in the Future of Tech',
+  'Live Guidance from Industry Experts',
+  'Your Path from Learning to Leading',
+  'Join the Next Generation of Tech Leaders.',
+  'Build More Than a Career',
 ];
 
 const SLIDE_INTERVAL = 4000;
-const PARTICLE_COUNT = 80;
-const MATRIX_COLUMNS = 40;
+const STAR_BURST_DURATION = 1200;
+const STAR_COUNT = 12;
+const SPARKLE_COUNT = 6;
+
+const PARTICLE_CONFIG = {
+  MAX_PARTICLES: 60,
+  CREATION_RATE: 1,
+  LIFETIME: 80,
+  MIN_SIZE: 1.2,
+  MAX_SIZE: 2.5,
+  SPEED_MULTIPLIER: 1.2,
+  GLOW_RADIUS: 100,
+};
+
+interface ClickEffect {
+  id: number;
+  x: number;
+  y: number;
+}
 
 interface Particle {
   x: number;
@@ -39,353 +48,315 @@ interface Particle {
   size: number;
   speedX: number;
   speedY: number;
-  opacity: number;
+  life: number;
 }
 
-interface MatrixColumn {
-  x: number;
-  y: number;
-  speed: number;
-  characters: string[];
-}
-
-export default function CyberSecurityHero() {
+export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [scanlinePosition, setScanlinePosition] = useState(0);
+  const [clickEffects, setClickEffects] = useState<ClickEffect[]>([]);
+  const [canvasReady, setCanvasReady] = useState(false);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const matrixCanvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
-  const matrixColumnsRef = useRef<MatrixColumn[]>([]);
   const animationFrameRef = useRef<number | null>(null);
-  const matrixAnimationRef = useRef<number | null>(null);
+  const mouseXRef = useRef(0);
+  const mouseYRef = useRef(0);
+  const lastMouseMoveRef = useRef<number>(0);
 
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const parallaxX = useTransform(mouseX, [-500, 500], [-20, 20]);
-  const parallaxY = useTransform(mouseY, [-500, 500], [-20, 20]);
-
-  // Scanline animation
-  useEffect(() => {
-    if (!mounted) return;
-    const interval = setInterval(() => {
-      setScanlinePosition((prev) => (prev + 1) % 100);
-    }, 50);
-    return () => clearInterval(interval);
-  }, [mounted]);
-
-  // Auto-slide
+  // 🚀 Mount and initialize
   useEffect(() => {
     setMounted(true);
+    
+    // Canvas init after tiny delay
+    const canvasTimer = setTimeout(() => {
+      setCanvasReady(true);
+    }, 50);
+
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
     }, SLIDE_INTERVAL);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Mouse tracking with parallax
-  useEffect(() => {
-    if (!mounted) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      
-      setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-      mouseX.set(x);
-      mouseY.set(y);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mounted, mouseX, mouseY]);
-
-  // Matrix Rain Effect
-  useEffect(() => {
-    if (!mounted || !matrixCanvasRef.current || !containerRef.current) return;
-
-    const canvas = matrixCanvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const resizeCanvas = () => {
-      if (containerRef.current) {
-        canvas.width = containerRef.current.offsetWidth;
-        canvas.height = containerRef.current.offsetHeight;
-      }
-    };
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-    const fontSize = 14;
-    const columns = Math.floor(canvas.width / fontSize);
-
-    // Initialize matrix columns
-    for (let i = 0; i < columns; i++) {
-      matrixColumnsRef.current.push({
-        x: i * fontSize,
-        y: Math.random() * -canvas.height,
-        speed: Math.random() * 3 + 2,
-        characters: Array(Math.floor(canvas.height / fontSize))
-          .fill(0)
-          .map(() => chars[Math.floor(Math.random() * chars.length)]),
-      });
-    }
-
-    const animateMatrix = () => {
-      if (!ctx || !canvas.width || !canvas.height) return;
-
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.font = `${fontSize}px monospace`;
-      
-      matrixColumnsRef.current.forEach((column, i) => {
-        const char = chars[Math.floor(Math.random() * chars.length)];
-        
-        // Cyan color for matrix effect
-        ctx.fillStyle = `rgba(0, 255, 255, ${Math.random() * 0.5 + 0.3})`;
-        ctx.fillText(char, column.x, column.y);
-
-        // Trail effect
-        for (let j = 1; j < 10; j++) {
-          const opacity = (10 - j) / 20;
-          ctx.fillStyle = `rgba(0, 255, 255, ${opacity})`;
-          ctx.fillText(
-            column.characters[j] || char,
-            column.x,
-            column.y - j * fontSize
-          );
-        }
-
-        column.y += column.speed;
-
-        if (column.y > canvas.height + Math.random() * 500) {
-          column.y = Math.random() * -500;
-        }
-      });
-
-      matrixAnimationRef.current = requestAnimationFrame(animateMatrix);
-    };
-
-    animateMatrix();
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      if (matrixAnimationRef.current) {
-        cancelAnimationFrame(matrixAnimationRef.current);
-      }
+      clearTimeout(canvasTimer);
+      clearInterval(interval);
     };
-  }, [mounted]);
+  }, []);
 
-  // Particle network animation
+  // 🚀 Canvas optimization
   useEffect(() => {
-    if (!mounted || !canvasRef.current || !containerRef.current) return;
+    if (!canvasReady || !canvasRef.current || !containerRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { 
+      alpha: true,
+      desynchronized: true,
+      willReadFrequently: false 
+    });
     if (!ctx) return;
 
+    let isVisible = true;
+    let rafId: number | null = null;
+
     const resizeCanvas = () => {
-      if (containerRef.current) {
-        canvas.width = containerRef.current.offsetWidth;
-        canvas.height = containerRef.current.offsetHeight;
-      }
+      if (!containerRef.current) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const width = containerRef.current.offsetWidth;
+      const height = containerRef.current.offsetHeight;
+      
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.scale(dpr, dpr);
     };
 
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    
+    let resizeTimeout: NodeJS.Timeout;
+    const debouncedResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(resizeCanvas, 200);
+    };
+    
+    window.addEventListener('resize', debouncedResize, { passive: true });
 
-    // Initialize particles
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particlesRef.current.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 2 + 1,
-        speedX: (Math.random() - 0.5) * 0.8,
-        speedY: (Math.random() - 0.5) * 0.8,
-        opacity: Math.random() * 0.5 + 0.3,
-      });
-    }
+    const visibilityHandler = () => {
+      isVisible = !document.hidden;
+      if (isVisible && !rafId) {
+        animate();
+      }
+    };
+    document.addEventListener('visibilitychange', visibilityHandler);
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const now = performance.now();
+      if (now - lastMouseMoveRef.current < 16) return;
+      lastMouseMoveRef.current = now;
+
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      mouseXRef.current = e.clientX - rect.left;
+      mouseYRef.current = e.clientY - rect.top;
+
+      if (particlesRef.current.length < PARTICLE_CONFIG.MAX_PARTICLES) {
+        particlesRef.current.push({
+          x: mouseXRef.current,
+          y: mouseYRef.current,
+          size: Math.random() * (PARTICLE_CONFIG.MAX_SIZE - PARTICLE_CONFIG.MIN_SIZE) + PARTICLE_CONFIG.MIN_SIZE,
+          speedX: (Math.random() - 0.5) * PARTICLE_CONFIG.SPEED_MULTIPLIER,
+          speedY: (Math.random() - 0.5) * PARTICLE_CONFIG.SPEED_MULTIPLIER,
+          life: PARTICLE_CONFIG.LIFETIME,
+        });
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const now = performance.now();
+      if (now - lastMouseMoveRef.current < 16) return;
+      lastMouseMoveRef.current = now;
+
+      if (!containerRef.current || !e.touches[0]) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const touch = e.touches[0];
+      mouseXRef.current = touch.clientX - rect.left;
+      mouseYRef.current = touch.clientY - rect.top;
+
+      if (particlesRef.current.length < PARTICLE_CONFIG.MAX_PARTICLES) {
+        particlesRef.current.push({
+          x: mouseXRef.current,
+          y: mouseYRef.current,
+          size: Math.random() * (PARTICLE_CONFIG.MAX_SIZE - PARTICLE_CONFIG.MIN_SIZE) + PARTICLE_CONFIG.MIN_SIZE,
+          speedX: (Math.random() - 0.5) * PARTICLE_CONFIG.SPEED_MULTIPLIER,
+          speedY: (Math.random() - 0.5) * PARTICLE_CONFIG.SPEED_MULTIPLIER,
+          life: PARTICLE_CONFIG.LIFETIME,
+        });
+      }
+    };
+
+    const currentContainer = containerRef.current;
+    currentContainer.addEventListener('mousemove', handleMouseMove, { passive: true });
+    currentContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
 
     const animate = () => {
-      if (!ctx || !canvas.width || !canvas.height) return;
+      if (!ctx || !canvas.width || !canvas.height || !isVisible) {
+        rafId = null;
+        return;
+      }
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
 
-      // Draw particles
-      particlesRef.current.forEach((particle, i) => {
+      const gradient = ctx.createRadialGradient(
+        mouseXRef.current,
+        mouseYRef.current,
+        0,
+        mouseXRef.current,
+        mouseYRef.current,
+        PARTICLE_CONFIG.GLOW_RADIUS
+      );
+      gradient.addColorStop(0, 'rgba(34, 211, 238, 0.25)');
+      gradient.addColorStop(0.5, 'rgba(34, 211, 238, 0.08)');
+      gradient.addColorStop(1, 'rgba(34, 211, 238, 0)');
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const aliveParticles: Particle[] = [];
+      
+      ctx.beginPath();
+      for (let i = 0; i < particlesRef.current.length; i++) {
+        const particle = particlesRef.current[i];
         particle.x += particle.speedX;
         particle.y += particle.speedY;
+        particle.life -= 2.5;
+        particle.size = Math.max(0.2, particle.size - 0.04);
 
-        // Wrap around
-        if (particle.x < 0) particle.x = canvas.width;
-        if (particle.x > canvas.width) particle.x = 0;
-        if (particle.y < 0) particle.y = canvas.height;
-        if (particle.y > canvas.height) particle.y = 0;
-
-        // Draw particle with cyan glow
-        const gradient = ctx.createRadialGradient(
-          particle.x, particle.y, 0,
-          particle.x, particle.y, particle.size * 3
-        );
-        gradient.addColorStop(0, `rgba(0, 255, 255, ${particle.opacity})`);
-        gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
-        
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Connect nearby particles
-        for (let j = i + 1; j < particlesRef.current.length; j++) {
-          const other = particlesRef.current[j];
-          const dx = particle.x - other.x;
-          const dy = particle.y - other.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 150) {
-            ctx.strokeStyle = `rgba(0, 255, 255, ${0.3 * (1 - distance / 150)})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(particle.x, particle.y);
-            ctx.lineTo(other.x, other.y);
-            ctx.stroke();
-          }
+        if (particle.life > 0) {
+          aliveParticles.push(particle);
+          ctx.fillStyle = `rgba(34, 211, 238, ${particle.life / 100})`;
+          ctx.moveTo(particle.x + particle.size, particle.y);
+          ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         }
-      });
+      }
+      ctx.fill();
+      
+      particlesRef.current = aliveParticles;
 
-      animationFrameRef.current = requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
+      window.removeEventListener('resize', debouncedResize);
+      document.removeEventListener('visibilitychange', visibilityHandler);
+      clearTimeout(resizeTimeout);
+      currentContainer.removeEventListener('mousemove', handleMouseMove);
+      currentContainer.removeEventListener('touchmove', handleTouchMove);
+      if (rafId) {
+        cancelAnimationFrame(rafId);
       }
     };
-  }, [mounted]);
+  }, [canvasReady]);
 
+  const handleInteraction = useCallback((clientX: number, clientY: number) => {
+    if (!containerRef.current) return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = ((clientX - rect.left) / rect.width) * 100;
+    const y = ((clientY - rect.top) / rect.height) * 100;
+
+    const effect: ClickEffect = { 
+      id: Date.now() + Math.random(), 
+      x, 
+      y 
+    };
+
+    setClickEffects(prev => [...prev.slice(-1), effect]);
+
+    setTimeout(() => {
+      setClickEffects(prev => prev.filter(ef => ef.id !== effect.id));
+    }, STAR_BURST_DURATION);
+  }, []);
+
+  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName !== 'BUTTON' && target.tagName !== 'A' && !target.closest('button, a')) {
+      handleInteraction(e.clientX, e.clientY);
+    }
+  }, [handleInteraction]);
+
+  const handleTouch = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (e.touches[0] && target.tagName !== 'BUTTON' && target.tagName !== 'A' && !target.closest('button, a')) {
+      handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, [handleInteraction]);
+
+  // 🚀 SSR placeholder
   if (!mounted) {
-    return <div style={{ minHeight: '100vh', background: '#000' }} />;
+    return (
+      <div style={{
+        position: 'relative',
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #000000 0%, #001a33 50%, #000000 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+      }}>
+        <div style={{
+          width: '100%',
+          maxWidth: '1100px',
+          padding: '0 24px',
+          textAlign: 'center',
+        }}>
+          <div style={{
+            padding: '8px 24px',
+            background: 'rgba(6, 182, 212, 0.2)',
+            border: '2px solid rgba(234, 150, 8, 0.6)',
+            borderRadius: '50px',
+            fontSize: '13px',
+            fontWeight: 700,
+            color: '#e5de00',
+            textTransform: 'uppercase',
+            letterSpacing: '2px',
+            display: 'inline-block',
+            marginBottom: '32px',
+          }}>
+            A Globally Trusted Edtech
+          </div>
+          <h1 style={{
+            fontSize: 'clamp(28px, 6vw, 56px)',
+            fontWeight: 500,
+            color: '#ffffff',
+            lineHeight: 1.3,
+            letterSpacing: '8px',
+            textTransform: 'uppercase',
+            marginBottom: '24px',
+          }}>
+            {HERO_SLIDES[0]}
+          </h1>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div
       ref={containerRef}
+      onClick={handleClick}
+      onTouchStart={handleTouch}
       style={{
         position: 'relative',
         width: '100%',
         minHeight: '100vh',
         overflow: 'hidden',
-        background: '#000000',
       }}
     >
-      {/* Matrix Rain Background */}
-      <canvas
-        ref={matrixCanvasRef}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          opacity: 0.15,
-          zIndex: 0,
-        }}
-      />
+      {/* Animated Gradient Background - NO VIDEO! */}
+      <AnimatedBackground />
 
-      {/* Dark Gradient Overlay */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: `
-            radial-gradient(circle at 30% 20%, rgba(0, 255, 255, 0.08) 0%, transparent 40%),
-            radial-gradient(circle at 70% 80%, rgba(0, 150, 255, 0.06) 0%, transparent 40%),
-            linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.9) 100%)
-          `,
-          zIndex: 1,
-        }}
-      />
+      {/* Canvas */}
+      {canvasReady && (
+        <canvas
+          ref={canvasRef}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            zIndex: 2,
+          }}
+        />
+      )}
 
-      {/* Cyber Grid */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: `
-            linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px',
-          opacity: 0.3,
-          zIndex: 1,
-        }}
-      />
-
-      {/* Scanline Effect */}
-      <motion.div
-        animate={{ top: `${scanlinePosition}%` }}
-        transition={{ duration: 0.05, ease: 'linear' }}
-        style={{
-          position: 'absolute',
-          left: 0,
-          width: '100%',
-          height: '2px',
-          background: 'linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.3), transparent)',
-          pointerEvents: 'none',
-          zIndex: 3,
-        }}
-      />
-
-      {/* Particle Network Canvas */}
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-          zIndex: 2,
-        }}
-      />
-
-      {/* Mouse Spotlight */}
-      <motion.div
-        style={{
-          position: 'absolute',
-          left: mousePosition.x - 400,
-          top: mousePosition.y - 400,
-          width: 800,
-          height: 800,
-          background: 'radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, transparent 60%)',
-          pointerEvents: 'none',
-          zIndex: 2,
-          filter: 'blur(50px)',
-        }}
-      />
-
-      {/* Floating Security Icons */}
-      <FloatingSecurityIcons />
+      {/* Star Burst Click Effects */}
+      <StarBurstEffects effects={clickEffects} />
 
       {/* Main Content */}
       <div
@@ -393,12 +364,13 @@ export default function CyberSecurityHero() {
           position: 'relative',
           zIndex: 10,
           width: '100%',
-          maxWidth: '1300px',
+          maxWidth: '1100px',
           margin: '0 auto',
           padding: '140px 24px 80px',
           display: 'flex',
           alignItems: 'center',
           minHeight: '100vh',
+          pointerEvents: 'none',
         }}
       >
         <div
@@ -407,37 +379,19 @@ export default function CyberSecurityHero() {
             flexDirection: 'column',
             alignItems: 'center',
             textAlign: 'center',
-            gap: '36px',
+            gap: '32px',
             width: '100%',
           }}
         >
-          {/* Premium Badge */}
-          <CyberBadge />
+          <Badge />
+          <HeadlineSlider currentSlide={currentSlide} slides={HERO_SLIDES} />
+          <Subtitle />
+          <CTAButton />
 
-          {/* Headline with Glitch Effect */}
-          <HeadlineSlider currentSlide={currentSlide} slides={HERO_SLIDES} parallaxX={parallaxX} />
-
-          {/* Subheadline */}
-          <CyberSubheadline parallaxY={parallaxY} />
-
-          {/* Trust Indicators */}
-          <SecurityStats />
-
-          {/* Dual CTA Buttons */}
-          <CTASection />
-
-          {/* Security Certifications */}
-          <SecurityCertifications />
-
-          {/* Urgency Banner */}
-          <UrgencyBanner />
-
-          {/* Feature Grid */}
-          <div style={{ marginTop: '60px', width: '100%' }}>
+          <div style={{ pointerEvents: 'auto', marginTop: '40px', width: '100%' }}>
             <Feature />
           </div>
 
-          {/* Slide Indicators */}
           <SlideIndicators 
             slides={HERO_SLIDES} 
             currentSlide={currentSlide} 
@@ -451,622 +405,381 @@ export default function CyberSecurityHero() {
 
 // ============= SUB-COMPONENTS =============
 
-function FloatingSecurityIcons() {
-  const icons = [
-    { Icon: Shield, x: 8, y: 15, delay: 0, color: '#00ffff' },
-    { Icon: Lock, x: 88, y: 25, delay: 0.5, color: '#0096ff' },
-    { Icon: Eye, x: 12, y: 65, delay: 1, color: '#00ccff' },
-    { Icon: Fingerprint, x: 90, y: 70, delay: 1.5, color: '#00ffcc' },
-    { Icon: Database, x: 15, y: 40, delay: 0.3, color: '#00d4ff' },
-    { Icon: Server, x: 85, y: 50, delay: 0.8, color: '#00e5ff' },
-  ];
-
+const AnimatedBackground = () => {
   return (
     <>
-      {icons.map((item, i) => (
-        <motion.div
-          key={i}
-          animate={{
-            y: [0, -30, 0],
-            rotate: [0, 10, 0],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 8,
-            delay: item.delay,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          style={{
-            position: 'absolute',
-            left: `${item.x}%`,
-            top: `${item.y}%`,
-            pointerEvents: 'none',
-            zIndex: 1,
+      <div
+        className="hero-gradient-bg"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+          background: 'linear-gradient(135deg, #000000 0%, #001a33 30%, #000d1a 50%, #001a33 70%, #000000 100%)',
+          backgroundSize: '200% 200%',
+          animation: 'gradientShift 15s ease infinite',
+        }}
+      />
+
+      {/* Subtle animated overlay for depth */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'radial-gradient(circle at 30% 50%, rgba(34, 211, 238, 0.08) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(168, 85, 247, 0.08) 0%, transparent 50%)',
+          animation: 'slowPulse 8s ease-in-out infinite',
+          zIndex: 1,
+        }}
+      />
+
+      {/* Dark Overlay */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6))',
+          zIndex: 1,
+        }}
+      />
+
+      <style jsx>{`
+        @keyframes gradientShift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        @keyframes slowPulse {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 0.8; }
+        }
+      `}</style>
+    </>
+  );
+};
+
+const VideoBackground = ({ 
+  videoRef, 
+  videoUrl, 
+  videoLoaded, 
+}: { 
+  videoRef: React.RefObject<HTMLVideoElement>;
+  videoUrl: string;
+  videoLoaded: boolean;
+}) => {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 0,
+      }}
+    >
+      {/* Gradient Background */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'linear-gradient(135deg, #000000 0%, #001a33 50%, #000000 100%)',
+          opacity: videoLoaded ? 0 : 1,
+          transition: 'opacity 0.4s ease-out',
+        }}
+      />
+
+      {/* Video - starts loading immediately, no loading text */}
+      <video
+        ref={videoRef}
+        loop
+        muted
+        playsInline
+        preload="auto"
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center',
+          opacity: videoLoaded ? 1 : 0,
+          transition: 'opacity 0.4s ease-in-out',
+        }}
+      >
+        <source src={videoUrl} type="video/webm" />
+      </video>
+
+      {/* Dark Overlay */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6))',
+        }}
+      />
+    </div>
+  );
+};
+
+const StarBurstEffects = ({ effects }: { effects: ClickEffect[] }) => {
+  return (
+    <>
+      {effects.map(effect => (
+        <div 
+          key={effect.id} 
+          style={{ 
+            position: 'absolute', 
+            left: `${effect.x}%`, 
+            top: `${effect.y}%`, 
+            pointerEvents: 'none', 
+            zIndex: 20,
+            willChange: 'transform',
           }}
         >
-          <div
+          <motion.div
+            initial={{ scale: 0, opacity: 1 }}
+            animate={{ scale: 2, opacity: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
             style={{
-              width: '80px',
-              height: '80px',
+              position: 'absolute',
+              width: '40px',
+              height: '40px',
               borderRadius: '50%',
-              background: `radial-gradient(circle, ${item.color}15, transparent)`,
-              border: `1px solid ${item.color}30`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backdropFilter: 'blur(10px)',
+              background: 'radial-gradient(circle, rgba(34, 211, 238, 0.6), transparent)',
+              boxShadow: '0 0 30px rgba(34, 211, 238, 0.4)',
+              transform: 'translate(-50%, -50%)',
             }}
-          >
-            <item.Icon style={{ width: '32px', height: '32px', color: item.color, opacity: 0.6 }} />
-          </div>
-        </motion.div>
+          />
+
+          {Array.from({ length: STAR_COUNT }).map((_, i) => {
+            const angle = (i * 360) / STAR_COUNT;
+            const distance = 50;
+            const size = Math.random() * 3 + 2;
+            
+            return (
+              <motion.div
+                key={i}
+                initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
+                animate={{
+                  x: Math.cos((angle * Math.PI) / 180) * distance,
+                  y: Math.sin((angle * Math.PI) / 180) * distance,
+                  opacity: 0,
+                  scale: [0, 1.2, 0],
+                }}
+                transition={{ duration: 0.8, ease: 'easeOut' }}
+                style={{
+                  position: 'absolute',
+                  width: `${size}px`,
+                  height: `${size}px`,
+                  transform: 'translate(-50%, -50%)',
+                  willChange: 'transform',
+                }}
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ 
+                    width: '100%', 
+                    height: '100%',
+                    filter: 'drop-shadow(0 0 2px rgba(34, 211, 238, 0.8))',
+                  }}
+                >
+                  <path
+                    d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+                    fill="#22d3ee"
+                    stroke="rgba(34, 211, 238, 0.8)"
+                    strokeWidth="0.5"
+                  />
+                </svg>
+              </motion.div>
+            );
+          })}
+
+          {Array.from({ length: SPARKLE_COUNT }).map((_, i) => {
+            const angle = (i * 360) / SPARKLE_COUNT + 30;
+            const distance = 35;
+            
+            return (
+              <motion.div
+                key={`sparkle-${i}`}
+                initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
+                animate={{
+                  x: Math.cos((angle * Math.PI) / 180) * distance,
+                  y: Math.sin((angle * Math.PI) / 180) * distance,
+                  opacity: 0,
+                  scale: [0, 1, 0],
+                }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.08 }}
+                style={{
+                  position: 'absolute',
+                  width: '2px',
+                  height: '2px',
+                  borderRadius: '50%',
+                  background: '#22d3ee',
+                  boxShadow: '0 0 4px rgba(34, 211, 238, 0.8)',
+                  transform: 'translate(-50%, -50%)',
+                  willChange: 'transform',
+                }}
+              />
+            );
+          })}
+        </div>
       ))}
     </>
   );
-}
+};
 
-function CyberBadge() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -30, scale: 0.8 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-    >
+const Badge = () => (
+  <motion.div
+    initial={{ opacity: 0, y: -15 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6 }}
+    style={{
+      padding: '8px 24px',
+      background: 'linear-gradient(to right, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.2))',
+      border: '2px solid rgba(234, 150, 8, 0.6)',
+      borderRadius: '50px',
+      fontSize: '13px',
+      fontWeight: 700,
+      color: '#e5de00',
+      textTransform: 'uppercase',
+      letterSpacing: '2px',
+      fontFamily: 'var(--font-nunito)',
+      boxShadow: '0 0 30px rgba(234, 150, 108, 0.4)',
+      pointerEvents: 'auto',
+      backdropFilter: 'blur(10px)',
+    }}
+  >
+    A Globally Trusted Edtech
+  </motion.div>
+);
+
+const HeadlineSlider = ({ currentSlide, slides }: { currentSlide: number; slides: string[] }) => (
+  <div style={{ 
+    width: '100%', 
+    minHeight: '160px', 
+    display: 'flex', 
+    alignItems: 'center', 
+    justifyContent: 'center' 
+  }}>
+    <AnimatePresence mode="wait">
+      <motion.h1
+        key={currentSlide}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          fontSize: 'clamp(28px, 6vw, 56px)',
+          fontWeight: 500,
+          color: '#ffffff',
+          lineHeight: 1.3,
+          textShadow: '0 0 35px rgba(255, 255, 255, 0.3), 0 4px 20px rgba(0, 0, 0, 0.7)',
+          letterSpacing: '8px',
+          fontFamily: 'var(--font-nunito)',
+          textTransform: 'uppercase',
+        }}
+      >
+        {slides[currentSlide]}
+      </motion.h1>
+    </AnimatePresence>
+  </div>
+);
+
+const Subtitle = () => (
+  <motion.p
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ delay: 0.2, duration: 0.6 }}
+    style={{
+      fontSize: 'clamp(15px, 2.5vw, 18px)',
+      color: '#ffffff',
+      maxWidth: '750px',
+      lineHeight: 1.8,
+      fontWeight: 500,
+      textShadow: '0 2px 12px rgba(0, 0, 0, 0.9)',
+      fontFamily: 'var(--font-nunito)',
+    }}
+  >
+    Master in demand technologies through applied learning.{' '}
+    <span style={{ color: '#22d3ee', fontWeight: 700 }}>Build, deploy, and secure real systems</span>, 
+    with expert mentorship at every step.
+  </motion.p>
+);
+
+const CTAButton = () => (
+  <motion.div
+    initial={{ opacity: 0, y: 15 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.4, duration: 0.6 }}
+    style={{ 
+      marginTop: '12px', 
+      pointerEvents: 'auto' 
+    }}
+  >
+    <Link href="/courses" style={{ textDecoration: 'none' }}>
       <motion.div
         animate={{
           boxShadow: [
-            '0 0 30px rgba(0, 255, 255, 0.4)',
-            '0 0 50px rgba(0, 255, 255, 0.6)',
-            '0 0 30px rgba(0, 255, 255, 0.4)',
+            '0 0 20px rgba(168, 85, 247, 0.5), 0 0 35px rgba(236, 72, 153, 0.3)',
+            '0 0 35px rgba(168, 85, 247, 0.8), 0 0 70px rgba(236, 72, 153, 0.6)',
+            '0 0 20px rgba(168, 85, 247, 0.5), 0 0 35px rgba(236, 72, 153, 0.3)',
           ],
         }}
-        transition={{ duration: 3, repeat: Infinity }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
         style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '12px',
-          padding: '14px 32px',
-          background: 'linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 150, 255, 0.1))',
-          border: '2px solid rgba(0, 255, 255, 0.4)',
           borderRadius: '50px',
-          backdropFilter: 'blur(20px)',
-          position: 'relative',
-          overflow: 'hidden',
+          padding: '3px',
+          background: 'linear-gradient(135deg, #a855f7, #ec4899)',
+          display: 'inline-block',
         }}
       >
-        {/* Animated border glow */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-          style={{
-            position: 'absolute',
-            inset: -2,
-            background: 'conic-gradient(from 0deg, transparent, rgba(0, 255, 255, 0.5), transparent)',
-            borderRadius: '50px',
-            zIndex: -1,
-          }}
-        />
-        
-        <motion.div
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <Shield style={{ width: '22px', height: '22px', color: '#00ffff' }} />
-        </motion.div>
-        <span
-          style={{
-            fontSize: '14px',
-            fontWeight: 800,
-            color: '#00ffff',
-            textTransform: 'uppercase',
-            letterSpacing: '2px',
-            fontFamily: 'var(--font-nunito)',
-            textShadow: '0 0 20px rgba(0, 255, 255, 0.5)',
-          }}
-        >
-          Industry-Leading Security Training
-        </span>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-function HeadlineSlider({ 
-  currentSlide, 
-  slides, 
-  parallaxX 
-}: { 
-  currentSlide: number; 
-  slides: string[];
-  parallaxX: any;
-}) {
-  return (
-    <motion.div 
-      style={{ 
-        x: parallaxX,
-        width: '100%', 
-        minHeight: '220px', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        flexDirection: 'column',
-        gap: '20px',
-      }}
-    >
-      <AnimatePresence mode="wait">
-        <motion.h1
-          key={currentSlide}
-          initial={{ opacity: 0, y: 60, scale: 0.85, filter: 'blur(20px)' }}
-          animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-          exit={{ opacity: 0, y: -60, scale: 0.85, filter: 'blur(20px)' }}
-          transition={{ 
-            duration: 1, 
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          style={{
-            fontSize: 'clamp(38px, 8vw, 80px)',
-            fontWeight: 900,
-            background: 'linear-gradient(135deg, #00ffff 0%, #ffffff 40%, #00ffff 80%, #0096ff 100%)',
-            backgroundSize: '200% 200%',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            lineHeight: 1.1,
-            letterSpacing: '-3px',
-            fontFamily: 'var(--font-nunito)',
-            position: 'relative',
-            textShadow: '0 0 80px rgba(0, 255, 255, 0.3)',
-          }}
-        >
-          {slides[currentSlide]}
-          
-          {/* Glitch effect overlay */}
-          <motion.span
-            animate={{
-              opacity: [0, 0.3, 0],
-              x: [-2, 2, -2],
-            }}
-            transition={{
-              duration: 0.1,
-              repeat: Infinity,
-              repeatDelay: 3,
-            }}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              color: '#00ffff',
-              mixBlendMode: 'screen',
-              pointerEvents: 'none',
-            }}
-          >
-            {slides[currentSlide]}
-          </motion.span>
-        </motion.h1>
-      </AnimatePresence>
-
-      {/* Animated underline */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 1, delay: 0.3 }}
-        style={{
-          width: '100%',
-          maxWidth: '600px',
-          height: '3px',
-          background: 'linear-gradient(90deg, transparent, #00ffff, transparent)',
-          borderRadius: '2px',
-          transformOrigin: 'center',
-          boxShadow: '0 0 20px rgba(0, 255, 255, 0.5)',
-        }}
-      />
-    </motion.div>
-  );
-}
-
-function CyberSubheadline({ parallaxY }: { parallaxY: any }) {
-  return (
-    <motion.div
-      style={{ y: parallaxY }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.4, duration: 1 }}
-    >
-      <div
-        style={{
-          fontSize: 'clamp(19px, 3.5vw, 26px)',
-          color: '#e5e7eb',
-          maxWidth: '900px',
-          lineHeight: 1.7,
-          fontWeight: 600,
-          fontFamily: 'var(--font-nunito)',
-        }}
-      >
-        <span style={{ color: '#00ffff', fontWeight: 800 }}>Stop being vulnerable.</span> Master
-        <span style={{ color: '#00ffff', fontWeight: 800 }}> AI-powered cybersecurity</span>, ethical hacking, and 
-        <span style={{ color: '#00ffff', fontWeight: 800 }}> Web3 security</span> from industry experts.
-      </div>
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        style={{
-          fontSize: '17px',
-          color: '#9ca3af',
-          marginTop: '20px',
-          fontFamily: 'var(--font-nunito)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '12px',
-          flexWrap: 'wrap',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <CheckCircle style={{ width: '18px', height: '18px', color: '#00ffff' }} />
-          <span>Live Training</span>
-        </div>
-        <span style={{ color: '#374151' }}>•</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <CheckCircle style={{ width: '18px', height: '18px', color: '#00ffff' }} />
-          <span>Hands-On Projects</span>
-        </div>
-        <span style={{ color: '#374151' }}>•</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <CheckCircle style={{ width: '18px', height: '18px', color: '#00ffff' }} />
-          <span>Industry Certifications</span>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-function SecurityStats() {
-  const stats = [
-    { icon: Users, value: '15,000+', label: 'Security Professionals', color: '#00ffff' },
-    { icon: Award, value: '98%', label: 'Job Placement', color: '#00d4ff' },
-    { icon: Star, value: '4.9/5', label: 'Expert Rating', color: '#00e5ff' },
-    { icon: TrendingUp, value: '$120K+', label: 'Avg. Starting Salary', color: '#00ccff' },
-  ];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.7, duration: 1 }}
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '24px',
-        width: '100%',
-        maxWidth: '1000px',
-        marginTop: '20px',
-      }}
-    >
-      {stats.map((item, index) => (
-        <motion.div
-          key={item.label}
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ delay: 0.8 + index * 0.1, duration: 0.6 }}
-          whileHover={{ scale: 1.08, y: -8 }}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '12px',
-            padding: '28px 24px',
-            background: 'rgba(0, 0, 0, 0.6)',
-            border: `1px solid ${item.color}30`,
-            borderRadius: '20px',
-            backdropFilter: 'blur(20px)',
-            position: 'relative',
-            overflow: 'hidden',
-            cursor: 'pointer',
-          }}
-        >
-          {/* Glow effect on hover */}
-          <motion.div
-            whileHover={{ opacity: 0.3 }}
-            initial={{ opacity: 0 }}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: `radial-gradient(circle at center, ${item.color}40, transparent)`,
-              pointerEvents: 'none',
-            }}
-          />
-          
-          <div
-            style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: '50%',
-              background: `linear-gradient(135deg, ${item.color}20, ${item.color}10)`,
-              border: `2px solid ${item.color}40`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <item.icon style={{ width: '28px', height: '28px', color: item.color }} />
-          </div>
-          
-          <span style={{ 
-            fontSize: '32px', 
-            fontWeight: 900, 
-            color: '#ffffff',
-            fontFamily: 'var(--font-nunito)',
-            textShadow: `0 0 20px ${item.color}60`,
-          }}>
-            {item.value}
-          </span>
-          
-          <span style={{ 
-            fontSize: '13px', 
-            color: '#9ca3af',
-            fontFamily: 'var(--font-nunito)',
-            textAlign: 'center',
-            lineHeight: 1.4,
-          }}>
-            {item.label}
-          </span>
-        </motion.div>
-      ))}
-    </motion.div>
-  );
-}
-
-function CTASection() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 1, duration: 1 }}
-      style={{ 
-        marginTop: '50px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '24px',
-        alignItems: 'center',
-        width: '100%',
-      }}
-    >
-      <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {/* Primary CTA */}
-        <Link href="/courses" style={{ textDecoration: 'none' }}>
-          <motion.div
-            whileHover={{ scale: 1.05, y: -3 }}
-            whileTap={{ scale: 0.98 }}
-            style={{
-              position: 'relative',
-              overflow: 'hidden',
-            }}
-          >
-            <motion.div
-              animate={{
-                boxShadow: [
-                  '0 0 40px rgba(0, 255, 255, 0.4)',
-                  '0 0 70px rgba(0, 255, 255, 0.7)',
-                  '0 0 40px rgba(0, 255, 255, 0.4)',
-                ],
-              }}
-              transition={{
-                boxShadow: { duration: 2, repeat: Infinity },
-              }}
-              style={{
-                padding: '22px 52px',
-                fontSize: '19px',
-                fontWeight: 900,
-                borderRadius: '50px',
-                background: 'linear-gradient(135deg, #00ffff 0%, #0096ff 100%)',
-                color: '#000000',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '14px',
-                fontFamily: 'var(--font-nunito)',
-                letterSpacing: '0.5px',
-                border: 'none',
-                textTransform: 'uppercase',
-                position: 'relative',
-              }}
-            >
-              <Lock style={{ width: '22px', height: '22px' }} />
-              <span>Start Your Journey</span>
-              <motion.div
-                animate={{ x: [0, 6, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                <ArrowRight style={{ width: '24px', height: '24px' }} />
-              </motion.div>
-
-              {/* Shine effect */}
-              <motion.div
-                animate={{ x: ['-200%', '200%'] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '50%',
-                  height: '100%',
-                  background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)',
-                  transform: 'skewX(-20deg)',
-                }}
-              />
-            </motion.div>
-          </motion.div>
-        </Link>
-
-        {/* Secondary CTA */}
         <motion.button
-          whileHover={{ scale: 1.05, y: -3 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           style={{
-            padding: '22px 52px',
-            fontSize: '19px',
+            padding: '16px 32px',
+            fontSize: '16px',
             fontWeight: 800,
             borderRadius: '50px',
-            background: 'rgba(0, 0, 0, 0.6)',
-            border: '2px solid rgba(0, 255, 255, 0.4)',
-            color: '#00ffff',
+            border: 'none',
+            background: 'rgba(0, 0, 0, 0.8)',
+            color: '#ffffff',
             cursor: 'pointer',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '14px',
+            gap: '10px',
             fontFamily: 'var(--font-nunito)',
-            backdropFilter: 'blur(20px)',
-            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            backdropFilter: 'blur(10px)',
+            transition: 'all 0.3s ease',
           }}
         >
-          <Code style={{ width: '22px', height: '22px' }} />
-          <span>View Curriculum</span>
+          Explore Courses
+          <ArrowRight style={{ width: '20px', height: '20px' }} />
         </motion.button>
-      </div>
-
-      {/* Trust badges under CTA */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '24px',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          fontSize: '14px',
-          color: '#9ca3af',
-          fontFamily: 'var(--font-nunito)',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <CheckCircle style={{ width: '18px', height: '18px', color: '#10b981' }} />
-          <span>No credit card required</span>
-        </div>
-        <span style={{ color: '#374151' }}>•</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <CheckCircle style={{ width: '18px', height: '18px', color: '#10b981' }} />
-          <span>14-day money-back guarantee</span>
-        </div>
-        <span style={{ color: '#374151' }}>•</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <CheckCircle style={{ width: '18px', height: '18px', color: '#10b981' }} />
-          <span>Lifetime access</span>
-        </div>
       </motion.div>
-    </motion.div>
-  );
-}
+    </Link>
+  </motion.div>
+);
 
-function SecurityCertifications() {
-  const certs = ['CEH', 'CISSP', 'OSCP', 'Security+', 'CISM'];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 1.3, duration: 1 }}
-      style={{
-        marginTop: '40px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '20px',
-      }}
-    >
-      <div
-        style={{
-          fontSize: '14px',
-          color: '#9ca3af',
-          fontFamily: 'var(--font-nunito)',
-          textTransform: 'uppercase',
-          letterSpacing: '2px',
-          fontWeight: 600,
-        }}
-      >
-        Prepare for Industry Certifications
-      </div>
-      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {certs.map((cert, index) => (
-          <motion.div
-            key={cert}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1.4 + index * 0.1 }}
-            whileHover={{ scale: 1.1, y: -3 }}
-            style={{
-              padding: '12px 24px',
-              background: 'rgba(0, 255, 255, 0.05)',
-              border: '1px solid rgba(0, 255, 255, 0.3)',
-              borderRadius: '12px',
-              fontSize: '13px',
-              fontWeight: 700,
-              color: '#00ffff',
-              fontFamily: 'var(--font-nunito)',
-              cursor: 'pointer',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
-            {cert}
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
-  );
-}
-
-function UrgencyBanner() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 1.5, duration: 1 }}
-      style={{
-        marginTop: '40px',
-        padding: '20px 32px',
-        background: 'linear-gradient(135deg, rgba(255, 69, 0, 0.1), rgba(255, 140, 0, 0.1))',
-        border: '2px solid rgba(255, 140, 0, 0.4)',
-        borderRadius: '16px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px',
-        backdropFilter: 'blur(20px)',
-        maxWidth: '700px',
-      }}
-    >
-      <motion.div
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        <Zap style={{ width: '28px', height: '28px', color: '#ff8c00' }} />
-      </motion.div>
-      <div style={{ textAlign: 'left', flex: 1 }}>
-        <div style={{ 
-          fontSize: '16px', 
-          fontWeight: 800, 
-          color: '#ff8c00',
-          fontFamily: 'var(--font-nunito)',
-          marginBottom: '4px',
-        }}>
-          🔥 Limited Time Offer
-        </div>
-        <div style={{ 
-          fontSize: '14px', 
-          color: '#d1d5db',
-          fontFamily: 'var(--font-nunito)',
-        }}>
-          Join this week and get <span style={{ color: '#ff8c00', fontWeight: 700 }}>3 bonus projects</span> + lifetime community access
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function SlideIndicators({ 
+const SlideIndicators = ({ 
   slides, 
   currentSlide, 
   onSlideChange 
@@ -1074,31 +787,29 @@ function SlideIndicators({
   slides: string[]; 
   currentSlide: number; 
   onSlideChange: (index: number) => void;
-}) {
-  return (
-    <div style={{ 
-      display: 'flex', 
-      gap: '12px', 
-      marginTop: '50px',
-    }}>
-      {slides.map((_, index) => (
-        <motion.div
-          key={index}
-          animate={{
-            width: index === currentSlide ? '48px' : '12px',
-            backgroundColor: index === currentSlide ? '#00ffff' : '#374151',
-          }}
-          transition={{ duration: 0.4 }}
-          whileHover={{ scale: 1.3 }}
-          style={{
-            height: '4px',
-            borderRadius: '2px',
-            cursor: 'pointer',
-            boxShadow: index === currentSlide ? '0 0 15px rgba(0, 255, 255, 0.6)' : 'none',
-          }}
-          onClick={() => onSlideChange(index)}
-        />
-      ))}
-    </div>
-  );
-}
+}) => (
+  <div style={{ 
+    display: 'flex', 
+    gap: '10px', 
+    marginTop: '20px', 
+    pointerEvents: 'auto' 
+  }}>
+    {slides.map((_, index) => (
+      <motion.div
+        key={index}
+        animate={{
+          width: index === currentSlide ? '40px' : '10px',
+          backgroundColor: index === currentSlide ? '#22d3ee' : '#6b7280',
+        }}
+        transition={{ duration: 0.3 }}
+        style={{
+          height: '4px',
+          borderRadius: '2px',
+          cursor: 'pointer',
+          boxShadow: index === currentSlide ? '0 0 8px #22d3ee' : 'none',
+        }}
+        onClick={() => onSlideChange(index)}
+      />
+    ))}
+  </div>
+);

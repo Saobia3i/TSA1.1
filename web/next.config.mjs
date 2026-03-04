@@ -3,7 +3,10 @@ const isProd = process.env.NODE_ENV === "production";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // ✅ Enable compression and SWC minification
   compress: true,
+  swcMinify: true,
+  poweredByHeader: false,
 
   async headers() {
     return [
@@ -31,20 +34,32 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "X-DNS-Prefetch-Control",
+            value: "on",
+          },
+        ],
+      },
     ];
   },
 
   images: {
     formats: ["image/avif", "image/webp"],
-    deviceSizes: [640, 750, 828, 1080, 1200],
-    qualities: [75, 90], // Added 90 to fix the warning
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    qualities: [75, 90],
     remotePatterns: [{ protocol: "https", hostname: "**" }],
     unoptimized: isDev,
     minimumCacheTTL: 60,
   },
 
   compiler: {
-    removeConsole: isProd,
+    removeConsole: isProd ? {
+      exclude: ['error', 'warn'],
+    } : false,
   },
 
   experimental: {
@@ -56,11 +71,38 @@ const nextConfig = {
       "@mui/material",
       "@mui/icons-material",
       "@heroicons/react",
+      "framer-motion",
     ],
   },
 
-  // ✅ SOLUTION: Use default Prisma location (no custom paths)
-  // This avoids Windows path issues with Turbopack
+  // ✅ Webpack optimizations for better code splitting
+  webpack: (config, { isServer }) => {
+    if (!isServer && isProd) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          ...config.optimization.splitChunks,
+          cacheGroups: {
+            ...config.optimization.splitChunks?.cacheGroups,
+            styles: {
+              name: 'styles',
+              test: /\.css$/,
+              chunks: 'all',
+              enforce: true,
+            },
+            commons: {
+              name: 'commons',
+              chunks: 'all',
+              minChunks: 2,
+              priority: 10,
+            },
+          },
+        },
+      };
+    }
+    return config;
+  },
+
   turbopack: {},
 };
 

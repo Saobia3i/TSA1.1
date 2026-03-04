@@ -1,25 +1,69 @@
-// app/dashboard/page.tsx
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { redirect } from 'next/navigation'
-import DashboardContent from './DashboardContent'
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import DashboardContent from "./DashboardContent";
 
 export default async function DashboardPage() {
-  const session = await getServerSession(authOptions)
- 
+  const session = await getServerSession(authOptions);
 
-  if (!session?.user) {
-    redirect('/login');
+  if (!session?.user?.email || !session.user.id) {
+    redirect("/login");
   }
 
+  const isAdmin = session.user.role === "ADMIN";
+
+  const [enrollments, serviceBookings] = await Promise.all([
+    prisma.enrollment.findMany({
+      where: isAdmin ? { status: "PENDING" } : { userId: session.user.id },
+      orderBy: { enrolledAt: "desc" },
+      take: isAdmin ? 500 : 200,
+      select: {
+        id: true,
+        courseId: true,
+        courseName: true,
+        status: true,
+        enrolledAt: true,
+        approvedAt: true,
+        user: isAdmin
+          ? {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                contact: true,
+              },
+            }
+          : false,
+      },
+    }),
+    prisma.serviceBooking.findMany({
+      where: isAdmin ? undefined : { email: session.user.email },
+      orderBy: { createdAt: "desc" },
+      take: isAdmin ? 500 : 50,
+      select: {
+        id: true,
+        serviceTitle: true,
+        fullName: true,
+        email: true,
+        packageName: true,
+        engagementType: true,
+        timeline: true,
+        createdAt: true,
+      },
+    }),
+  ]);
+
   return (
-    <DashboardContent 
+    <DashboardContent
       user={{
-        name: session.user.name || 'User',
-        email: session.user.email || '',
-        id: session.user.id || crypto.randomUUID(),
-        role: session.user.role, // ✅ Default role
-      }} 
+        name: session.user.name || "User",
+        email: session.user.email,
+        id: session.user.id,
+        role: session.user.role || "STUDENT",
+      }}
+      enrollments={enrollments}
+      serviceBookings={serviceBookings}
     />
   );
 }

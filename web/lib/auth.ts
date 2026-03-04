@@ -56,8 +56,54 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        const submittedEmail = credentials.email.toLowerCase().trim();
+        const submittedPassword = credentials.password;
+        const adminEmail = process.env.ADMIN_PANEL_EMAIL?.toLowerCase().trim();
+        const adminPassword = process.env.ADMIN_PANEL_PASSWORD?.trim();
+
+        // Admin bootstrap path:
+        // if submitted credentials match configured admin credentials,
+        // ensure admin user exists and allow login.
+        if (
+          adminEmail &&
+          adminPassword &&
+          submittedEmail === adminEmail &&
+          submittedPassword === adminPassword
+        ) {
+          const hashedAdminPassword = await bcrypt.hash(adminPassword, 12);
+
+          const adminUser = await prisma.user.upsert({
+            where: { email: submittedEmail },
+            update: {
+              role: "ADMIN",
+              password: hashedAdminPassword,
+            },
+            create: {
+              email: submittedEmail,
+              name: "Admin",
+              password: hashedAdminPassword,
+              role: "ADMIN",
+            },
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              contact: true,
+              role: true,
+            },
+          });
+
+          return {
+            id: adminUser.id,
+            email: adminUser.email,
+            name: adminUser.name,
+            contact: adminUser.contact ?? undefined,
+            role: adminUser.role as "ADMIN" | "INSTRUCTOR" | "STUDENT",
+          };
+        }
+
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email.toLowerCase().trim() },
+          where: { email: submittedEmail },
           select: {
             id: true,
             email: true,
@@ -73,7 +119,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         const passwordMatch = await bcrypt.compare(
-          credentials.password,
+          submittedPassword,
           user.password
         );
 

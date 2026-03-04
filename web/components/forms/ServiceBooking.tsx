@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { useSession } from "next-auth/react";
 
 interface ServiceBookingProps {
   serviceTitle?: string;
@@ -35,6 +36,7 @@ export default function ServiceBooking({
   serviceTitle,
   selectedPackage,
 }: ServiceBookingProps) {
+  const { data: session } = useSession();
   const resolvedServiceTitle = useMemo(
     () => serviceTitle ?? "",
     [serviceTitle]
@@ -89,6 +91,16 @@ export default function ServiceBooking({
       packageName: selectedPackage ?? "",
     }));
   }, [selectedPackage]);
+
+  useEffect(() => {
+    if (!session?.user) return;
+
+    setForm((prev) => ({
+      ...prev,
+      email: session.user.email || prev.email,
+      fullName: session.user.name || prev.fullName,
+    }));
+  }, [session]);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -204,7 +216,13 @@ export default function ServiceBooking({
               onChange={onChange}
               placeholder="you@company.com"
               required
+              readOnly={Boolean(session?.user?.email)}
             />
+            {session?.user?.email && (
+              <small style={{ color: "rgba(255,255,255,0.55)" }}>
+                Logged in email will be used for dashboard tracking.
+              </small>
+            )}
           </div>
           <div className="field">
             <label htmlFor="whatsapp">

@@ -13,6 +13,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import type { Course } from "../data/courses";
+import EnrollmentForm from "@/components/forms/Enrollment";
 
 interface CourseDetailsModalProps {
   course: Course;
@@ -25,6 +26,7 @@ export default memo(function CourseDetailsModal({
 }: CourseDetailsModalProps) {
   const Icon = course.icon;
   const [showCurriculum, setShowCurriculum] = useState(false);
+  const [showEnrollment, setShowEnrollment] = useState(false);
 
   return (
     <motion.div
@@ -112,6 +114,14 @@ export default memo(function CourseDetailsModal({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
+                {showEnrollment ? (
+                  <EnrollmentForm
+                    courseId={course.id}
+                    courseName={course.title}
+                    courseDescription={course.shortDescription}
+                  />
+                ) : (
+                  <>
                 {/* Icon */}
                 <div
                   style={{
@@ -227,6 +237,8 @@ export default memo(function CourseDetailsModal({
                     </li>
                   ))}
                 </ul>
+                  </>
+                )}
               </motion.div>
             ) : (
               <motion.div
@@ -272,7 +284,10 @@ export default memo(function CourseDetailsModal({
         >
           <motion.a
             whileHover={{ scale: 1.05 }}
-            onClick={() => setShowCurriculum((v) => !v)}
+            onClick={() => {
+              setShowEnrollment(false);
+              setShowCurriculum((v) => !v);
+            }}
             style={{
               flex: 1,
               padding: 16,
@@ -293,9 +308,10 @@ export default memo(function CourseDetailsModal({
           </motion.a>
           <motion.a
             whileHover={{ scale: 1.05 }}
-            href="https://docs.google.com/forms/d/e/1FAIpQLSfduDI5LRqLxkuvr7eS1vcLmupV4yQs8XUV2BoyznR4mQNwJw/viewform"
-            target="_blank"
-            rel="noopener noreferrer"
+            onClick={() => {
+              setShowEnrollment(true);
+              setShowCurriculum(false);
+            }}
             style={{
               flex: 1,
               padding: 16,
@@ -308,10 +324,12 @@ export default memo(function CourseDetailsModal({
               cursor: "pointer",
             }}
           >
-            Enroll Now {/* {course.price && `• ${course.price}`} */}
+            Enroll Now
           </motion.a>
         </div>
       </motion.div>
     </motion.div>
   );
 });
+
+

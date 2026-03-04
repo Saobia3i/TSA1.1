@@ -82,7 +82,7 @@ export default function HomePage() {
   // });
 
   return (
-    <div style={{ backgroundColor: "#000", overflowX: "hidden" }}>
+    <div style={{ backgroundColor: "#000", overflowX: "hidden", position: "relative" }}>
       {/* Hero Section */}
       <HeroSection />
 

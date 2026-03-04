@@ -64,12 +64,6 @@ export default function EnrollmentForm({
 
       setSuccess(true);
 
-      // Wait 2 seconds then redirect to courses page
-      setTimeout(() => {
-        router.push('/courses');
-        router.refresh();
-      }, 2000);
-
     } catch (err) {
       console.error('Enrollment error:', err);
       if (err instanceof DOMException && err.name === 'AbortError') {
@@ -93,12 +87,9 @@ export default function EnrollmentForm({
               <path d="M8 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-300"/>
             </svg>
           </div>
-          <h3 className="success-title">🎉 Enrollment Request Successful!</h3>
+          <h3 className="success-title">Enrollment Request Successful!</h3>
           <p className="success-message">
-            Check updates in your <strong>mail</strong>
-          </p>
-          <p className="redirect-message">
-            Redirecting to course page...
+            we have received your enrollment request. we will contact you soon.
           </p>
         </div>
       </div>
@@ -131,7 +122,7 @@ export default function EnrollmentForm({
 
       {/* Benefits Section */}
       <div className="benefits-section">
-        <h5 className="benefits-title">What You'll Get:</h5>
+        <h5 className="benefits-title">What You&apos;ll Get:</h5>
         <ul className="benefits-list">
           <li>
             <span className="check-icon">✓</span>
@@ -210,7 +201,7 @@ export default function EnrollmentForm({
 
         {status === 'unauthenticated' && (
           <p className="login-hint">
-            You'll be redirected to login page
+            You&apos;ll be redirected to login page
           </p>
         )}
       </form>
