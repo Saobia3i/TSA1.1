@@ -279,7 +279,13 @@ export default memo(function CourseDetailsModal({
 
         {/* Fixed Bottom Bar */}
         {!enrollmentSuccess ? (
-          <div className="modal-footer">
+          <div
+            className="modal-footer"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+            }}
+          >
             <motion.button
               type="button"
               className="footer-button footer-button-secondary"
@@ -291,6 +297,7 @@ export default memo(function CourseDetailsModal({
               }}
               style={{
                 borderColor: `${course.color}90`,
+                width: "100%",
               }}
             >
               <BookOpen size={18} />{" "}
@@ -308,13 +315,20 @@ export default memo(function CourseDetailsModal({
               style={{
                 borderColor: `${course.color}80`,
                 background: `linear-gradient(${course.color}, ${course.color}50)`,
+                width: "100%",
               }}
             >
               Enroll Now
             </motion.button>
           </div>
         ) : (
-          <div className="modal-footer">
+          <div
+            className="modal-footer"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 1fr)",
+            }}
+          >
             <motion.a
               href={whatsappUrl}
               target="_blank"
@@ -332,61 +346,90 @@ export default memo(function CourseDetailsModal({
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 20px 40px;
-            display: flex;
+            padding: 24px 40px;
             gap: 16px;
-            background: linear-gradient(to top, rgba(17, 24, 39, 0.98), transparent);
+            background: linear-gradient(to top, rgba(17, 24, 39, 0.98) 0%, rgba(17, 24, 39, 0.95) 50%, transparent 100%);
             z-index: 2;
+            box-sizing: border-box;
+            width: 100%;
           }
 
           .footer-button {
-            flex: 1;
-            min-height: 56px;
-            padding: 16px 18px;
+            min-height: 64px;
+            padding: 18px 24px;
             border-radius: 12px;
             border: 2px solid transparent;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             color: white;
             font-weight: 700;
+            font-size: 15px;
             font-family: var(--font-nunito);
             cursor: pointer;
             text-align: center;
             text-decoration: none;
-            line-height: 1.25;
+            line-height: 1.4;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            white-space: normal;
+            word-break: normal;
+            overflow-wrap: anywhere;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
           }
 
           .footer-button-secondary {
-            background: #010101;
+            background: #000000;
+            color: white;
+          }
+
+          .footer-button-secondary:hover {
+            background: #050505;
           }
 
           .footer-button-primary {
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+            color: white;
+          }
+
+          .footer-button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
           }
 
           .footer-button-whatsapp {
             border-color: rgba(37, 211, 102, 0.55);
             background: linear-gradient(135deg, #25d366, #128c7e);
+            font-size: 14px;
           }
 
           @media (max-width: 768px) {
             .modal-footer {
+              padding: 20px 24px;
+              gap: 14px;
+            }
+
+            .footer-button {
+              min-height: 58px;
               padding: 16px 20px;
-              gap: 12px;
+              font-size: 14px;
             }
           }
 
           @media (max-width: 560px) {
             .modal-footer {
-              flex-direction: column;
+              padding: 16px 18px;
+              gap: 10px;
             }
 
             .footer-button {
-              width: 100%;
               min-height: 52px;
-              padding: 14px 16px;
+              padding: 12px 14px;
+              font-size: 13px;
             }
           }
         `}</style>

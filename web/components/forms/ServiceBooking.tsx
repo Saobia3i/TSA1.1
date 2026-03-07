@@ -11,6 +11,49 @@ interface ServiceBookingProps {
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
+const COUNTRY_OPTIONS = [
+  "Bangladesh",
+  "Afghanistan",
+  "Australia",
+  "Austria",
+  "Belgium",
+  "Brazil",
+  "Canada",
+  "China",
+  "Denmark",
+  "Egypt",
+  "France",
+  "Germany",
+  "Hong Kong",
+  "India",
+  "Indonesia",
+  "Ireland",
+  "Italy",
+  "Japan",
+  "Malaysia",
+  "Maldives",
+  "Nepal",
+  "Netherlands",
+  "New Zealand",
+  "Nigeria",
+  "Pakistan",
+  "Philippines",
+  "Qatar",
+  "Saudi Arabia",
+  "Singapore",
+  "South Africa",
+  "South Korea",
+  "Sri Lanka",
+  "Sweden",
+  "Switzerland",
+  "Thailand",
+  "Turkey",
+  "UAE",
+  "United Kingdom",
+  "United States",
+  "Vietnam",
+];
+
 const ENGAGEMENT_OPTIONS = [
   "One-time Assessment",
   "Ongoing / Retainer",
@@ -241,14 +284,20 @@ export default function ServiceBooking({
             <label htmlFor="country">
               Country <span className="req">*</span>
             </label>
-            <input
+            <select
               id="country"
               name="country"
               value={form.country}
               onChange={onChange}
-              placeholder="Country"
               required
-            />
+            >
+              <option value="">Select country</option>
+              {COUNTRY_OPTIONS.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="field full">
             <label htmlFor="requirements">
