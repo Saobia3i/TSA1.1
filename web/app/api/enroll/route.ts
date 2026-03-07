@@ -147,52 +147,6 @@ export async function POST(request: Request) {
       },
     });
 
-    const existingEnrollment = await prisma.enrollment.findUnique({
-      where: {
-        userId_courseId: {
-          userId: updatedUser.id,
-          courseId: validatedData.courseId,
-        },
-      },
-    });
-
-    if (existingEnrollment) {
-      const existingStatus =
-        ((existingEnrollment as unknown as { status?: EnrollmentStatusValue }).status ??
-          "PENDING") as EnrollmentStatusValue;
-
-      if (existingStatus === "PENDING") {
-        revalidatePath("/dashboard");
-        revalidatePath("/admin/enrollments");
-        return NextResponse.json(
-          {
-            success: true,
-            message: "we have received your enrollment request. we will contact you soon.",
-            whatsapp: updatedUser.contact,
-            enrollment: {
-              id: existingEnrollment.id,
-              courseName: existingEnrollment.courseName,
-              status: existingStatus,
-              enrolledAt: existingEnrollment.enrolledAt,
-            },
-          },
-          { status: 200 }
-        );
-      }
-
-      if (existingStatus === "APPROVED") {
-        return NextResponse.json(
-          { error: "You are already enrolled in this course" },
-          { status: 400 }
-        );
-      }
-
-      return NextResponse.json(
-        { error: "Your previous enrollment was rejected. Please contact support." },
-        { status: 400 }
-      );
-    }
-
     const enrollment = await prisma.enrollment.create({
       data: {
         userId: updatedUser.id,
@@ -256,13 +210,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    if (error instanceof Error && error.message.includes("Unique constraint")) {
-      return NextResponse.json(
-        { error: "This WhatsApp number is already in use." },
-        { status: 400 }
-      );
-    }
-
     if (error instanceof Error && error.message.includes("Prisma")) {
       return NextResponse.json(
         { error: "Database error. Please try again." },
@@ -300,20 +247,28 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const enrollment = await prisma.enrollment.findUnique({
-      where: {
-        userId_courseId: {
+    const [latestEnrollment, approvedEnrollment] = await Promise.all([
+      prisma.enrollment.findFirst({
+        where: {
           userId: user.id,
           courseId,
         },
-      },
-    });
+        orderBy: {
+          enrolledAt: "desc",
+        },
+      }),
+      prisma.enrollment.findFirst({
+        where: {
+          userId: user.id,
+          courseId,
+          status: "APPROVED",
+        },
+      }),
+    ]);
 
     return NextResponse.json({
-      isEnrolled:
-        ((enrollment as unknown as { status?: EnrollmentStatusValue } | null)?.status ??
-          "PENDING") === "APPROVED",
-      enrollment: enrollment || null,
+      isEnrolled: Boolean(approvedEnrollment),
+      enrollment: latestEnrollment || null,
     });
   } catch (error) {
     console.error("Error checking enrollment:", error);

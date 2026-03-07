@@ -13,7 +13,7 @@ model User {
   name          String?
   email         String    @unique
   password      String?
-  contact       String?    @unique
+  contact       String?
   role          String    @default("STUDENT")
   emailVerified DateTime?
   createdAt     DateTime  @default(now())
@@ -78,7 +78,7 @@ model Enrollment {
   approvedAt DateTime?
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
-  @@unique([userId, courseId])
+  @@index([userId, courseId])
   @@index([status])
 }
 

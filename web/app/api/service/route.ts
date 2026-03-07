@@ -3,50 +3,8 @@ import { getServerSession } from "next-auth";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
+import { findMatchingCountry } from "@/lib/countries";
 import { normalizeInternationalWhatsappNumber } from "@/lib/validators";
-
-const VALID_COUNTRIES = [
-  "Bangladesh",
-  "Afghanistan",
-  "Australia",
-  "Austria",
-  "Belgium",
-  "Brazil",
-  "Canada",
-  "China",
-  "Denmark",
-  "Egypt",
-  "France",
-  "Germany",
-  "Hong Kong",
-  "India",
-  "Indonesia",
-  "Ireland",
-  "Italy",
-  "Japan",
-  "Malaysia",
-  "Maldives",
-  "Nepal",
-  "Netherlands",
-  "New Zealand",
-  "Nigeria",
-  "Pakistan",
-  "Philippines",
-  "Qatar",
-  "Saudi Arabia",
-  "Singapore",
-  "South Africa",
-  "South Korea",
-  "Sri Lanka",
-  "Sweden",
-  "Switzerland",
-  "Thailand",
-  "Turkey",
-  "UAE",
-  "United Kingdom",
-  "United States",
-  "Vietnam",
-] as const;
 
 const serviceBookingSchema = z.object({
   serviceTitle: z.string().min(1, "Service title is required"),
@@ -54,9 +12,13 @@ const serviceBookingSchema = z.object({
   organization: z.string().optional(),
   email: z.string().email("Valid email is required"),
   whatsapp: z.string().min(5, "WhatsApp contact number is required"),
-  country: z.enum(VALID_COUNTRIES, {
-    error: "Please select a valid country",
-  }),
+  country: z
+    .string()
+    .min(1, "Country is required")
+    .transform((value) => findMatchingCountry(value))
+    .refine((value) => value !== null, {
+      message: "Please select a valid country",
+    }),
   packageName: z.string().min(1, "Package selection is required"),
   requirements: z.string().min(1, "Requirements are required"),
   engagementType: z.string().min(1, "Engagement type is required"),
