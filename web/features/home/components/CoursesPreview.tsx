@@ -9,6 +9,7 @@ import { GlowingCard } from '@/components/ui/animated-cards';
 import CourseDetailsModal from '@/features/courses/components/CourseDetailsModal';
 import { AnimatePresence } from 'framer-motion';
 
+
 export default function CoursesPreview() {
   const featuredCourses = getFeaturedCourses();
   const courseSectionRef = useRef<HTMLElement>(null);
