@@ -147,5 +147,5 @@ export async function signup(formData: FormData) {
 
 // ✅ Fixed logout - returns void and redirects
 export async function logout(): Promise<void> {
-  redirect('/api/auth/signout')
+  redirect('/api/auth/signout?callbackUrl=%2F')
 }
