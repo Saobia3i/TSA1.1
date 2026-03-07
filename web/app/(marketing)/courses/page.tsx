@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -13,6 +13,7 @@ import Link from "next/link";
 import { getAllCourses, type Course } from "@/features/courses/data/courses";
 import CourseCard from "@/features/courses/components/CourseCard";
 import CourseDetailsModal from "@/features/courses/components/CourseDetailsModal";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 //import { Metadata } from 'next'
 const ITEMS_PER_PAGE = 6;
 // export const metadata: Metadata = {
@@ -28,7 +29,19 @@ export default function CoursesPage() {
   const allCourses = getAllCourses();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [manualSelectedCourse, setManualSelectedCourse] = useState<Course | null>(null);
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const openCourseSlug = searchParams.get("openCourse");
+  const shouldOpenEnrollment = searchParams.get("openEnrollment") === "1";
+  const selectedCourse = useMemo(
+    () =>
+      manualSelectedCourse ||
+      allCourses.find((course) => course.slug === openCourseSlug) ||
+      null,
+    [allCourses, manualSelectedCourse, openCourseSlug]
+  );
 
   const filteredCourses = allCourses.filter(
     (course) =>
@@ -45,6 +58,16 @@ export default function CoursesPage() {
     startIndex,
     startIndex + ITEMS_PER_PAGE
   );
+
+  const handleCloseModal = () => {
+    setManualSelectedCourse(null);
+    if (!openCourseSlug && !shouldOpenEnrollment) return;
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("openCourse");
+    params.delete("openEnrollment");
+    const nextQuery = params.toString();
+    router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
+  };
 
   return (
     <>
@@ -215,7 +238,7 @@ export default function CoursesPage() {
                     key={course.slug}
                     course={course}
                     index={index}
-                    onClick={() => setSelectedCourse(course)}
+                    onClick={() => setManualSelectedCourse(course)}
                   />
                 ))}
               </div>
@@ -314,7 +337,8 @@ export default function CoursesPage() {
         {selectedCourse && (
           <CourseDetailsModal
             course={selectedCourse}
-            onClose={() => setSelectedCourse(null)}
+            initialShowEnrollment={shouldOpenEnrollment}
+            onClose={handleCloseModal}
           />
         )}
       </AnimatePresence>

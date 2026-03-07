@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { normalizeWhatsappWithCountryCode } from "@/lib/validators";
 
 const enrollmentSchema = z.object({
   courseId: z.string().min(1, "Course ID is required"),
@@ -25,22 +27,6 @@ function getEnvAny(...keys: string[]) {
     if (value && value.trim()) return value.trim();
   }
   return "";
-}
-
-function normalizeWhatsappNumber(countryCode: string, whatsappNumber: string) {
-  const cleanCountryCode = countryCode.trim();
-  const cleanLocalNumber = whatsappNumber.replace(/[^\d]/g, "");
-  const localWithoutLeadingZeros = cleanLocalNumber.replace(/^0+/, "");
-
-  if (!/^\+\d{1,4}$/.test(cleanCountryCode)) {
-    throw new Error("Valid country code is required.");
-  }
-
-  if (localWithoutLeadingZeros.length < 6 || localWithoutLeadingZeros.length > 15) {
-    throw new Error("Valid WhatsApp number is required.");
-  }
-
-  return `${cleanCountryCode}${localWithoutLeadingZeros}`;
 }
 
 async function sendEnrollmentNotificationEmail(params: {
@@ -143,7 +129,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const normalizedWhatsapp = normalizeWhatsappNumber(
+    const normalizedWhatsapp = normalizeWhatsappWithCountryCode(
       validatedData.whatsappCountryCode,
       validatedData.whatsappNumber
     );
@@ -176,6 +162,8 @@ export async function POST(request: Request) {
           "PENDING") as EnrollmentStatusValue;
 
       if (existingStatus === "PENDING") {
+        revalidatePath("/dashboard");
+        revalidatePath("/admin/enrollments");
         return NextResponse.json(
           {
             success: true,
@@ -226,6 +214,9 @@ export async function POST(request: Request) {
       // Email delivery failure should not block saved enrollment.
       console.error("Enrollment saved but email notification failed:", mailError);
     }
+
+    revalidatePath("/dashboard");
+    revalidatePath("/admin/enrollments");
 
     return NextResponse.json(
       {

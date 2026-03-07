@@ -1,25 +1,34 @@
 'use client';
 
-import { motion, useScroll } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { useRef, useState } from 'react';
-import { getFeaturedCourses, type Course } from '@/features/courses/data/courses';
+import { useMemo, useRef, useState } from 'react';
+import { getAllCourses, getFeaturedCourses, type Course } from '@/features/courses/data/courses';
 import { GlowingCard } from '@/components/ui/animated-cards';
 import CourseDetailsModal from '@/features/courses/components/CourseDetailsModal';
 import { AnimatePresence } from 'framer-motion';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 
 export default function CoursesPreview() {
   const featuredCourses = getFeaturedCourses();
+  const allCourses = getAllCourses();
   const courseSectionRef = useRef<HTMLElement>(null);
   const [courseIndex, setCourseIndex] = useState(0);
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-
-  const { scrollYProgress: courseProgress } = useScroll({
-    target: courseSectionRef,
-    offset: ['start center', 'end center'],
-  });
+  const [manualSelectedCourse, setManualSelectedCourse] = useState<Course | null>(null);
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const openCourseSlug = searchParams.get('openCourse');
+  const shouldOpenEnrollment = searchParams.get('openEnrollment') === '1';
+  const selectedCourse = useMemo(
+    () =>
+      manualSelectedCourse ||
+      allCourses.find((course) => course.slug === openCourseSlug) ||
+      null,
+    [allCourses, manualSelectedCourse, openCourseSlug]
+  );
 
   const handleCourseNext = () => {
     setCourseIndex((prev) => (prev + 1) % featuredCourses.length);
@@ -36,6 +45,16 @@ export default function CoursesPreview() {
       cards.push({ index, course: featuredCourses[index], offset: i });
     }
     return cards;
+  };
+
+  const handleCloseModal = () => {
+    setManualSelectedCourse(null);
+    if (!openCourseSlug && !shouldOpenEnrollment) return;
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('openCourse');
+    params.delete('openEnrollment');
+    const nextQuery = params.toString();
+    router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
   };
 
   return (
@@ -125,7 +144,7 @@ export default function CoursesPreview() {
                         height: '100%',
                         cursor: 'pointer',
                       }}
-                      onClick={() => isCenter && setSelectedCourse(course)}
+                      onClick={() => isCenter && setManualSelectedCourse(course)}
                     >
                       <GlowingCard glowColor="#22d3ee">
                         <div style={{
@@ -264,7 +283,7 @@ export default function CoursesPreview() {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              setSelectedCourse(course);
+                              setManualSelectedCourse(course);
                             }}
                             whileHover={{ 
                               scale: 1.05,
@@ -421,7 +440,8 @@ export default function CoursesPreview() {
         {selectedCourse && (
           <CourseDetailsModal 
             course={selectedCourse} 
-            onClose={() => setSelectedCourse(null)} 
+            initialShowEnrollment={shouldOpenEnrollment}
+            onClose={handleCloseModal} 
           />
         )}
       </AnimatePresence>

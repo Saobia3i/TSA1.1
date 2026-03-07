@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
+import { normalizeInternationalWhatsappNumber } from "@/lib/validators";
 
 const VALID_COUNTRIES = [
   "Bangladesh",
@@ -72,6 +73,9 @@ export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
     const body = await request.json();
     const validatedData = serviceBookingSchema.parse(body);
+    const normalizedWhatsapp = normalizeInternationalWhatsappNumber(
+      validatedData.whatsapp
+    );
 
     const booking = await prisma.serviceBooking.create({
       data: {
@@ -79,7 +83,7 @@ export async function POST(request: Request) {
         fullName: session?.user?.name || validatedData.fullName,
         organization: validatedData.organization,
         email: session?.user?.email || validatedData.email,
-        whatsapp: validatedData.whatsapp,
+        whatsapp: normalizedWhatsapp,
         country: validatedData.country,
         packageName: validatedData.packageName,
         requirements: validatedData.requirements,
@@ -97,6 +101,7 @@ export async function POST(request: Request) {
       const payload = {
         bookingId: booking.id,
         ...validatedData,
+        whatsapp: normalizedWhatsapp,
         email: session?.user?.email || validatedData.email,
         fullName: session?.user?.name || validatedData.fullName,
         submittedAt: booking.createdAt.toISOString(),
@@ -142,6 +147,15 @@ export async function POST(request: Request) {
         },
         { status: 400 }
       );
+    }
+
+    if (
+      error instanceof Error &&
+      (error.message === "WhatsApp number must include country code, e.g. +880..." ||
+        error.message === "Enter a valid WhatsApp number with country code" ||
+        error.message === "WhatsApp number must start with a valid country code")
+    ) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     if (error instanceof Error && error.message.includes("Prisma")) {

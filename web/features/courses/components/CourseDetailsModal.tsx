@@ -18,16 +18,19 @@ import EnrollmentForm from "@/components/forms/Enrollment";
 interface CourseDetailsModalProps {
   course: Course;
   onClose: () => void;
+  initialShowEnrollment?: boolean;
 }
 
 export default memo(function CourseDetailsModal({
   course,
   onClose,
+  initialShowEnrollment = false,
 }: CourseDetailsModalProps) {
   const Icon = course.icon;
   const [showCurriculum, setShowCurriculum] = useState(false);
-  const [showEnrollment, setShowEnrollment] = useState(false);
+  const [showEnrollment, setShowEnrollment] = useState(initialShowEnrollment);
   const [enrollmentSuccess, setEnrollmentSuccess] = useState(false);
+  const isEnrollmentView = enrollmentSuccess || showEnrollment || initialShowEnrollment;
 
   const whatsappUrl = `https://wa.me/8801871719419?text=${encodeURIComponent(
     `Hello, I want faster enrollment support for ${course.title}.`
@@ -122,9 +125,10 @@ export default memo(function CourseDetailsModal({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                {showEnrollment ? (
+                {isEnrollmentView ? (
                   <EnrollmentForm
                     courseId={course.id}
+                    courseSlug={course.slug}
                     courseName={course.title}
                     courseDescription={course.shortDescription}
                     onSuccessChange={setEnrollmentSuccess}
@@ -329,15 +333,24 @@ export default memo(function CourseDetailsModal({
               gridTemplateColumns: "minmax(0, 1fr)",
             }}
           >
-            <motion.a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noreferrer"
+            <motion.button
+              type="button"
               whileHover={{ scale: 1.02 }}
               className="footer-button footer-button-whatsapp"
+              onClick={() => window.open(whatsappUrl, "_blank", "noopener,noreferrer")}
+              style={{
+                width: "100%",
+                borderColor: "#25d366",
+                background: "linear-gradient(135deg, #25d366, #1ebe5b)",
+                minHeight: "72px",
+                padding: "20px 28px",
+                fontSize: "16px",
+                boxShadow: "0 16px 34px rgba(37, 211, 102, 0.28)",
+                color: "#ffffff",
+              }}
             >
               For faster enrollment contact us via WhatsApp
-            </motion.a>
+            </motion.button>
           </div>
         )}
         <style jsx>{`
@@ -402,9 +415,7 @@ export default memo(function CourseDetailsModal({
           }
 
           .footer-button-whatsapp {
-            border-color: rgba(37, 211, 102, 0.55);
-            background: linear-gradient(135deg, #25d366, #128c7e);
-            font-size: 14px;
+            color: #ffffff;
           }
 
           @media (max-width: 768px) {
@@ -418,6 +429,12 @@ export default memo(function CourseDetailsModal({
               padding: 16px 20px;
               font-size: 14px;
             }
+
+            .footer-button-whatsapp {
+              min-height: 66px;
+              padding: 18px 22px;
+              font-size: 15px;
+            }
           }
 
           @media (max-width: 560px) {
@@ -430,6 +447,12 @@ export default memo(function CourseDetailsModal({
               min-height: 52px;
               padding: 12px 14px;
               font-size: 13px;
+            }
+
+            .footer-button-whatsapp {
+              min-height: 60px;
+              padding: 16px 18px;
+              font-size: 14px;
             }
           }
         `}</style>

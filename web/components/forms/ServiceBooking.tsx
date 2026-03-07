@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { useSession } from "next-auth/react";
+import { normalizeInternationalWhatsappNumber } from "@/lib/validators";
 
 interface ServiceBookingProps {
   serviceTitle?: string;
@@ -155,12 +156,17 @@ export default function ServiceBooking({
         throw new Error("Please select a package.");
       }
 
+      const normalizedWhatsapp = normalizeInternationalWhatsappNumber(
+        form.whatsapp
+      );
+
       const response = await fetch("/api/service", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           serviceTitle: form.serviceTitle,
           ...form,
+          whatsapp: normalizedWhatsapp,
         }),
       });
 
@@ -277,6 +283,7 @@ export default function ServiceBooking({
               value={form.whatsapp}
               onChange={onChange}
               placeholder="+880..."
+              inputMode="tel"
               required
             />
           </div>

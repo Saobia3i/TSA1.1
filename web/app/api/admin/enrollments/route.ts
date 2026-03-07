@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -108,8 +109,7 @@ export async function GET() {
   }
 
   const pendingEnrollments = await prisma.enrollment.findMany({
-    where: { status: "PENDING" },
-    orderBy: { enrolledAt: "asc" },
+    orderBy: { enrolledAt: "desc" },
     select: {
       id: true,
       courseId: true,
@@ -200,6 +200,9 @@ export async function PATCH(request: Request) {
         },
       },
     });
+
+    revalidatePath("/dashboard");
+    revalidatePath("/admin/enrollments");
 
     return NextResponse.json({
       success: true,

@@ -42,3 +42,38 @@ export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return emailRegex.test(email.toLowerCase())
 }
+
+export function normalizeInternationalWhatsappNumber(raw: string): string {
+  const trimmed = raw.trim()
+  const hasPlusPrefix = trimmed.startsWith('+')
+  const digitsOnly = trimmed.replace(/[^\d]/g, '')
+
+  if (!hasPlusPrefix) {
+    throw new Error('WhatsApp number must include country code, e.g. +880...')
+  }
+
+  if (digitsOnly.length < 8 || digitsOnly.length > 15) {
+    throw new Error('Enter a valid WhatsApp number with country code')
+  }
+
+  if (digitsOnly.startsWith('0')) {
+    throw new Error('WhatsApp number must start with a valid country code')
+  }
+
+  return `+${digitsOnly}`
+}
+
+export function normalizeWhatsappWithCountryCode(countryCode: string, localNumber: string): string {
+  const cleanCountryCode = countryCode.trim()
+  const cleanLocalNumber = localNumber.replace(/[^\d]/g, '').replace(/^0+/, '')
+
+  if (!/^\+\d{1,4}$/.test(cleanCountryCode)) {
+    throw new Error('Valid country code is required.')
+  }
+
+  if (cleanLocalNumber.length < 6 || cleanLocalNumber.length > 12) {
+    throw new Error('Valid WhatsApp number is required.')
+  }
+
+  return normalizeInternationalWhatsappNumber(`${cleanCountryCode}${cleanLocalNumber}`)
+}

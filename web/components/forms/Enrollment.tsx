@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface EnrollmentFormProps {
   courseId: string;
+  courseSlug?: string;
   courseName: string;
   //coursePrice?: number;
   courseDescription?: string;
@@ -57,6 +58,7 @@ const COUNTRY_CODES = [
 
 export default function EnrollmentForm({
   courseId,
+  courseSlug,
   courseName,
   //coursePrice,
   courseDescription,
@@ -72,11 +74,6 @@ export default function EnrollmentForm({
   const [success, setSuccess] = useState(false);
   const [countryCode, setCountryCode] = useState('+880');
   const [whatsappNumber, setWhatsappNumber] = useState('');
-
-  useEffect(() => {
-    onSuccessChange?.(success);
-  }, [onSuccessChange, success]);
-
   useEffect(() => {
     const savedContact = session?.user?.contact?.trim();
     if (!savedContact) return;
@@ -92,9 +89,14 @@ export default function EnrollmentForm({
   }, [session?.user?.contact]);
 
   const loginCallbackUrl = useMemo(() => {
-    const query = searchParams.toString();
+    const params = new URLSearchParams(searchParams.toString());
+    if (courseSlug) {
+      params.set('openCourse', courseSlug);
+      params.set('openEnrollment', '1');
+    }
+    const query = params.toString();
     return query ? `${pathname}?${query}` : pathname;
-  }, [pathname, searchParams]);
+  }, [courseSlug, pathname, searchParams]);
 
   const handleEnroll = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -146,9 +148,11 @@ export default function EnrollmentForm({
       }
 
       setSuccess(true);
+      onSuccessChange?.(true);
 
     } catch (err) {
       console.error('Enrollment error:', err);
+      onSuccessChange?.(false);
       if (err instanceof DOMException && err.name === 'AbortError') {
         setError('Request timed out. Please try again.');
       } else {

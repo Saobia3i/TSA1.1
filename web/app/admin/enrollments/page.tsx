@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { unstable_noStore as noStore } from "next/cache";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import AdminEnrollmentsClient from "./AdminEnrollmentsClient";
@@ -11,6 +12,7 @@ export default async function AdminEnrollmentsPage({
 }: {
   searchParams?: Promise<{ verified?: string }>;
 }) {
+  noStore();
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.email || !session.user.id) {
@@ -34,13 +36,15 @@ export default async function AdminEnrollmentsPage({
     return <AdminVerifyClient email={session.user.email} />;
   }
 
-  const pendingEnrollments = await prisma.enrollment.findMany({
-    where: { status: "PENDING" },
-    orderBy: { enrolledAt: "asc" },
+  const enrollments = await prisma.enrollment.findMany({
+    orderBy: { enrolledAt: "desc" },
     select: {
       id: true,
+      courseId: true,
       courseName: true,
+      status: true,
       enrolledAt: true,
+      approvedAt: true,
       user: {
         select: {
           name: true,
@@ -49,8 +53,8 @@ export default async function AdminEnrollmentsPage({
         },
       },
     },
-    take: 200,
+    take: 500,
   });
 
-  return <AdminEnrollmentsClient pendingEnrollments={pendingEnrollments} />;
+  return <AdminEnrollmentsClient pendingEnrollments={enrollments} />;
 }

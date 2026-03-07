@@ -6,8 +6,11 @@ import { useRouter } from "next/navigation";
 
 type PendingEnrollment = {
   id: string;
+  courseId: string;
   courseName: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
   enrolledAt: Date | string;
+  approvedAt: Date | string | null;
   user: {
     name: string | null;
     email: string;
@@ -20,6 +23,37 @@ function fmt(v: Date | string) {
     dateStyle: "medium",
     timeStyle: "short",
   });
+}
+
+function fmtNullable(v: Date | string | null) {
+  return v ? fmt(v) : "-";
+}
+
+function StatusBadge({
+  status,
+}: {
+  status: "PENDING" | "APPROVED" | "REJECTED";
+}) {
+  const map = {
+    PENDING: { bg: "rgba(245,158,11,.2)", text: "#fbbf24" },
+    APPROVED: { bg: "rgba(16,185,129,.2)", text: "#34d399" },
+    REJECTED: { bg: "rgba(239,68,68,.2)", text: "#f87171" },
+  }[status];
+
+  return (
+    <span
+      style={{
+        background: map.bg,
+        color: map.text,
+        padding: "4px 10px",
+        borderRadius: 999,
+        fontSize: 12,
+        fontWeight: 700,
+      }}
+    >
+      {status}
+    </span>
+  );
 }
 
 export default function AdminEnrollmentsClient({
@@ -48,7 +82,17 @@ export default function AdminEnrollmentsClient({
         throw new Error(payload?.error || "Approve failed");
       }
 
-      setItems((prev) => prev.filter((x) => x.id !== enrollmentId));
+      setItems((prev) =>
+        prev.map((item) =>
+          item.id === enrollmentId
+            ? {
+                ...item,
+                status: "APPROVED",
+                approvedAt: new Date().toISOString(),
+              }
+            : item
+        )
+      );
       setMessage("Enrollment approved successfully.");
     } catch (err) {
       setMessage(err instanceof Error ? err.message : "Approve failed");
@@ -122,13 +166,13 @@ export default function AdminEnrollmentsClient({
         {message && <p style={{ color: "#93c5fd" }}>{message}</p>}
 
         {items.length === 0 ? (
-          <p style={{ color: "#9ca3af" }}>No pending enrollment requests.</p>
+          <p style={{ color: "#9ca3af" }}>No enrollment requests found.</p>
         ) : (
           <div className="table-wrap" style={{ overflowX: "auto", border: "1px solid rgba(255,255,255,.12)", borderRadius: 12 }}>
             <table className="enrollments-table" style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr>
-                  {["Student", "Email", "WhatsApp", "Course", "Requested At", "Action"].map((h) => (
+                  {["Student", "Email", "WhatsApp", "Course", "Status", "Requested At", "Approved At", "Action"].map((h) => (
                     <th
                       key={h}
                       style={{
@@ -151,23 +195,29 @@ export default function AdminEnrollmentsClient({
                     <td style={tdStyle}>{item.user.email}</td>
                     <td style={tdStyle}>{item.user.contact || "-"}</td>
                     <td style={tdStyle}>{item.courseName}</td>
+                    <td style={tdStyle}>
+                      <StatusBadge status={item.status} />
+                    </td>
                     <td style={tdStyle}>{fmt(item.enrolledAt)}</td>
+                    <td style={tdStyle}>{fmtNullable(item.approvedAt)}</td>
                     <td style={tdStyle}>
                       <div className="action-buttons" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                        <button
-                          onClick={() => approve(item.id)}
-                          disabled={loadingId === item.id}
-                          style={{
-                            border: "1px solid rgba(16,185,129,.5)",
-                            background: "rgba(16,185,129,.15)",
-                            color: "#34d399",
-                            borderRadius: 8,
-                            padding: "6px 12px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {loadingId === item.id ? "Working..." : "Approve"}
-                        </button>
+                        {item.status === "PENDING" && (
+                          <button
+                            onClick={() => approve(item.id)}
+                            disabled={loadingId === item.id}
+                            style={{
+                              border: "1px solid rgba(16,185,129,.5)",
+                              background: "rgba(16,185,129,.15)",
+                              color: "#34d399",
+                              borderRadius: 8,
+                              padding: "6px 12px",
+                              cursor: "pointer",
+                            }}
+                          >
+                            {loadingId === item.id ? "Working..." : "Approve"}
+                          </button>
+                        )}
                         <button
                           onClick={() => sendMail(item.id)}
                           disabled={loadingId === item.id}
@@ -216,7 +266,7 @@ export default function AdminEnrollmentsClient({
           }
 
           .enrollments-table {
-            min-width: 760px;
+            min-width: 980px;
           }
 
           .action-buttons {
