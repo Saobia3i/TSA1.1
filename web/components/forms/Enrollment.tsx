@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
@@ -74,7 +74,26 @@ export default function EnrollmentForm({
   const [success, setSuccess] = useState(false);
   const [countryCode, setCountryCode] = useState('+880');
   const [whatsappNumber, setWhatsappNumber] = useState('');
+  const hasAutoSubmittedRef = useRef(false);
+  const pendingStorageKey = useMemo(() => `tsa:pending-enrollment:${courseId}`, [courseId]);
+
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const pendingRaw = window.sessionStorage.getItem(pendingStorageKey);
+    if (pendingRaw) {
+      try {
+        const pending = JSON.parse(pendingRaw) as {
+          countryCode?: string;
+          whatsappNumber?: string;
+        };
+        if (pending.countryCode) setCountryCode(pending.countryCode);
+        if (pending.whatsappNumber) setWhatsappNumber(pending.whatsappNumber);
+      } catch {
+        window.sessionStorage.removeItem(pendingStorageKey);
+      }
+    }
+
     const savedContact = session?.user?.contact?.trim();
     if (!savedContact) return;
 
@@ -86,7 +105,7 @@ export default function EnrollmentForm({
 
     setCountryCode(match[1]);
     setWhatsappNumber(match[2]);
-  }, [session?.user?.contact]);
+  }, [pendingStorageKey, session?.user?.contact]);
 
   const loginCallbackUrl = useMemo(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -98,14 +117,88 @@ export default function EnrollmentForm({
     return query ? `${pathname}?${query}` : pathname;
   }, [courseSlug, pathname, searchParams]);
 
-  const handleEnroll = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Check authentication
-    if (status === 'unauthenticated') {
-      router.push(`/login?callbackUrl=${encodeURIComponent(loginCallbackUrl)}`);
+  const submitEnrollment = useCallback(async (cleanWhatsappNumber: string) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+    try {
+      const response = await fetch('/api/enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          courseId,
+          courseName,
+          whatsappCountryCode: countryCode,
+          whatsappNumber: cleanWhatsappNumber,
+        }),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        const payload = await response.json().catch(() => null);
+        const message =
+          payload?.error ||
+          (response.status === 401
+            ? 'Please login to enroll.'
+            : 'Enrollment failed. Please try again.');
+        throw new Error(message);
+      }
+
+      if (typeof window !== 'undefined') {
+        window.sessionStorage.removeItem(pendingStorageKey);
+      }
+
+      setSuccess(true);
+      onSuccessChange?.(true);
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }, [countryCode, courseId, courseName, onSuccessChange, pendingStorageKey]);
+
+  useEffect(() => {
+    if (status !== 'authenticated' || hasAutoSubmittedRef.current || success) {
       return;
     }
+
+    if (typeof window === 'undefined') return;
+
+    const pendingRaw = window.sessionStorage.getItem(pendingStorageKey);
+    if (!pendingRaw) return;
+
+    try {
+      const pending = JSON.parse(pendingRaw) as {
+        whatsappNumber?: string;
+      };
+      const cleanWhatsappNumber = pending.whatsappNumber?.replace(/[^\d]/g, '') || '';
+      if (cleanWhatsappNumber.length < 6) {
+        window.sessionStorage.removeItem(pendingStorageKey);
+        return;
+      }
+
+      hasAutoSubmittedRef.current = true;
+      setIsEnrolling(true);
+      setError('');
+      void submitEnrollment(cleanWhatsappNumber)
+        .catch((err) => {
+          console.error('Enrollment error:', err);
+          onSuccessChange?.(false);
+          if (err instanceof DOMException && err.name === 'AbortError') {
+            setError('Request timed out. Please try again.');
+          } else {
+            setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+          }
+          hasAutoSubmittedRef.current = false;
+        })
+        .finally(() => {
+          setIsEnrolling(false);
+        });
+    } catch {
+      window.sessionStorage.removeItem(pendingStorageKey);
+    }
+  }, [pendingStorageKey, status, submitEnrollment, success, onSuccessChange]);
+
+  const handleEnroll = async (e: React.FormEvent) => {
+    e.preventDefault();
 
     setIsEnrolling(true);
     setError('');
@@ -120,35 +213,23 @@ export default function EnrollmentForm({
         throw new Error('WhatsApp number is required.');
       }
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-      const response = await fetch('/api/enroll', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          courseId,
-          courseName,
-          whatsappCountryCode: countryCode,
-          whatsappNumber: cleanWhatsappNumber,
-        }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        const payload = await response.json().catch(() => null);
-        const message =
-          payload?.error ||
-          (response.status === 401
-            ? 'Please login to enroll.'
-            : 'Enrollment failed. Please try again.');
-        throw new Error(message);
+      if (status === 'unauthenticated') {
+        if (typeof window !== 'undefined') {
+          window.sessionStorage.setItem(
+            pendingStorageKey,
+            JSON.stringify({
+              courseId,
+              courseName,
+              countryCode,
+              whatsappNumber: cleanWhatsappNumber,
+            })
+          );
+        }
+        router.push(`/login?callbackUrl=${encodeURIComponent(loginCallbackUrl)}`);
+        return;
       }
 
-      setSuccess(true);
-      onSuccessChange?.(true);
+      await submitEnrollment(cleanWhatsappNumber);
 
     } catch (err) {
       console.error('Enrollment error:', err);
@@ -242,7 +323,6 @@ export default function EnrollmentForm({
           </div>
         )}
 
-        {/* User Info Display (if logged in) */}
         {session?.user && (
           <div className="user-info">
             <div className="info-row">
@@ -291,7 +371,9 @@ export default function EnrollmentForm({
         </div>
 
         <p className="field-note">
-          Login is required. Your WhatsApp number with country code will be saved for enrollment follow-up.
+          {status === 'unauthenticated'
+            ? 'First time only: enter WhatsApp and continue to login. After login, enrollment will be submitted automatically.'
+            : 'Your WhatsApp number will be saved for enrollment follow-up and shown in the dashboard.'}
         </p>
 
         {/* Enroll Button */}
@@ -316,7 +398,7 @@ export default function EnrollmentForm({
             </>
           ) : (
             <>
-              <span>Request Enrollment?</span>
+              <span>Request Enrollment</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -326,7 +408,7 @@ export default function EnrollmentForm({
 
         {status === 'unauthenticated' && (
           <p className="login-hint">
-            You&apos;ll be redirected to login page
+            You&apos;ll be redirected to login and then enrollment will continue automatically.
           </p>
         )}
       </form>

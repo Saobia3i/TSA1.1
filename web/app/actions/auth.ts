@@ -104,7 +104,7 @@ export async function signup(formData: FormData) {
     }
 
     if (sanitizedContact) {
-      const existingContact = await prisma.user.findUnique({
+      const existingContact = await prisma.user.findFirst({
         where: { contact: sanitizedContact },
       })
 
