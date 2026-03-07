@@ -259,7 +259,7 @@ export default function RootLayout({
     .mb-6{margin-bottom:1.5rem}
   `}</style>
       </head>
-      <body style={{ margin: 0, padding: 0 }}>
+      <body suppressHydrationWarning style={{ margin: 0, padding: 0 }}>
         <Providers>
           <InstallPrompt />
           <RegisterSW />

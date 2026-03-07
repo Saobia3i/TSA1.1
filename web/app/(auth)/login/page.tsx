@@ -23,6 +23,7 @@ function LoginForm() {
   const searchParams = useSearchParams()
   const urlError = searchParams.get('error')
   const urlSuccess = searchParams.get('success')
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -38,12 +39,13 @@ function LoginForm() {
         email,
         password,
         redirect: false,
+        callbackUrl,
       })
 
       if (result?.error) {
         setError('Invalid email or password')
       } else if (result?.ok) {
-        router.push('/dashboard')
+        router.push(result.url || callbackUrl)
         router.refresh()
       }
     } catch (err) {
@@ -364,7 +366,7 @@ function LoginForm() {
 {/* Google Sign In Button */}
 <motion.button
   type="button"
-  onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+  onClick={() => signIn('google', { callbackUrl })}
   disabled={loading}
   whileHover={!loading ? { scale: 1.02, boxShadow: '0 4px 20px rgba(66, 133, 244, 0.3)' } : {}}
   whileTap={!loading ? { scale: 0.98 } : {}}
@@ -401,7 +403,7 @@ function LoginForm() {
 
           <p className="signup-text">
             Don&apos;t have an account?{' '}
-            <Link href="/signup" className="signup-link">
+            <Link href={`/signup${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`} className="signup-link">
               Sign up
             </Link>
           </p>

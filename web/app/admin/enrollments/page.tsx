@@ -6,7 +6,11 @@ import { prisma } from "@/lib/prisma";
 import AdminEnrollmentsClient from "./AdminEnrollmentsClient";
 import AdminVerifyClient from "./AdminVerifyClient";
 
-export default async function AdminEnrollmentsPage() {
+export default async function AdminEnrollmentsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ verified?: string }>;
+}) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.email || !session.user.id) {
@@ -23,8 +27,10 @@ export default async function AdminEnrollmentsPage() {
     redirect("/dashboard");
   }
 
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
   const isVerified = (await cookies()).get("admin_panel_auth")?.value === "verified";
-  if (!isVerified) {
+  const allowAccess = isVerified && resolvedSearchParams?.verified === "1";
+  if (!allowAccess) {
     return <AdminVerifyClient email={session.user.email} />;
   }
 

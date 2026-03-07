@@ -22,6 +22,7 @@ function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const urlError = searchParams.get("error");
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,7 +37,9 @@ function SignupForm() {
         setError(result.error);
       } else if (result.success) {
         router.push(
-          "/login?success=Account created successfully! Please login."
+          `/login?success=${encodeURIComponent(
+            "Account created successfully! Please login."
+          )}&callbackUrl=${encodeURIComponent(callbackUrl)}`
         );
       }
     });
@@ -410,7 +413,7 @@ function SignupForm() {
           {/* Google Sign Up Button */}
           <motion.button
             type="button"
-            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            onClick={() => signIn("google", { callbackUrl })}
             //disabled={loading}
             // whileHover={!loading ? { scale: 1.02, boxShadow: '0 4px 20px rgba(236, 72, 153, 0.3)' } : {}}
             // whileTap={!loading ? { scale: 0.98 } : {}}
@@ -485,7 +488,10 @@ function SignupForm() {
 
           <p className="login-text">
             Already have an account?{" "}
-            <Link href="/login" className="login-link">
+            <Link
+              href={`/login${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ""}`}
+              className="login-link"
+            >
               Login
             </Link>
           </p>

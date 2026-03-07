@@ -27,6 +27,11 @@ export default memo(function CourseDetailsModal({
   const Icon = course.icon;
   const [showCurriculum, setShowCurriculum] = useState(false);
   const [showEnrollment, setShowEnrollment] = useState(false);
+  const [enrollmentSuccess, setEnrollmentSuccess] = useState(false);
+
+  const whatsappUrl = `https://wa.me/8801871719419?text=${encodeURIComponent(
+    `Hello, I want faster enrollment support for ${course.title}.`
+  )}`;
 
   return (
     <motion.div
@@ -73,6 +78,8 @@ export default memo(function CourseDetailsModal({
       >
         {/* Close */}
         <motion.button
+          type="button"
+          aria-label="Close course details"
           onClick={onClose}
           whileHover={{ scale: 1.1, rotate: 90 }}
           style={{
@@ -89,6 +96,7 @@ export default memo(function CourseDetailsModal({
             justifyContent: "center",
             cursor: "pointer",
             color: course.color,
+            zIndex: 3,
           }}
         >
           <X />
@@ -119,6 +127,7 @@ export default memo(function CourseDetailsModal({
                     courseId={course.id}
                     courseName={course.title}
                     courseDescription={course.shortDescription}
+                    onSuccessChange={setEnrollmentSuccess}
                   />
                 ) : (
                   <>
@@ -269,64 +278,118 @@ export default memo(function CourseDetailsModal({
         </div>
 
         {/* Fixed Bottom Bar */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            padding: "20px 40px",
-            display: "flex",
-            gap: 16,
-            background:
-              "linear-gradient(to top, rgba(17,24,39,0.98), transparent)",
-          }}
-        >
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            onClick={() => {
-              setShowEnrollment(false);
-              setShowCurriculum((v) => !v);
-            }}
-            style={{
-              flex: 1,
-              padding: 16,
-              borderRadius: 12,
-              border: `2px solid ${course.color}90`,
-              gap: 8,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: `#010101 `,
-              color: "white",
-              fontWeight: 700,
-              fontFamily: "var(--font-nunito)",
-            }}
-          >
-            <BookOpen size={18} />{" "}
-            {showCurriculum ? "What You'll Learn" : "View Curriculum"}
-          </motion.a>
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            onClick={() => {
-              setShowEnrollment(true);
-              setShowCurriculum(false);
-            }}
-            style={{
-              flex: 1,
-              padding: 16,
-              borderRadius: 12,
-              border: `2px solid ${course.color}80`,
-              background: `linear-gradient(${course.color}, ${course.color}50)`,
-              color: "white",
-              fontWeight: 700,
-              fontFamily: "var(--font-nunito)",
-              cursor: "pointer",
-            }}
-          >
-            Enroll Now
-          </motion.a>
-        </div>
+        {!enrollmentSuccess ? (
+          <div className="modal-footer">
+            <motion.button
+              type="button"
+              className="footer-button footer-button-secondary"
+              whileHover={{ scale: 1.05 }}
+              onClick={() => {
+                setShowEnrollment(false);
+                setEnrollmentSuccess(false);
+                setShowCurriculum((v) => !v);
+              }}
+              style={{
+                borderColor: `${course.color}90`,
+              }}
+            >
+              <BookOpen size={18} />{" "}
+              {showCurriculum ? "What You'll Learn" : "View Curriculum"}
+            </motion.button>
+            <motion.button
+              type="button"
+              className="footer-button footer-button-primary"
+              whileHover={{ scale: 1.05 }}
+              onClick={() => {
+                setShowEnrollment(true);
+                setEnrollmentSuccess(false);
+                setShowCurriculum(false);
+              }}
+              style={{
+                borderColor: `${course.color}80`,
+                background: `linear-gradient(${course.color}, ${course.color}50)`,
+              }}
+            >
+              Enroll Now
+            </motion.button>
+          </div>
+        ) : (
+          <div className="modal-footer">
+            <motion.a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noreferrer"
+              whileHover={{ scale: 1.02 }}
+              className="footer-button footer-button-whatsapp"
+            >
+              For faster enrollment contact us via WhatsApp
+            </motion.a>
+          </div>
+        )}
+        <style jsx>{`
+          .modal-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            gap: 16px;
+            background: linear-gradient(to top, rgba(17, 24, 39, 0.98), transparent);
+            z-index: 2;
+          }
+
+          .footer-button {
+            flex: 1;
+            min-height: 56px;
+            padding: 16px 18px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: white;
+            font-weight: 700;
+            font-family: var(--font-nunito);
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            line-height: 1.25;
+          }
+
+          .footer-button-secondary {
+            background: #010101;
+          }
+
+          .footer-button-primary {
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+          }
+
+          .footer-button-whatsapp {
+            border-color: rgba(37, 211, 102, 0.55);
+            background: linear-gradient(135deg, #25d366, #128c7e);
+          }
+
+          @media (max-width: 768px) {
+            .modal-footer {
+              padding: 16px 20px;
+              gap: 12px;
+            }
+          }
+
+          @media (max-width: 560px) {
+            .modal-footer {
+              flex-direction: column;
+            }
+
+            .footer-button {
+              width: 100%;
+              min-height: 52px;
+              padding: 14px 16px;
+            }
+          }
+        `}</style>
       </motion.div>
     </motion.div>
   );

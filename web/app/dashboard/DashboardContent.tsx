@@ -52,10 +52,7 @@ export default function DashboardContent({
   enrollments: initialEnrollments,
   serviceBookings,
 }: DashboardContentProps) {
-  const [enrollments, setEnrollments] = useState(initialEnrollments);
-  const [approvingId, setApprovingId] = useState("");
-  const [adminMessage, setAdminMessage] = useState("");
-  const [adminPassword, setAdminPassword] = useState("");
+  const [enrollments] = useState(initialEnrollments);
 
   const pending = useMemo(
     () => enrollments.filter((e) => e.status === "PENDING"),
@@ -65,47 +62,6 @@ export default function DashboardContent({
     () => enrollments.filter((e) => e.status === "APPROVED"),
     [enrollments]
   );
-
-  const unlockAdmin = async () => {
-    try {
-      setAdminMessage("");
-      const res = await fetch("/api/admin/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: adminPassword }),
-      });
-      const payload = await res.json().catch(() => null);
-      if (!res.ok) {
-        throw new Error(payload?.error || "Admin verification failed");
-      }
-      setAdminMessage("Admin verification successful. You can approve now.");
-      setAdminPassword("");
-    } catch (err) {
-      setAdminMessage(err instanceof Error ? err.message : "Admin verification failed");
-    }
-  };
-
-  const approvePending = async (enrollmentId: string) => {
-    try {
-      setApprovingId(enrollmentId);
-      setAdminMessage("");
-      const res = await fetch("/api/admin/enrollments", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ enrollmentId, action: "APPROVE" }),
-      });
-      const payload = await res.json().catch(() => null);
-      if (!res.ok) {
-        throw new Error(payload?.error || "Approve failed");
-      }
-      setEnrollments((prev) => prev.filter((e) => e.id !== enrollmentId));
-      setAdminMessage("Enrollment approved successfully.");
-    } catch (err) {
-      setAdminMessage(err instanceof Error ? err.message : "Approve failed");
-    } finally {
-      setApprovingId("");
-    }
-  };
 
   return (
     <div style={{ backgroundColor: "#0a1929", minHeight: "100vh", fontFamily: "var(--font-nunito)" }}>
@@ -158,59 +114,17 @@ export default function DashboardContent({
               {user.role === "ADMIN" ? (
                 <>
                   <p style={{ color: "#9ca3af", marginTop: 0 }}>
-                    Showing only pending course enrollments for approval.
+                    Dashboard shows enrollment status only. Approvals are handled from the simple admin approval page.
                   </p>
-                  <div style={{ display: "flex", gap: 10, marginBottom: 12, flexWrap: "wrap" }}>
-                    <input
-                      type="password"
-                      placeholder="Enter admin password"
-                      value={adminPassword}
-                      onChange={(e) => setAdminPassword(e.target.value)}
-                      style={{
-                        padding: "8px 10px",
-                        borderRadius: 8,
-                        border: "1px solid rgba(255,255,255,.2)",
-                        background: "rgba(15,23,42,.75)",
-                        color: "#fff",
-                      }}
-                    />
-                    <button
-                      onClick={unlockAdmin}
-                      style={{
-                        border: "1px solid rgba(125,211,252,.5)",
-                        background: "rgba(125,211,252,.15)",
-                        color: "#7dd3fc",
-                        borderRadius: 8,
-                        padding: "8px 12px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Verify Admin
-                    </button>
-                  </div>
-                  {adminMessage && <p style={{ color: "#93c5fd" }}>{adminMessage}</p>}
                   <Table
-                    headers={["Student", "Email", "Course", "Requested At", "Action"]}
+                    headers={["Student", "Email", "Course", "Status", "Requested At", "Approved At"]}
                     rows={enrollments.map((e) => [
                       e.user?.name || "Unknown",
                       e.user?.email || "-",
                       e.courseName,
+                      <StatusBadge key={`${e.id}-status`} status={e.status} />,
                       fmt(e.enrolledAt),
-                      <button
-                        key={`${e.id}-approve`}
-                        onClick={() => approvePending(e.id)}
-                        disabled={approvingId === e.id}
-                        style={{
-                          border: "1px solid rgba(16,185,129,.5)",
-                          background: "rgba(16,185,129,.15)",
-                          color: "#34d399",
-                          borderRadius: 8,
-                          padding: "6px 12px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        {approvingId === e.id ? "Approving..." : "Approve"}
-                      </button>,
+                      fmt(e.approvedAt),
                     ])}
                   />
                 </>

@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function AdminVerifyClient({ email }: { email: string }) {
   const router = useRouter();
-  const [password, setPassword] = useState("");
+  const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -18,12 +18,13 @@ export default function AdminVerifyClient({ email }: { email: string }) {
       const res = await fetch("/api/admin/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ pin }),
       });
       const payload = await res.json().catch(() => null);
       if (!res.ok) {
         throw new Error(payload?.error || "Verification failed");
       }
+      router.push("/admin/enrollments?verified=1");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Verification failed");
@@ -60,14 +61,17 @@ export default function AdminVerifyClient({ email }: { email: string }) {
         <p style={{ color: "#9ca3af", marginTop: 0 }}>
           Logged in as: <strong>{email}</strong>
         </p>
-        <label htmlFor="admin-password" style={{ display: "block", marginBottom: 8 }}>
-          Enter admin password
+        <label htmlFor="admin-pin" style={{ display: "block", marginBottom: 8 }}>
+          Enter 4 digit admin PIN
         </label>
         <input
-          id="admin-password"
+          id="admin-pin"
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          inputMode="numeric"
+          pattern="\d{4}"
+          maxLength={4}
+          value={pin}
+          onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
           required
           style={{
             width: "100%",

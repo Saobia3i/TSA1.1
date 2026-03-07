@@ -5,7 +5,10 @@ import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 
 const verifySchema = z.object({
-  password: z.string().min(1, "Password is required"),
+  pin: z
+    .string()
+    .trim()
+    .regex(/^\d{4}$/, "4 digit PIN is required"),
 });
 
 function canUseAdminPanel(session: Session | null) {
@@ -21,20 +24,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const adminPassword = process.env.ADMIN_PANEL_PASSWORD?.trim();
-  if (!adminPassword) {
+  const adminPin =
+    process.env.ADMIN_APPROVAL_PIN?.trim() || process.env.ADMIN_PANEL_PIN?.trim();
+  if (!adminPin) {
     return NextResponse.json(
-      { error: "ADMIN_PANEL_PASSWORD is not configured" },
+      { error: "ADMIN_APPROVAL_PIN or ADMIN_PANEL_PIN is not configured" },
       { status: 500 }
     );
   }
 
   try {
     const body = await request.json();
-    const { password } = verifySchema.parse(body);
+    const { pin } = verifySchema.parse(body);
 
-    if (password !== adminPassword) {
-      return NextResponse.json({ error: "Invalid admin password" }, { status: 401 });
+    if (pin !== adminPin) {
+      return NextResponse.json({ error: "Invalid admin PIN" }, { status: 401 });
     }
 
     const res = NextResponse.json({ success: true, message: "Admin verified" });

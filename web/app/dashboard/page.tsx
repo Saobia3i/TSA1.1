@@ -15,7 +15,7 @@ export default async function DashboardPage() {
 
   const [enrollments, serviceBookings] = await Promise.all([
     prisma.enrollment.findMany({
-      where: isAdmin ? { status: "PENDING" } : { userId: session.user.id },
+      where: isAdmin ? undefined : { userId: session.user.id },
       orderBy: { enrolledAt: "desc" },
       take: isAdmin ? 500 : 200,
       select: {

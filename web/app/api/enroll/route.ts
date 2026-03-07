@@ -7,6 +7,14 @@ import { prisma } from "@/lib/prisma";
 const enrollmentSchema = z.object({
   courseId: z.string().min(1, "Course ID is required"),
   courseName: z.string().min(1, "Course name is required"),
+  whatsappCountryCode: z
+    .string()
+    .trim()
+    .regex(/^\+\d{1,4}$/, "Valid country code is required"),
+  whatsappNumber: z
+    .string()
+    .trim()
+    .min(6, "WhatsApp number is required"),
 });
 
 type EnrollmentStatusValue = "PENDING" | "APPROVED" | "REJECTED";
@@ -17,6 +25,22 @@ function getEnvAny(...keys: string[]) {
     if (value && value.trim()) return value.trim();
   }
   return "";
+}
+
+function normalizeWhatsappNumber(countryCode: string, whatsappNumber: string) {
+  const cleanCountryCode = countryCode.trim();
+  const cleanLocalNumber = whatsappNumber.replace(/[^\d]/g, "");
+  const localWithoutLeadingZeros = cleanLocalNumber.replace(/^0+/, "");
+
+  if (!/^\+\d{1,4}$/.test(cleanCountryCode)) {
+    throw new Error("Valid country code is required.");
+  }
+
+  if (localWithoutLeadingZeros.length < 6 || localWithoutLeadingZeros.length > 15) {
+    throw new Error("Valid WhatsApp number is required.");
+  }
+
+  return `${cleanCountryCode}${localWithoutLeadingZeros}`;
 }
 
 async function sendEnrollmentNotificationEmail(params: {
@@ -119,10 +143,28 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    const normalizedWhatsapp = normalizeWhatsappNumber(
+      validatedData.whatsappCountryCode,
+      validatedData.whatsappNumber
+    );
+
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        contact: normalizedWhatsapp,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        contact: true,
+      },
+    });
+
     const existingEnrollment = await prisma.enrollment.findUnique({
       where: {
         userId_courseId: {
-          userId: user.id,
+          userId: updatedUser.id,
           courseId: validatedData.courseId,
         },
       },
@@ -138,6 +180,7 @@ export async function POST(request: Request) {
           {
             success: true,
             message: "we have received your enrollment request. we will contact you soon.",
+            whatsapp: updatedUser.contact,
             enrollment: {
               id: existingEnrollment.id,
               courseName: existingEnrollment.courseName,
@@ -164,7 +207,7 @@ export async function POST(request: Request) {
 
     const enrollment = await prisma.enrollment.create({
       data: {
-        userId: user.id,
+        userId: updatedUser.id,
         courseId: validatedData.courseId,
         courseName: validatedData.courseName,
       },
@@ -172,9 +215,9 @@ export async function POST(request: Request) {
 
     try {
       await sendEnrollmentNotificationEmail({
-        studentName: user.name || "Unknown",
-        studentEmail: user.email,
-        studentContact: user.contact || "Not provided",
+        studentName: updatedUser.name || "Unknown",
+        studentEmail: updatedUser.email,
+        studentContact: updatedUser.contact || "Not provided",
         courseName: validatedData.courseName,
         courseId: validatedData.courseId,
         enrolledAt: enrollment.enrolledAt,
@@ -188,6 +231,7 @@ export async function POST(request: Request) {
       {
         success: true,
         message: "we have received your enrollment request. we will contact you soon.",
+        whatsapp: updatedUser.contact,
         enrollment: {
           id: enrollment.id,
           courseName: enrollment.courseName,
@@ -209,6 +253,21 @@ export async function POST(request: Request) {
             message: e.message,
           })),
         },
+        { status: 400 }
+      );
+    }
+
+    if (
+      error instanceof Error &&
+      (error.message === "Valid country code is required." ||
+        error.message === "Valid WhatsApp number is required.")
+    ) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    if (error instanceof Error && error.message.includes("Unique constraint")) {
+      return NextResponse.json(
+        { error: "This WhatsApp number is already in use." },
         { status: 400 }
       );
     }

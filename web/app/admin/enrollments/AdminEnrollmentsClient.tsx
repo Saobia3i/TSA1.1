@@ -128,7 +128,7 @@ export default function AdminEnrollmentsClient({
             <table className="enrollments-table" style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr>
-                  {["Student", "Email", "Contact", "Course", "Requested At", "Action"].map((h) => (
+                  {["Student", "Email", "WhatsApp", "Course", "Requested At", "Action"].map((h) => (
                     <th
                       key={h}
                       style={{

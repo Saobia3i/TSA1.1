@@ -1,35 +1,107 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface EnrollmentFormProps {
   courseId: string;
   courseName: string;
   //coursePrice?: number;
   courseDescription?: string;
+  onSuccessChange?: (success: boolean) => void;
 }
+
+const COUNTRY_CODES = [
+  { label: 'Bangladesh (+880)', value: '+880' },
+  { label: 'Afghanistan (+93)', value: '+93' },
+  { label: 'Australia (+61)', value: '+61' },
+  { label: 'Austria (+43)', value: '+43' },
+  { label: 'Belgium (+32)', value: '+32' },
+  { label: 'Brazil (+55)', value: '+55' },
+  { label: 'Canada (+1)', value: '+1' },
+  { label: 'China (+86)', value: '+86' },
+  { label: 'Denmark (+45)', value: '+45' },
+  { label: 'Egypt (+20)', value: '+20' },
+  { label: 'France (+33)', value: '+33' },
+  { label: 'Germany (+49)', value: '+49' },
+  { label: 'Hong Kong (+852)', value: '+852' },
+  { label: 'India (+91)', value: '+91' },
+  { label: 'Indonesia (+62)', value: '+62' },
+  { label: 'Ireland (+353)', value: '+353' },
+  { label: 'Italy (+39)', value: '+39' },
+  { label: 'Japan (+81)', value: '+81' },
+  { label: 'Malaysia (+60)', value: '+60' },
+  { label: 'Maldives (+960)', value: '+960' },
+  { label: 'Nepal (+977)', value: '+977' },
+  { label: 'Netherlands (+31)', value: '+31' },
+  { label: 'New Zealand (+64)', value: '+64' },
+  { label: 'Nigeria (+234)', value: '+234' },
+  { label: 'Pakistan (+92)', value: '+92' },
+  { label: 'Philippines (+63)', value: '+63' },
+  { label: 'Qatar (+974)', value: '+974' },
+  { label: 'Saudi Arabia (+966)', value: '+966' },
+  { label: 'Singapore (+65)', value: '+65' },
+  { label: 'South Africa (+27)', value: '+27' },
+  { label: 'South Korea (+82)', value: '+82' },
+  { label: 'Sri Lanka (+94)', value: '+94' },
+  { label: 'Sweden (+46)', value: '+46' },
+  { label: 'Switzerland (+41)', value: '+41' },
+  { label: 'Thailand (+66)', value: '+66' },
+  { label: 'Turkey (+90)', value: '+90' },
+  { label: 'UAE (+971)', value: '+971' },
+  { label: 'United States (+1)', value: '+1' },
+  { label: 'United Kingdom (+44)', value: '+44' },
+  { label: 'Vietnam (+84)', value: '+84' },
+];
 
 export default function EnrollmentForm({
   courseId,
   courseName,
   //coursePrice,
   courseDescription,
+  onSuccessChange,
 }: EnrollmentFormProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   
   const [isEnrolling, setIsEnrolling] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [countryCode, setCountryCode] = useState('+880');
+  const [whatsappNumber, setWhatsappNumber] = useState('');
+
+  useEffect(() => {
+    onSuccessChange?.(success);
+  }, [onSuccessChange, success]);
+
+  useEffect(() => {
+    const savedContact = session?.user?.contact?.trim();
+    if (!savedContact) return;
+
+    const match = savedContact.match(/^(\+\d{1,4})(\d+)$/);
+    if (!match) {
+      setWhatsappNumber(savedContact.replace(/[^\d]/g, ''));
+      return;
+    }
+
+    setCountryCode(match[1]);
+    setWhatsappNumber(match[2]);
+  }, [session?.user?.contact]);
+
+  const loginCallbackUrl = useMemo(() => {
+    const query = searchParams.toString();
+    return query ? `${pathname}?${query}` : pathname;
+  }, [pathname, searchParams]);
 
   const handleEnroll = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Check authentication
     if (status === 'unauthenticated') {
-      router.push(`/login?callbackUrl=/courses/${courseId}`);
+      router.push(`/login?callbackUrl=${encodeURIComponent(loginCallbackUrl)}`);
       return;
     }
 
@@ -37,6 +109,15 @@ export default function EnrollmentForm({
     setError('');
 
     try {
+      if (!countryCode.match(/^\+\d{1,4}$/)) {
+        throw new Error('Select a valid country code.');
+      }
+
+      const cleanWhatsappNumber = whatsappNumber.replace(/[^\d]/g, '');
+      if (cleanWhatsappNumber.length < 6) {
+        throw new Error('WhatsApp number is required.');
+      }
+
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000);
 
@@ -46,6 +127,8 @@ export default function EnrollmentForm({
         body: JSON.stringify({
           courseId,
           courseName,
+          whatsappCountryCode: countryCode,
+          whatsappNumber: cleanWhatsappNumber,
         }),
         signal: controller.signal,
       });
@@ -168,6 +251,44 @@ export default function EnrollmentForm({
             </div>
           </div>
         )}
+
+        <div className="whatsapp-grid">
+          <div className="field-group field-group-code">
+            <label htmlFor="countryCode" className="field-label">Country Code</label>
+            <select
+              id="countryCode"
+              value={countryCode}
+              onChange={(e) => setCountryCode(e.target.value)}
+              className="field-input field-select"
+              required
+            >
+              {COUNTRY_CODES.map((option) => (
+                <option key={`${option.value}-${option.label}`} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="field-group">
+            <label htmlFor="whatsappNumber" className="field-label">WhatsApp Number</label>
+            <input
+              id="whatsappNumber"
+              type="tel"
+              inputMode="numeric"
+              autoComplete="tel"
+              placeholder="1712345678"
+              value={whatsappNumber}
+              onChange={(e) => setWhatsappNumber(e.target.value)}
+              className="field-input"
+              required
+            />
+          </div>
+        </div>
+
+        <p className="field-note">
+          Login is required. Your WhatsApp number with country code will be saved for enrollment follow-up.
+        </p>
 
         {/* Enroll Button */}
         <button
@@ -435,6 +556,59 @@ export default function EnrollmentForm({
           font-weight: 600;
         }
 
+        .whatsapp-grid {
+          display: grid;
+          grid-template-columns: 150px minmax(0, 1fr);
+          gap: 12px;
+          margin-bottom: 12px;
+        }
+
+        .field-group {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .field-group-code {
+          min-width: 0;
+        }
+
+        .field-label {
+          color: rgba(245, 245, 245, 0.72);
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+        }
+
+        .field-input {
+          width: 100%;
+          border: 1px solid rgba(50, 184, 198, 0.22);
+          border-radius: 10px;
+          background: rgba(19, 52, 59, 0.42);
+          color: #F5F5F5;
+          padding: 13px 14px;
+          font-size: 14px;
+          outline: none;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .field-select {
+          appearance: none;
+        }
+
+        .field-input:focus {
+          border-color: rgba(50, 184, 198, 0.7);
+          box-shadow: 0 0 0 3px rgba(50, 184, 198, 0.12);
+        }
+
+        .field-note {
+          margin: 0 0 16px;
+          color: rgba(245, 245, 245, 0.6);
+          font-size: 12px;
+          line-height: 1.5;
+        }
+
         /* ============================================
            ENROLL BUTTON
            ============================================ */
@@ -643,6 +817,10 @@ export default function EnrollmentForm({
         @media (max-width: 480px) {
           .enrollment-card {
             padding: 20px;
+          }
+
+          .whatsapp-grid {
+            grid-template-columns: 1fr;
           }
 
           .card-title {
