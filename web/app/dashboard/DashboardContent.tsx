@@ -117,10 +117,11 @@ export default function DashboardContent({
                     Dashboard shows enrollment status only. Approvals are handled from the simple admin approval page.
                   </p>
                   <Table
-                    headers={["Student", "Email", "Course", "Status", "Requested At", "Approved At"]}
+                    headers={["Student", "Email", "WhatsApp", "Course", "Status", "Requested At", "Approved At"]}
                     rows={enrollments.map((e) => [
                       e.user?.name || "Unknown",
                       e.user?.email || "-",
+                      e.user?.contact || "-",
                       e.courseName,
                       <StatusBadge key={`${e.id}-status`} status={e.status} />,
                       fmt(e.enrolledAt),
