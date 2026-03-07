@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { appendEnrollmentToGoogleSheet } from "@/lib/googleSheets";
 import { normalizeWhatsappWithCountryCode } from "@/lib/validators";
 
 const enrollmentSchema = z.object({
@@ -155,6 +156,27 @@ export async function POST(request: Request) {
       },
     });
 
+    // Try to append to Google Sheets (non-blocking - database is source of truth)
+    // If sheets sync fails, user still sees success because database save succeeded
+    try {
+      await appendEnrollmentToGoogleSheet({
+        enrollmentId: enrollment.id,
+        studentName: updatedUser.name || "Unknown",
+        studentEmail: updatedUser.email,
+        studentContact: updatedUser.contact || "Not provided",
+        courseName: validatedData.courseName,
+        courseId: validatedData.courseId,
+        status:
+          ((enrollment as unknown as { status?: EnrollmentStatusValue }).status ??
+            "PENDING") as EnrollmentStatusValue,
+        enrolledAt: enrollment.enrolledAt,
+      });
+      console.log(`✓ Enrollment ${enrollment.id} synced to Google Sheets`);
+    } catch (sheetError) {
+      console.error("❌ Google Sheets sync failed (enrollment saved in database):", sheetError);
+      // Don't throw - database save succeeded, user will see success message
+    }
+
     try {
       await sendEnrollmentNotificationEmail({
         studentName: updatedUser.name || "Unknown",
@@ -172,6 +194,8 @@ export async function POST(request: Request) {
     revalidatePath("/dashboard");
     revalidatePath("/admin/enrollments");
 
+    // Always return success if database save succeeded
+    // Sheet sync status is only logged server-side, not exposed to user
     return NextResponse.json(
       {
         success: true,

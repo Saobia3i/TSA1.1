@@ -34,3 +34,25 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Google Sheets Enrollment Sync
+
+Course enrollment now supports dual-write to PostgreSQL and Google Sheets.
+
+Required server environment variables:
+
+```env
+GOOGLE_SERVICE_ACCOUNT_EMAIL=your-service-account@your-project.iam.gserviceaccount.com
+GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+GOOGLE_ENROLLMENT_SHEET_ID=12xDaLZb4sruZUpTobDpgszlVGqKcCsh3x7bTob7LlH4
+GOOGLE_ENROLLMENT_SHEET_NAME=Enrollments
+```
+
+Sheet columns appended in order:
+
+`Enrollment ID`, `Student Name`, `Student Email`, `Student Contact`, `Course Name`, `Course ID`, `Status`, `Enrolled At (UTC)`, `Enrolled At (BD Time)`
+
+Important:
+
+- Share the target Google Sheet with the service account email as `Editor`.
+- Database save remains the source of truth. If Google Sheets sync fails, the enrollment still succeeds and the failure is only logged on the server.
