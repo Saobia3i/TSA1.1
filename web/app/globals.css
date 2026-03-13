@@ -1,4 +1,4 @@
-/* Fonts loaded via <link> in layout.tsx for better performance */
+/* Fonts loaded via next/font in layout.tsx — no render blocking */
 @import "tailwindcss";
 
 :root {

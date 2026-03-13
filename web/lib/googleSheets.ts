@@ -1,4 +1,5 @@
 import { createPrivateKey, createSign } from "crypto";
+import { getEnvAny } from "@/lib/env";
 
 const GOOGLE_OAUTH_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
@@ -20,14 +21,6 @@ type GoogleSheetsConfig = {
 const globalForSheets = globalThis as typeof globalThis & {
   __googleSheetsTokenCache?: AccessTokenCache;
 };
-
-function getEnvAny(...keys: string[]) {
-  for (const key of keys) {
-    const value = process.env[key];
-    if (value && value.trim()) return value.trim();
-  }
-  return "";
-}
 
 function toBase64Url(value: Buffer | string) {
   const base64 = Buffer.from(value).toString("base64");

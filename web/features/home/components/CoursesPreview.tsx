@@ -158,23 +158,14 @@ export default function CoursesPreview() {
                           overflow: 'hidden',
                           border: '2px solid rgba(34, 211, 238, 0.1)',
                         }}>
-                          <motion.div
-                            animate={{
-                              opacity: [0.3, 0.6, 0.3],
-                              scale: [1, 1.1, 1],
-                            }}
-                            transition={{
-                              duration: 4,
-                              repeat: Infinity,
-                              ease: 'easeInOut',
-                            }}
+                          <div
                             style={{
                               position: 'absolute',
                               top: 0,
                               left: 0,
                               right: 0,
                               bottom: 0,
-                              background: 'radial-gradient(circle at 30% 20%, rgba(34, 211, 238, 0.15), transparent 50%)',
+                              background: 'radial-gradient(circle at 30% 20%, rgba(34, 211, 238, 0.12), transparent 50%)',
                               pointerEvents: 'none',
                             }}
                           />
@@ -209,9 +200,7 @@ export default function CoursesPreview() {
                             </motion.div>
                           )}
 
-                          <motion.div
-                            animate={{ y: [0, -10, 0] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                          <div
                             style={{
                               width: '68px',
                               height: '68px',
@@ -227,7 +216,7 @@ export default function CoursesPreview() {
                             }}
                           >
                             <Icon style={{ width: '36px', height: '36px', color: '#22d3ee' }} />
-                          </motion.div>
+                          </div>
 
                           <h3 style={{ 
                             fontSize: 'clamp(20px, 4vw, 24px)', 

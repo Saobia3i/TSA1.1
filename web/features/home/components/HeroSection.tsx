@@ -229,28 +229,40 @@ function RightWave() {
 
         <svg viewBox="0 0 1000 900" preserveAspectRatio="none"
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+          <defs>
+            {Array.from({ length: STRIPES }).map((_, i) => {
+              const color = STRIPE_COLORS[i % STRIPE_COLORS.length];
+              const delay = i * SERIAL_GAP;
+              return (
+                <style key={i}>{`
+                  @keyframes stripe${i} {
+                    0%,${Math.round((delay/TOTAL_CYCLE)*100)}% { opacity:0 }
+                    ${Math.round(((delay+GLOW_ON)/TOTAL_CYCLE)*100)}% { opacity:1 }
+                    ${Math.round(((delay+GLOW_ON+GLOW_FADE)/TOTAL_CYCLE)*100)}%,100% { opacity:0 }
+                  }
+                  .stripe-${i} { animation: stripe${i} ${TOTAL_CYCLE}s ease-in-out infinite; will-change: opacity; filter: drop-shadow(0 0 6px ${color}); }
+                `}</style>
+              );
+            })}
+          </defs>
           {Array.from({ length: STRIPES }).map((_, i) => {
             const x1 = STRIPE_START + i * STRIPE_STEP;
             const x2 = x1 + DX;
             const color = STRIPE_COLORS[i % STRIPE_COLORS.length];
             const sw = i % 3 === 0 ? 2.8 : i % 3 === 1 ? 2.1 : 1.6;
-            const onPct  = Math.round((GLOW_ON / TOTAL_CYCLE) * 100);
-            const offPct = Math.round(((GLOW_ON + GLOW_FADE) / TOTAL_CYCLE) * 100);
             return (
-              <motion.line key={i}
+              <line key={i}
                 x1={x1} y1={0} x2={x2} y2={900}
                 stroke={color} strokeWidth={sw} strokeLinecap="round"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0, 1, 0, 0] }}
-                transition={{ duration: TOTAL_CYCLE, delay: i * SERIAL_GAP, repeat: Infinity, ease: 'easeInOut', times: [0, 0.01, onPct / 100, offPct / 100, 1] }}
-                style={{ filter: `drop-shadow(0 0 8px ${color}) drop-shadow(0 0 22px ${color}cc) drop-shadow(0 0 40px ${color}55)` }}
+                className={`stripe-${i}`}
+                style={{ opacity: 0 }}
               />
             );
           })}
         </svg>
 
-        <div style={{ position: 'absolute', top: '10%', right: '8%', width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle,rgba(56,189,248,0.18) 0%,transparent 70%)', filter: 'blur(40px)', animation: 'floatD 9s ease-in-out infinite' }} />
-        <div style={{ position: 'absolute', bottom: '15%', right: '4%', width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle,rgba(99,102,241,0.16) 0%,transparent 70%)', filter: 'blur(32px)', animation: 'floatB 11s ease-in-out infinite 1.5s' }} />
+        <div style={{ position: 'absolute', top: '10%', right: '8%', width: 260, height: 260, borderRadius: '50%', background: 'radial-gradient(circle,rgba(56,189,248,0.18) 0%,transparent 70%)', filter: 'blur(40px)', animation: 'floatD 9s ease-in-out infinite', willChange: 'transform' }} />
+        <div style={{ position: 'absolute', bottom: '15%', right: '4%', width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle,rgba(99,102,241,0.16) 0%,transparent 70%)', filter: 'blur(32px)', animation: 'floatB 11s ease-in-out infinite 1.5s', willChange: 'transform' }} />
       </div>
 
       {/* Feature Cards in Zigzag Pattern */}
@@ -297,8 +309,7 @@ export default function HeroSection() {
   return (
     <section style={{ position:'relative', minHeight:'100vh', width:'100%', overflow:'hidden', background:'#01040a', color:'#fff', display:'flex', flexDirection:'column' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
-        .hff { font-family:'Inter',sans-serif; }
+        .hff { font-family:'Inter',system-ui,sans-serif; }
 
         @keyframes marquee  { from{transform:translateX(0)}  to{transform:translateX(-50%)} }
         @keyframes pulseDot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.6)} }

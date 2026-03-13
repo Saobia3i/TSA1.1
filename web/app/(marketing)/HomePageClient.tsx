@@ -192,21 +192,15 @@ export default function HomePage() {
             >
               {/* Glow layer */}
               {!isMobile && (
-                <motion.div
+                <div
                   aria-hidden
-                  animate={{ opacity: [0.4, 0.85, 0.4], scale: [1, 1.04, 1] }}
-                  transition={{
-                    duration: 2.4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
                   style={{
                     position: "absolute",
                     inset: "1px",
                     borderRadius: "1px",
-                    background:
-                      "linear-gradient(135deg, rgb(38,159,154), rgb(38,159,154) 25%)",
+                    background: "linear-gradient(135deg, rgb(38,159,154), rgb(38,159,154) 25%)",
                     filter: "blur(18px)",
+                    opacity: 0.6,
                     zIndex: 0,
                     pointerEvents: "none",
                   }}

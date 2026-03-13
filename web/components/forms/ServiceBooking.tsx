@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { useSession } from "next-auth/react";
-import { COUNTRY_OPTIONS, findMatchingCountry } from "@/lib/countries";
+import { COUNTRY_OPTIONS } from "@/lib/countries";
 import { normalizeInternationalWhatsappNumber } from "@/lib/validators";
 
 interface ServiceBookingProps {
@@ -62,53 +62,15 @@ export default function ServiceBooking({
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [error, setError] = useState("");
 
-  const syncCountryValidity = (input: HTMLInputElement) => {
-    if (!input.value.trim()) {
-      input.setCustomValidity("Please enter your country.");
-      return null;
-    }
-
-    const matchedCountry = findMatchingCountry(input.value);
-
-    if (!matchedCountry) {
-      input.setCustomValidity("Please enter a valid country from the list.");
-      return null;
-    }
-
-    input.setCustomValidity("");
-    return matchedCountry;
-  };
-
   const onChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const target = e.target;
     if (target instanceof HTMLInputElement && target.type === "checkbox") {
-      setForm((prev) => ({
-        ...prev,
-        [target.name]: target.checked,
-      }));
+      setForm((prev) => ({ ...prev, [target.name]: target.checked }));
       return;
     }
-
-    setForm((prev) => ({
-      ...prev,
-      [target.name]: target.value,
-    }));
-
-    if (target instanceof HTMLInputElement && target.name === "country") {
-      if (!target.value.trim()) {
-        target.setCustomValidity("Please enter your country.");
-        return;
-      }
-
-      if (findMatchingCountry(target.value)) {
-        target.setCustomValidity("");
-        return;
-      }
-
-      target.setCustomValidity("Please enter a valid country from the list.");
-    }
+    setForm((prev) => ({ ...prev, [target.name]: target.value }));
   };
 
   useEffect(() => {
@@ -145,10 +107,8 @@ export default function ServiceBooking({
         throw new Error("Please select a package.");
       }
 
-      const matchedCountry = findMatchingCountry(form.country);
-
-      if (!matchedCountry) {
-        throw new Error("Please enter a valid country from the list.");
+      if (!form.country) {
+        throw new Error("Please select your country.");
       }
 
       const normalizedWhatsapp = normalizeInternationalWhatsappNumber(
@@ -161,7 +121,6 @@ export default function ServiceBooking({
         body: JSON.stringify({
           serviceTitle: form.serviceTitle,
           ...form,
-          country: matchedCountry,
           whatsapp: normalizedWhatsapp,
         }),
       });
@@ -287,30 +246,20 @@ export default function ServiceBooking({
             <label htmlFor="country">
               Country <span className="req">*</span>
             </label>
-            <input
+            <select
               id="country"
               name="country"
               value={form.country}
               onChange={onChange}
-              onBlur={(e) => {
-                const matchedCountry = syncCountryValidity(e.target);
-
-                if (matchedCountry) {
-                  setForm((prev) => ({ ...prev, country: matchedCountry }));
-                }
-              }}
-              list="service-country-options"
-              placeholder="Type or select your country"
-              autoComplete="country-name"
               required
-            />
-            <datalist id="service-country-options">
+            >
+              <option value="">Select your country</option>
               {COUNTRY_OPTIONS.map((country) => (
                 <option key={country} value={country}>
                   {country}
                 </option>
               ))}
-            </datalist>
+            </select>
           </div>
           <div className="field full">
             <label htmlFor="requirements">

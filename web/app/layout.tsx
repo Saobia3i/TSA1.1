@@ -1,12 +1,21 @@
 // app/(marketing)/layout.tsx
 import { Metadata } from "next";
+import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import InstallPrompt from "../components/InstallPrompt";
-const BASE_URL = "https://tensorsecurityacademy.com";
 import RegisterSW from "./RegisterSW";
 import PWAUpdateManager from "@/components/PWAUpdateManager";
 import { Providers } from "./providers";
 import WhatsAppChatBubble from "@/features/home/components/WhatsAppChatBubble";
+
+const BASE_URL = "https://tensorsecurityacademy.com";
+
+const nunitoSans = Nunito_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-nunito",
+  display: "swap",
+});
 
 // ✅ Export Web Vitals reporting
 export { reportWebVitals } from '@/lib/performance';
@@ -153,26 +162,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html lang="en" data-scroll-behavior="smooth" className={nunitoSans.variable}>
       <head>
-        {/* DNS Prefetch & Preconnect for faster resource loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Preconnect for ImageKit CDN */}
         <link rel="preconnect" href="https://ik.imagekit.io" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-        
-        {/* Load fonts - preconnect + preload for optimal performance */}
-        <link
-          rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap"
-          as="style"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
-        
-        {/* Video Preload - NO LONGER NEEDED (Video removed!) */}
 
         {/* PWA Manifest */}
         <link rel="manifest" href="/site.webmanifest" />

@@ -19,9 +19,10 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
-  accounts      Account[]
-  sessions      Session[]
-  enrollments   Enrollment[]
+  accounts        Account[]
+  sessions        Session[]
+  enrollments     Enrollment[]
+  serviceBookings ServiceBooking[]
 
   @@index([email])
   @@index([contact])
@@ -84,6 +85,8 @@ model Enrollment {
 
 model ServiceBooking {
   id              String   @id @default(cuid())
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   serviceTitle    String
   fullName        String
   organization    String?
@@ -100,6 +103,7 @@ model ServiceBooking {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
+  @@index([userId])
   @@index([email])
   @@index([createdAt])
 }

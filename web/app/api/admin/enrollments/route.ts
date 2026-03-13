@@ -5,19 +5,12 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { sendMail } from "@/lib/mailer";
 
 const actionSchema = z.object({
   enrollmentId: z.string().min(1, "Enrollment ID is required"),
   action: z.enum(["APPROVE", "SEND_MAIL"]).default("APPROVE"),
 });
-
-function getEnvAny(...keys: string[]) {
-  for (const key of keys) {
-    const value = process.env[key];
-    if (value && value.trim()) return value.trim();
-  }
-  return "";
-}
 
 async function ensureAdmin() {
   const session = await getServerSession(authOptions);
@@ -48,28 +41,6 @@ async function sendCourseDetailsMail(params: {
   enrolledAt: Date;
   approvedAt: Date | null;
 }) {
-  const smtpUser = getEnvAny("SMTP_USER", "SmtpUser", "Email__SmtpUser");
-  const smtpPass = getEnvAny("SMTP_PASS", "SmtpPass", "Email__SmtpPass");
-  const smtpHost =
-    getEnvAny("SMTP_HOST", "SmtpHost", "Email__SmtpHost") || "smtp.gmail.com";
-  const smtpPort = Number(
-    getEnvAny("SMTP_PORT", "SmtpPort", "Email__SmtpPort") || "587"
-  );
-  const fromAddress =
-    getEnvAny("SMTP_FROM", "FromEmail", "Email__FromEmail") || smtpUser;
-
-  if (!smtpUser || !smtpPass) {
-    throw new Error("SMTP credentials are not configured.");
-  }
-
-  const nodemailer = await import("nodemailer");
-  const transporter = nodemailer.createTransport({
-    host: smtpHost,
-    port: smtpPort,
-    secure: smtpPort === 465,
-    auth: { user: smtpUser, pass: smtpPass },
-  });
-
   const enrolledAtText = params.enrolledAt.toLocaleString("en-BD", {
     timeZone: "Asia/Dhaka",
     dateStyle: "full",
@@ -83,8 +54,7 @@ async function sendCourseDetailsMail(params: {
       })
     : "Not approved yet";
 
-  await transporter.sendMail({
-    from: fromAddress,
+  await sendMail({
     to: params.to,
     subject: `Course enrollment details - ${params.courseName}`,
     text: [

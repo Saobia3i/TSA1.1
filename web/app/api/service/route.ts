@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/lib/auth";
 import { findMatchingCountry } from "@/lib/countries";
 import { normalizeInternationalWhatsappNumber } from "@/lib/validators";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 const serviceBookingSchema = z.object({
   serviceTitle: z.string().min(1, "Service title is required"),
@@ -32,6 +33,15 @@ const serviceBookingSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    const ip = getClientIp(request);
+    const rl = rateLimit(`service:${ip}`, { limit: 3, windowMs: 60 * 60 * 1000 }); // 3 per hour
+    if (!rl.success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const session = await getServerSession(authOptions);
     const body = await request.json();
     const validatedData = serviceBookingSchema.parse(body);
@@ -41,6 +51,7 @@ export async function POST(request: Request) {
 
     const booking = await prisma.serviceBooking.create({
       data: {
+        userId: session?.user?.id ?? null,
         serviceTitle: validatedData.serviceTitle,
         fullName: session?.user?.name || validatedData.fullName,
         organization: validatedData.organization,

@@ -1,3 +1,5 @@
+import { withSentryConfig } from "@sentry/nextjs";
+
 const isDev = process.env.NODE_ENV === "development";
 const isProd = process.env.NODE_ENV === "production";
 
@@ -74,7 +76,6 @@ const nextConfig = {
     ],
   },
 
-  // ✅ Webpack optimizations for better code splitting
   webpack: (config, { isServer }) => {
     if (!isServer && isProd) {
       config.optimization = {
@@ -105,4 +106,10 @@ const nextConfig = {
   turbopack: {},
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  silent: true,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+});

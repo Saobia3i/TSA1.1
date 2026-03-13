@@ -6,6 +6,8 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { appendEnrollmentToGoogleSheet } from "@/lib/googleSheets";
 import { normalizeWhatsappWithCountryCode } from "@/lib/validators";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { sendMail } from "@/lib/mailer";
 
 const enrollmentSchema = z.object({
   courseId: z.string().min(1, "Course ID is required"),
@@ -22,91 +24,17 @@ const enrollmentSchema = z.object({
 
 type EnrollmentStatusValue = "PENDING" | "APPROVED" | "REJECTED";
 
-function getEnvAny(...keys: string[]) {
-  for (const key of keys) {
-    const value = process.env[key];
-    if (value && value.trim()) return value.trim();
-  }
-  return "";
-}
-
-async function sendEnrollmentNotificationEmail(params: {
-  studentName: string;
-  studentEmail: string;
-  studentContact: string;
-  courseName: string;
-  courseId: string;
-  enrolledAt: Date;
-}) {
-  const smtpUser = getEnvAny("SMTP_USER", "SmtpUser", "Email__SmtpUser");
-  const smtpPass = getEnvAny("SMTP_PASS", "SmtpPass", "Email__SmtpPass");
-  const smtpHost =
-    getEnvAny("SMTP_HOST", "SmtpHost", "Email__SmtpHost") || "smtp.gmail.com";
-  const smtpPort = Number(
-    getEnvAny("SMTP_PORT", "SmtpPort", "Email__SmtpPort") || "587"
-  );
-
-  if (!smtpUser || !smtpPass) {
-    console.warn("SMTP_USER/SMTP_PASS not set. Skipping enrollment email.");
-    return;
-  }
-
-  const notifyTo =
-    getEnvAny("ENROLLMENT_NOTIFY_EMAIL", "Email__NotifyTo") ||
-    "tensorsecurityacademy@gmail.com";
-  const fromAddress =
-    getEnvAny("SMTP_FROM", "FromEmail", "Email__FromEmail") || smtpUser;
-
-  const nodemailer = await import("nodemailer");
-  const transporter = smtpHost
-    ? nodemailer.createTransport({
-        host: smtpHost,
-        port: smtpPort,
-        secure: smtpPort === 465,
-        auth: { user: smtpUser, pass: smtpPass },
-      })
-    : nodemailer.createTransport({
-        service: "gmail",
-        auth: { user: smtpUser, pass: smtpPass },
-      });
-
-  const enrolledAtBd = params.enrolledAt.toLocaleString("en-BD", {
-    timeZone: "Asia/Dhaka",
-    dateStyle: "full",
-    timeStyle: "short",
-  });
-
-  await transporter.sendMail({
-    from: fromAddress,
-    to: notifyTo,
-    subject: `New enrollment request: ${params.courseName}`,
-    text: [
-      `${params.studentName} wants to enroll in "${params.courseName}" course.`,
-      ``,
-      `Student Name: ${params.studentName}`,
-      `Student Email: ${params.studentEmail}`,
-      `Student Contact: ${params.studentContact}`,
-      `Course Name: ${params.courseName}`,
-      `Course ID: ${params.courseId}`,
-      `Enrolled At: ${enrolledAtBd}`,
-    ].join("\n"),
-    html: `
-      <h2>New Enrollment Request</h2>
-      <p><strong>${params.studentName}</strong> wants to enroll in "<strong>${params.courseName}</strong>" course.</p>
-      <ul>
-        <li><strong>Student Name:</strong> ${params.studentName}</li>
-        <li><strong>Student Email:</strong> ${params.studentEmail}</li>
-        <li><strong>Student Contact:</strong> ${params.studentContact}</li>
-        <li><strong>Course Name:</strong> ${params.courseName}</li>
-        <li><strong>Course ID:</strong> ${params.courseId}</li>
-        <li><strong>Enrolled At:</strong> ${enrolledAtBd}</li>
-      </ul>
-    `,
-  });
-}
-
 export async function POST(request: Request) {
   try {
+    const ip = getClientIp(request);
+    const rl = rateLimit(`enroll:${ip}`, { limit: 5, windowMs: 60 * 60 * 1000 }); // 5 per hour
+    if (!rl.success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) {
@@ -178,16 +106,42 @@ export async function POST(request: Request) {
     }
 
     try {
-      await sendEnrollmentNotificationEmail({
-        studentName: updatedUser.name || "Unknown",
-        studentEmail: updatedUser.email,
-        studentContact: updatedUser.contact || "Not provided",
-        courseName: validatedData.courseName,
-        courseId: validatedData.courseId,
-        enrolledAt: enrollment.enrolledAt,
+      const notifyTo =
+        process.env.ENROLLMENT_NOTIFY_EMAIL || process.env.SMTP_USER || "";
+      const enrolledAtBd = enrollment.enrolledAt.toLocaleString("en-BD", {
+        timeZone: "Asia/Dhaka",
+        dateStyle: "full",
+        timeStyle: "short",
       });
+      if (notifyTo) {
+        await sendMail({
+          to: notifyTo,
+          subject: `New enrollment request: ${validatedData.courseName}`,
+          text: [
+            `${updatedUser.name || "Unknown"} wants to enroll in "${validatedData.courseName}" course.`,
+            ``,
+            `Student Name: ${updatedUser.name || "Unknown"}`,
+            `Student Email: ${updatedUser.email}`,
+            `Student Contact: ${updatedUser.contact || "Not provided"}`,
+            `Course Name: ${validatedData.courseName}`,
+            `Course ID: ${validatedData.courseId}`,
+            `Enrolled At: ${enrolledAtBd}`,
+          ].join("\n"),
+          html: `
+            <h2>New Enrollment Request</h2>
+            <p><strong>${updatedUser.name || "Unknown"}</strong> wants to enroll in "<strong>${validatedData.courseName}</strong>" course.</p>
+            <ul>
+              <li><strong>Student Name:</strong> ${updatedUser.name || "Unknown"}</li>
+              <li><strong>Student Email:</strong> ${updatedUser.email}</li>
+              <li><strong>Student Contact:</strong> ${updatedUser.contact || "Not provided"}</li>
+              <li><strong>Course Name:</strong> ${validatedData.courseName}</li>
+              <li><strong>Course ID:</strong> ${validatedData.courseId}</li>
+              <li><strong>Enrolled At:</strong> ${enrolledAtBd}</li>
+            </ul>
+          `,
+        });
+      }
     } catch (mailError) {
-      // Email delivery failure should not block saved enrollment.
       console.error("Enrollment saved but email notification failed:", mailError);
     }
 
