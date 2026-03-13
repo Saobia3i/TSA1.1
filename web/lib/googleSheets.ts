@@ -3,7 +3,6 @@ import { getEnvAny } from "@/lib/env";
 
 const GOOGLE_OAUTH_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
-const DEFAULT_SPREADSHEET_ID = "12xDaLZb4sruZUpTobDpgszlVGqKcCsh3x7bTob7LlH4";
 const DEFAULT_SHEET_NAME = "Enrollments";
 
 type AccessTokenCache = {
@@ -86,7 +85,7 @@ function getGoogleSheetsConfig(): GoogleSheetsConfig {
       "GOOGLE_ENROLLMENT_SHEET_ID",
       "GOOGLE_SHEETS_SPREADSHEET_ID",
       "Google__EnrollmentSheetId"
-    ) || DEFAULT_SPREADSHEET_ID
+    )
   );
   const sheetName =
     getEnvAny(
