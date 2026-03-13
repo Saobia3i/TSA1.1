@@ -214,52 +214,38 @@ body::before {
 body::after {
   content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
   z-index: -1;
   background: radial-gradient(circle at 20% 50%, rgba(39, 113, 225, 0.25) 0%, transparent 50%),
               radial-gradient(circle at 80% 30%, rgba(138, 43, 226, 0.25) 0%, transparent 50%),
               radial-gradient(circle at 60% 70%, rgba(75, 0, 130, 0.25) 0%, transparent 50%),
               radial-gradient(circle at 40% 20%, rgba(148, 112, 219, 0.145) 0%, transparent 50%);
-  background-attachment: fixed;
   pointer-events: none;
-  will-change: auto;
-  backface-visibility: hidden;
+  will-change: opacity;
   filter: blur(80px);
   opacity: 0.5;
+  /* Only animate opacity — composited, no layout/paint cost */
   animation: cyberGlow 25s ease-in-out infinite;
-  contain: layout style paint;
-  transform-origin: center;
+  contain: strict;
+  transform: translateZ(0);
 }
 
-/* ✅ Fix 6 (iOS only): background-attachment fixed is buggy, keep same look */
+/* iOS: background-attachment already removed; ensure compositing layer */
 @supports (-webkit-touch-callout: none) {
   body::after {
-    background-attachment: scroll !important;
     transform: translate3d(0, 0, 0);
   }
 }
 
-/* FIX #3: Optimized animation (less blur, better performance) */
+/* Composited opacity-only animation — no layout/paint triggered */
 @keyframes cyberGlow {
-  0%, 100% {
-    transform: translateX(0px) translateY(0px) scale(1);
-    opacity: 0.5;
-  }
-  25% {
-    transform: translateX(30px) translateY(-30px) scale(1.05);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateX(-40px) translateY(40px) scale(1.1);
-    opacity: 0.5;
-  }
-  75% {
-    transform: translateX(20px) translateY(-50px) scale(1.05);
-    opacity: 0.6;
-  }
+  0%, 100% { opacity: 0.5; }
+  25%       { opacity: 0.6; }
+  50%       { opacity: 0.45; }
+  75%       { opacity: 0.6; }
 }
 
 /* FIX #4: Ensure child elements don't override background */

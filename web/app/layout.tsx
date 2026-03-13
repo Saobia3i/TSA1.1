@@ -165,7 +165,8 @@ export default function RootLayout({
     <html lang="en" data-scroll-behavior="smooth" className={nunitoSans.variable}>
       <head>
         {/* Preconnect for ImageKit CDN */}
-        <link rel="preconnect" href="https://ik.imagekit.io" />
+        <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://ik.imagekit.io" />
         <link rel="dns-prefetch" href="https://res.cloudinary.com" />
 
         {/* PWA Manifest */}

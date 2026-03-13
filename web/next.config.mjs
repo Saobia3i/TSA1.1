@@ -64,15 +64,30 @@ const nextConfig = {
   },
 
   experimental: {
-    serverActions: { bodySizeLimit: "2mb" },
-    optimizeCss: isProd,
+    // Server Actions: tighter body limit (default 1mb fine for form submissions)
+    serverActions: {
+      bodySizeLimit: "512kb",
+      allowedOrigins: ["tensorsecurityacademy.com"],
+    },
+
+    // CSS: inline critical above-the-fold CSS, defer the rest (fixes render-blocking)
+    optimizeCss: true,
+
+    // clientTraceMetadata: pass custom trace fields to client error boundaries
+    clientTraceMetadata: ["requestId", "userId"],
+
+    // Tree-shake barrel imports — each package only ships used icons/components
     optimizePackageImports: [
       "lucide-react",
       "recharts",
       "@mui/material",
       "@mui/icons-material",
       "@heroicons/react",
+      "@tabler/icons-react",
       "framer-motion",
+      "@mantine/core",
+      "@mantine/hooks",
+      "swiper",
     ],
   },
 
@@ -89,6 +104,14 @@ const nextConfig = {
               test: /\.css$/,
               chunks: 'all',
               enforce: true,
+            },
+            // Split heavy UI libs into a separate cacheable vendor chunk
+            uiVendors: {
+              name: 'ui-vendors',
+              test: /[\\/]node_modules[\\/](@mui|@mantine|framer-motion|@emotion)[\\/]/,
+              chunks: 'all',
+              priority: 30,
+              reuseExistingChunk: true,
             },
             commons: {
               name: 'commons',
