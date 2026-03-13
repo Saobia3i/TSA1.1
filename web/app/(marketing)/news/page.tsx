@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Search, ArrowLeft } from 'lucide-react';
@@ -11,6 +11,14 @@ export default function NewsPage() {
   const allNews = getAllNews();
   const [searchQuery, setSearchQuery] = useState('');
   const [sort, setSort] = useState<'new' | 'old'>('new');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -234,7 +242,7 @@ export default function NewsPage() {
                       }}
                       style={{
                         display: 'flex',
-                        flexDirection: window.innerWidth < 768 ? 'column' : 'row',
+                        flexDirection: isMobile ? 'column' : 'row',
                         gap: 'clamp(16px, 2.5vw, 24px)',
                         padding: 'clamp(12px, 2.5vw, 20px)',
                         background: 'rgba(17, 24, 39, 0.7)',
@@ -253,9 +261,9 @@ export default function NewsPage() {
                       <div
                         style={{
                           position: 'relative',
-                          width: window.innerWidth < 768 ? '100%' : 'clamp(180px, 25vw, 280px)',
-                          minWidth: window.innerWidth < 768 ? '100%' : 'clamp(180px, 25vw, 280px)',
-                          height: window.innerWidth < 768 ? 'clamp(180px, 50vw, 250px)' : 'clamp(140px, 18vw, 200px)',
+                          width: isMobile ? '100%' : 'clamp(180px, 25vw, 280px)',
+                          minWidth: isMobile ? '100%' : 'clamp(180px, 25vw, 280px)',
+                          height: isMobile ? 'clamp(180px, 50vw, 250px)' : 'clamp(140px, 18vw, 200px)',
                           borderRadius: '12px',
                           overflow: 'hidden',
                           flexShrink: 0,
@@ -353,7 +361,7 @@ export default function NewsPage() {
                               lineHeight: 1.6,
                               marginBottom: 'clamp(10px, 2vw, 14px)',
                               display: '-webkit-box',
-                              WebkitLineClamp: window.innerWidth < 768 ? 3 : 2,
+                              WebkitLineClamp: isMobile ? 3 : 2,
                               WebkitBoxOrient: 'vertical',
                               overflow: 'hidden',
                             }}

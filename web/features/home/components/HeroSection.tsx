@@ -30,7 +30,7 @@ const WORDS = [
 ];
 
 const TRUST = [
-  'No credit card required',
+  
   '14-day money-back guarantee',
   'Live mentor support',
 ];
