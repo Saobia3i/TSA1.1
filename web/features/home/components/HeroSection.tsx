@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  ArrowRight, CheckCircle2, ShieldCheck, Sparkles, Star,
-  Zap, TrendingUp, BookOpen, Users, CheckCircle, Shield,
-} from 'lucide-react';
+import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -21,24 +18,17 @@ const HERO_SLIDES = [
 
 const SLIDE_INTERVAL = 4000;
 
-const WORDS = [
-  'Penetration Testing',
-  'Threat Intelligence',
-  'Cloud Security',
-  'AI Security Ops',
-  'Red Team Execution',
-];
-
 const TRUST = [
-  
-  '14-day money-back guarantee',
+  '1-on-1 mentorship',
+  'Certification support',
   'Live mentor support',
+  'Career guidance',
 ];
 
 const CERTS = ['CEH','CISSP','OSCP','Security+','CISM','CCSP','GPEN','GCIH','CISA','CASP+'];
 
 /* ── stripe config ───────────────────────────────────────── */
-const STRIPES = 14;
+const STRIPES = 18;
 const GLOW_ON      = 0.35;
 const GLOW_FADE    = 0.25;
 const SERIAL_GAP   = 0.45;
@@ -101,45 +91,6 @@ function USFlagIcon({ size = 80 }: { size?: number }) {
 }
 
 /* ── TOP FEATURES (from Feature.tsx) ─────────────────────── */
-const TOP_FEATURES = [
-  { 
-    icon: (
-      <div style={{ width: '45px', height: '45px', borderRadius: '50%', background: 'rgba(34,211,238,0.15)', border: '2px solid rgba(34,211,238,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(34,211,238,0.3)' }}>
-        <Users size={20} color="#22d3ee" />
-      </div>
-    ), 
-    text: '1-on-1 Mentorship', 
-    color: '#22d3ee' 
-  },
-  { 
-    icon: (
-      <div style={{ width: '45px', height: '45px', borderRadius: '50%', background: 'rgba(168,85,247,0.15)', border: '2px solid rgba(168,85,247,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(168,85,247,0.3)' }}>
-        <Zap size={20} color="#a855f7" />
-      </div>
-    ), 
-    text: 'Live Training', 
-    color: '#a855f7' 
-  },
-  { 
-    icon: (
-      <div style={{ width: '45px', height: '45px', borderRadius: '50%', background: 'rgba(236,72,153,0.15)', border: '2px solid rgba(236,72,153,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(236,72,153,0.3)' }}>
-        <CheckCircle size={20} color="#ec4899" />
-      </div>
-    ), 
-    text: 'Career Guidance', 
-    color: '#ec4899' 
-  },
-  { 
-    icon: (
-      <div style={{ width: '45px', height: '45px', borderRadius: '50%', background: 'rgba(6,182,212,0.15)', border: '2px solid rgba(6,182,212,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(6,182,212,0.3)' }}>
-        <Shield size={20} color="#06b6d4" />
-      </div>
-    ), 
-    text: 'Certification Support', 
-    color: '#06b6d4' 
-  },
-];
-
 /* ── BOTTOM FEATURES (from Feature.tsx) ──────────────────── */
 const BOTTOM_FEATURES = [
   {
@@ -192,16 +143,23 @@ const BOTTOM_FEATURES = [
 ];
 
 /* ── Feature Card (for right wave) ───────────────────────── */
-function FloatingFeatureCard({ icon, text, color, top, right, delay, horizontal = false, width }: { icon: React.ReactNode; text: React.ReactNode; color: string; top: string; right: string; delay: number; horizontal?: boolean; width?: string }) {
+function FloatingFeatureCard({ icon, text, color, top, right, delay, horizontal = false, width, className }: { icon: React.ReactNode; text: React.ReactNode; color: string; top: string; right: string; delay: number; horizontal?: boolean; width?: string; className?: string }) {
+  const positionVars = {
+    ['--card-top' as any]: top,
+    ['--card-right' as any]: right,
+  } as React.CSSProperties;
+
   return (
     <motion.div 
       initial={{ opacity: 0, x: 40, scale: 0.94 }} 
       animate={{ opacity: 1, x: 0, scale: 1 }}
       transition={{ delay, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
       style={{
+        ...positionVars,
         position: 'absolute',
-        top,
-        right,
+        top: 'var(--card-top)',
+        right: 'var(--card-right)',
         padding: horizontal ? '12px 16px' : '14px 18px',
         borderRadius: '12px',
         minWidth: width || (horizontal ? '170px' : '160px'),
@@ -234,7 +192,7 @@ function RightWave() {
   const BOT_X    = 880;
   const DX       = BOT_X - TOP_X;
   const STRIPE_START = 500;
-  const STRIPE_STEP  = 32;
+  const STRIPE_STEP  = 28;
 
   return (
     <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, pointerEvents: 'none', zIndex: 1 }}>
@@ -265,7 +223,7 @@ function RightWave() {
           {Array.from({ length: STRIPES }).map((_, i) => {
             const x1 = STRIPE_START + i * STRIPE_STEP;
             const x2 = x1 + DX;
-            return <line key={i} x1={x1} y1={0} x2={x2} y2={900} stroke="rgba(125,211,252,0.07)" strokeWidth="0.9" />;
+            return <line key={i} x1={x1} y1={0} x2={x2} y2={900} stroke="rgba(125,211,252,0.09)" strokeWidth="1.4" />;
           })}
         </svg>
 
@@ -275,7 +233,7 @@ function RightWave() {
             const x1 = STRIPE_START + i * STRIPE_STEP;
             const x2 = x1 + DX;
             const color = STRIPE_COLORS[i % STRIPE_COLORS.length];
-            const sw = i % 3 === 0 ? 2.2 : i % 3 === 1 ? 1.6 : 1.2;
+            const sw = i % 3 === 0 ? 2.8 : i % 3 === 1 ? 2.1 : 1.6;
             const onPct  = Math.round((GLOW_ON / TOTAL_CYCLE) * 100);
             const offPct = Math.round(((GLOW_ON + GLOW_FADE) / TOTAL_CYCLE) * 100);
             return (
@@ -296,12 +254,8 @@ function RightWave() {
       </div>
 
       {/* Feature Cards in Zigzag Pattern */}
-      <FloatingFeatureCard icon={TOP_FEATURES[0].icon} text={TOP_FEATURES[0].text} color={TOP_FEATURES[0].color} top="18%" right="2%" delay={0.4} horizontal />
-      <FloatingFeatureCard icon={TOP_FEATURES[1].icon} text={TOP_FEATURES[1].text} color={TOP_FEATURES[1].color} top="32%" right="26%" delay={0.6} horizontal />
-      <FloatingFeatureCard icon={BOTTOM_FEATURES[1].icon} text={BOTTOM_FEATURES[1].text} color={BOTTOM_FEATURES[1].color} top="48%" right="2%" delay={0.8} />
-      <FloatingFeatureCard icon={TOP_FEATURES[3].icon} text={TOP_FEATURES[3].text} color={TOP_FEATURES[3].color} top="64%" right="28%" delay={1.0} horizontal />
-      <FloatingFeatureCard icon={BOTTOM_FEATURES[0].icon} text={BOTTOM_FEATURES[0].text} color={BOTTOM_FEATURES[0].color} top="78%" right="2%" delay={1.2} horizontal width="220px" />
-      <FloatingFeatureCard icon={TOP_FEATURES[2].icon} text={TOP_FEATURES[2].text} color={TOP_FEATURES[2].color} top="85%" right="26%" delay={1.4} horizontal />
+      <FloatingFeatureCard className="ff-card usa-card" icon={BOTTOM_FEATURES[1].icon} text={BOTTOM_FEATURES[1].text} color={BOTTOM_FEATURES[1].color} top="36%" right="8%" delay={0.8} />
+      <FloatingFeatureCard className="ff-card expansion-card" icon={BOTTOM_FEATURES[0].icon} text={BOTTOM_FEATURES[0].text} color={BOTTOM_FEATURES[0].color} top="72%" right="2%" delay={1.2} horizontal width="220px" />
     </div>
   );
 }
@@ -329,23 +283,16 @@ function CertMarquee() {
 
 /* ── main ─────────────────────────────────────────────────── */
 export default function HeroSection() {
-  const [mounted, setMounted] = useState(false);
-  const [idx, setIdx]         = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    setMounted(true);
-    const t = setInterval(() => setIdx(p => (p + 1) % WORDS.length), 3000);
     const slideInterval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
     }, SLIDE_INTERVAL);
     return () => {
-      clearInterval(t);
       clearInterval(slideInterval);
     };
   }, []);
-
-  if (!mounted) return <div style={{ minHeight:'100vh', background:'#01040a' }} />;
 
   return (
     <section style={{ position:'relative', minHeight:'100vh', width:'100%', overflow:'hidden', background:'#01040a', color:'#fff', display:'flex', flexDirection:'column' }}>
@@ -375,13 +322,23 @@ export default function HeroSection() {
         .h-wave-desk  { display:block; }
         .h-wave-mob   { display:none; }
         .h-left-col { display:flex; flex-direction:column; gap:32px; }
+        .ff-card { --card-top: 0%; --card-right: 0%; }
 
-        @media(max-width:900px) {
+        @media(max-width:1100px) {
+          .h-grid { grid-template-columns:1.08fr 0.92fr; padding:92px 22px 44px; column-gap:24px; }
+        }
+        @media(max-width:1024px) and (min-width:769px) {
+          .ff-card.usa-card { --card-top: 30%; --card-right: 8%; }
+          .ff-card.expansion-card { --card-top: 68%; --card-right: 10%; }
+        }
+
+        @media(max-width:768px) {
           .h-grid { grid-template-columns:1fr; padding:88px 20px 36px; }
           .h-right-col { display:none !important; }
           .h-wave-desk { display:none !important; }
           .h-wave-mob  { display:block !important; }
           .h-left-col { gap:16px !important; }
+          .ff-card { display:none !important; }
         }
         @media(max-width:480px) { .h-grid { padding:80px 16px 28px; } }
 
@@ -401,6 +358,10 @@ export default function HeroSection() {
       <div className="h-wave-desk" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none' }}>
         <RightWave />
       </div>
+      {/* mobile wave */}
+      <div className="h-wave-mob" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none' }}>
+        <RightWave />
+      </div>
 
       {/* content */}
       <div className="hff h-grid" style={{ position:'relative', zIndex:2 }}>
@@ -417,9 +378,16 @@ export default function HeroSection() {
             </span>
           </motion.div>
 
-          {/* headline - Hero Slides */}
+          {/* headline - Hero Slides (no layout shift) */}
           <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.55, delay:0.07 }}>
-            <div style={{ width: '100%', height: '200px', display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+            <div
+              style={{
+                width: '100%',
+                position: 'relative',
+                minHeight: 'clamp(170px, 26vw, 300px)',
+                display: 'block',
+              }}
+            >
               <AnimatePresence mode="wait">
                 <motion.h1
                   key={currentSlide}
@@ -435,6 +403,11 @@ export default function HeroSection() {
                     letterSpacing: '-0.045em',
                     color: '#fff',
                     textAlign: 'left',
+                    position: 'absolute',
+                    left: 0,
+                    top: 0,
+                    width: '100%',
+                    willChange: 'transform, opacity',
                   }}
                 >
                   {HERO_SLIDES[currentSlide]}

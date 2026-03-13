@@ -183,11 +183,11 @@ export default function Navbar({ user = null }: NavbarProps) {
           width: 100%;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
           .desktop-only-nav { display: none !important; }
           .mobile-only-button { display: flex !important; }
         }
-        @media (min-width: 769px) {
+        @media (min-width: 1025px) {
           .desktop-only-nav { display: flex !important; }
           .mobile-only-button { display: none !important; }
         }

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useScroll, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useRef, useState, useEffect } from 'react';
 import { getAllServices } from '@/features/services/data/services';
@@ -11,11 +11,6 @@ export default function ServicesPreview() {
   const serviceSectionRef = useRef<HTMLElement>(null);
   const [serviceIndex, setServiceIndex] = useState(0);
   const [isServicePaused, setIsServicePaused] = useState(false);
-
-  useScroll({
-    target: serviceSectionRef,
-    offset: ['start center', 'end center'],
-  });
 
   useEffect(() => {
     if (isServicePaused) return;
@@ -41,8 +36,47 @@ export default function ServicesPreview() {
       style={{ 
         padding: 'clamp(36px, 6vw, 60px) clamp(14px, 4vw, 24px)',
         backgroundColor: 'rgba(17, 24, 39, 0.3)',
+        position: 'relative',
       }}
     >
+      <style>{`
+        .service-card-shell {
+          height: clamp(440px, 67vh, 580px);
+        }
+
+        .service-card-title {
+          height: clamp(64px, 11vh, 100px);
+          -webkit-line-clamp: 3;
+        }
+
+        .service-card-desc-wrap {
+          height: clamp(92px, 14vh, 130px);
+        }
+
+        .service-card-desc {
+          -webkit-line-clamp: 4;
+        }
+
+        @media (max-width: 640px) {
+          .service-card-shell {
+            height: 390px;
+          }
+
+          .service-card-title {
+            height: 64px;
+            -webkit-line-clamp: 2;
+          }
+
+          .service-card-desc-wrap {
+            height: 82px;
+          }
+
+          .service-card-desc {
+            -webkit-line-clamp: 3;
+          }
+        }
+      `}</style>
+
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -68,16 +102,24 @@ export default function ServicesPreview() {
         </p>
       </motion.div>
 
-      <div style={{ maxWidth: '780px', margin: '0 auto', paddingBottom: '52px' }}>
+      <div style={{ maxWidth: '720px', margin: '0 auto', paddingBottom: '52px' }}>
         {/* Fixed height wrapper - fully responsive */}
         <div style={{ 
           position: 'relative', 
           width: '100%', 
-          height: 'clamp(440px, 67vh, 580px)',
-        }}>
+        }} className="service-card-shell">
           <GlowingCard
             glowColor="#22d3ee"
-            style={{ height: '100%', boxSizing: 'border-box' }}
+            style={{
+              height: '100%',
+              boxSizing: 'border-box',
+              border: '1px solid rgba(34, 211, 238, 0.22)',
+              background:
+                'radial-gradient(circle at 10% 0%, rgba(34, 211, 238, 0.12), transparent 45%), radial-gradient(circle at 90% 100%, rgba(168, 85, 247, 0.12), transparent 40%), rgba(2, 6, 23, 0.82)',
+              boxShadow:
+                '0 16px 48px rgba(2, 6, 23, 0.55), inset 0 1px 0 rgba(255,255,255,0.06)',
+              overflow: 'hidden',
+            }}
           >
             <AnimatePresence mode="wait">
               <motion.div
@@ -95,11 +137,23 @@ export default function ServicesPreview() {
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'flex-start',
+                  justifyContent: 'space-between',
                   alignItems: 'center',
                   boxSizing: 'border-box',
                   gap: 'clamp(12px, 2.5vw, 20px)',
+                  overflow: 'hidden',
                 }}>
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '2px',
+                      borderRadius: '999px',
+                      background: 'linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.8), rgba(168, 85, 247, 0.8), transparent)',
+                      boxShadow: '0 0 18px rgba(34, 211, 238, 0.35)',
+                      flexShrink: 0,
+                    }}
+                  />
+
                   <motion.div
                     animate={{ y: [0, -12, 0] }}
                     transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
@@ -113,6 +167,7 @@ export default function ServicesPreview() {
                       justifyContent: 'center',
                       border: '2px solid rgba(34, 211, 238, 0.4)',
                       flexShrink: 0,
+                      boxShadow: '0 10px 28px rgba(34, 211, 238, 0.22)',
                     }}
                   >
                     <ServiceIcon style={{ 
@@ -122,42 +177,38 @@ export default function ServicesPreview() {
                     }} />
                   </motion.div>
 
-                  <h3 style={{
-                    fontSize: 'clamp(18px, 3.6vw, 28px)',
+                  <h3 className="service-card-title" style={{
+                    fontSize: 'clamp(17px, 3.2vw, 24px)',
                     fontWeight: 700,
                     color: 'white',
                     fontFamily: 'var(--font-nunito)',
-                    lineHeight: 1.2,
+                    lineHeight: 1.25,
                     flexShrink: 0,
-                    minHeight: 'clamp(46px, 7vh, 72px)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
                     textAlign: 'center' as const,
-                    overflowWrap: 'anywhere',
+                    overflow: 'hidden',
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
                   }}>
                     {currentService.title}
                   </h3>
 
-                  <div style={{
-                    flex: 1,
+                  <div className="service-card-desc-wrap" style={{
                     display: 'flex',
                     alignItems: 'flex-start',
                     justifyContent: 'center',
                     width: '100%',
-                    minHeight: 'clamp(100px, 16vh, 150px)',
                     overflow: 'hidden',
+                    flexShrink: 0,
                   }}>
-                    <p style={{
+                    <p className="service-card-desc" style={{
                       fontSize: 'clamp(12px, 1.55vw, 15px)',
                       color: '#d1d5db',
                       lineHeight: 1.6,
                       fontFamily: 'var(--font-nunito)',
-                      maxWidth: '600px',
+                      maxWidth: '520px',
                       textAlign: 'center' as const,
                       margin: 0,
                       display: '-webkit-box',
-                      WebkitLineClamp: 5,
                       WebkitBoxOrient: 'vertical',
                       overflow: 'hidden',
                     }}>
@@ -167,7 +218,7 @@ export default function ServicesPreview() {
 
                   <Link
                     href={`/services/${currentService.slug}`}
-                    style={{ textDecoration: 'none', flexShrink: 0, marginTop: 'auto' }}
+                    style={{ textDecoration: 'none', flexShrink: 0 }}
                   >
                     <motion.button
                       whileHover={{ scale: 1.04, boxShadow: '0 0 25px rgba(34, 211, 238, 0.6), 0 0 50px rgba(168, 85, 247, 0.4)' }}
