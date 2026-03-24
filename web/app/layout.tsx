@@ -164,6 +164,12 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth" className={nunitoSans.variable}>
       <head>
+        {/* Prevent theme flash: apply saved theme before paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('tsa-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`,
+          }}
+        />
         {/* Preconnect for ImageKit CDN */}
         <link rel="preconnect" href="https://ik.imagekit.io" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://ik.imagekit.io" />

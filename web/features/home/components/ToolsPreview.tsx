@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Github, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { useTheme } from "@/lib/ThemeContext";
 
 const featuredTools = [
   {
@@ -33,6 +34,8 @@ const featuredTools = [
 ];
 
 export default function ToolsPreview() {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [hoveredViewMore, setHoveredViewMore] = useState(false);
 
@@ -40,7 +43,7 @@ export default function ToolsPreview() {
     <motion.section
       style={{
         padding: 'clamp(40px, 6vw, 60px) clamp(16px, 4vw, 24px)',
-        backgroundColor: 'rgba(17, 24, 39, 0.2)',
+        backgroundColor: isLight ? 'rgba(235,236,237,0.4)' : 'rgba(17, 24, 39, 0.2)',
       }}
     >
       <motion.div
@@ -64,7 +67,7 @@ export default function ToolsPreview() {
         >
           Our Security Tools
         </h2>
-        <p style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: '#9ca3af', fontFamily: 'var(--font-nunito)' }}>
+        <p style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: isLight ? 'rgba(98,108,113,0.9)' : '#9ca3af', fontFamily: 'var(--font-nunito)' }}>
           Open-source offensive security tools built by TSA
         </p>
       </motion.div>
@@ -80,7 +83,7 @@ export default function ToolsPreview() {
           paddingBottom: '40px',
           paddingTop: '20px',
           scrollbarWidth: 'thin',
-          scrollbarColor: 'rgba(34, 211, 238, 0.3) rgba(17, 24, 39, 0.2)',
+          scrollbarColor: isLight ? 'rgba(34, 211, 238, 0.3) rgba(235,236,237,0.4)' : 'rgba(34, 211, 238, 0.3) rgba(17, 24, 39, 0.2)',
         }}
       >
         {/* Tool Cards - SMALLER WIDTH */}
@@ -103,7 +106,7 @@ export default function ToolsPreview() {
               maxWidth: '240px', // ✅ MAX WIDTH
               flex: '0 0 auto',
               padding: 'clamp(16px, 3vw, 20px)', // ✅ SMALLER PADDING
-              background: 'rgba(17, 24, 39, 0.5)',
+              background: isLight ? 'rgba(235,236,237,0.7)' : 'rgba(17, 24, 39, 0.5)',
               backdropFilter: 'blur(30px)',
               borderRadius: '14px', // ✅ SMALLER RADIUS
               border: `2px solid ${hoveredIndex === index ? tool.color : `${tool.color}40`}`,
@@ -122,7 +125,7 @@ export default function ToolsPreview() {
                 style={{
                   fontSize: 'clamp(16px, 2.5vw, 18px)', // ✅ SMALLER TITLE
                   fontWeight: 700,
-                  color: '#ffffff',
+                  color: isLight ? '#13343b' : '#ffffff',
                   marginBottom: '8px',
                   fontFamily: 'var(--font-nunito)',
                   letterSpacing: '0.3px',
@@ -135,7 +138,7 @@ export default function ToolsPreview() {
               <p
                 style={{
                   fontSize: 'clamp(11px, 1.8vw, 13px)', // ✅ SMALLER TEXT
-                  color: '#d1d5db',
+                  color: isLight ? '#4a5568' : '#d1d5db',
                   lineHeight: 1.6,
                   marginBottom: '16px',
                   fontFamily: 'var(--font-nunito)',
@@ -163,7 +166,7 @@ export default function ToolsPreview() {
                   border: `2px solid ${tool.color}60`,
                   background: `linear-gradient(135deg, ${tool.color}20, ${tool.color}10)`,
                   backdropFilter: 'blur(10px)',
-                  color: '#ffffff',
+                  color: isLight ? '#13343b' : '#ffffff',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -252,7 +255,7 @@ export default function ToolsPreview() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 marginBottom: '12px',
-                background: 'rgba(17, 24, 39, 0.6)',
+                background: isLight ? 'rgba(235,236,237,0.7)' : 'rgba(17, 24, 39, 0.6)',
                 position: 'relative',
                 zIndex: 1,
               }}
@@ -278,7 +281,7 @@ export default function ToolsPreview() {
               style={{
                 fontSize: 'clamp(16px, 2.8vw, 18px)', // ✅ SMALLER TITLE
                 fontWeight: 700,
-                color: '#ffffff',
+                color: isLight ? '#13343b' : '#ffffff',
                 marginBottom: '6px',
                 fontFamily: 'var(--font-nunito)',
                 textAlign: 'center',
@@ -293,7 +296,7 @@ export default function ToolsPreview() {
             <p
               style={{
                 fontSize: 'clamp(11px, 1.8vw, 13px)', // ✅ SMALLER SUBTITLE
-                color: '#9ca3af',
+                color: isLight ? 'rgba(98,108,113,0.9)' : '#9ca3af',
                 fontFamily: 'var(--font-nunito)',
                 textAlign: 'center',
                 position: 'relative',
@@ -331,7 +334,7 @@ export default function ToolsPreview() {
           height: 8px;
         }
         div::-webkit-scrollbar-track {
-          background: rgba(17, 24, 39, 0.2);
+          background: ${isLight ? 'rgba(235,236,237,0.4)' : 'rgba(17, 24, 39, 0.2)'};
           border-radius: 10px;
         }
         div::-webkit-scrollbar-thumb {

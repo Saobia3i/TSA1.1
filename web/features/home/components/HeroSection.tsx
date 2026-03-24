@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTheme } from "@/lib/ThemeContext";
 
 /* ── data ─────────────────────────────────────────────────── */
 const HERO_SLIDES = [
@@ -61,14 +62,14 @@ function CountUp5() {
     <motion.span
       animate={{ scale: [1, 1.08, 1] }}
       transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 1.2 }}
-      style={{ 
-        fontSize: '26px', 
-        fontWeight: 900, 
-        color: '#f97316', 
-        letterSpacing: '-0.02em', 
-        lineHeight: 1, 
-        textShadow: '0px 0px 20px rgba(249,115,22,0.8)', 
-        willChange: 'transform' 
+      style={{
+        fontSize: '26px',
+        fontWeight: 900,
+        color: '#f97316',
+        letterSpacing: '-0.02em',
+        lineHeight: 1,
+        textShadow: '0px 0px 20px rgba(249,115,22,0.8)',
+        willChange: 'transform'
       }}
     >
       {count}+
@@ -95,14 +96,14 @@ function USFlagIcon({ size = 80 }: { size?: number }) {
 const BOTTOM_FEATURES = [
   {
     icon: (
-      <div style={{ 
-        width: '46px', 
-        height: '46px', 
-        borderRadius: '50%', 
-        background: 'rgba(249,115,22,0.15)', 
-        border: '2px solid rgba(249,115,22,0.4)', 
-        display: 'flex', 
-        alignItems: 'center', 
+      <div style={{
+        width: '46px',
+        height: '46px',
+        borderRadius: '50%',
+        background: 'rgba(249,115,22,0.15)',
+        border: '2px solid rgba(249,115,22,0.4)',
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
         boxShadow: '0 0 20px rgba(249,115,22,0.3)'
       }}>
@@ -114,14 +115,14 @@ const BOTTOM_FEATURES = [
   },
   {
     icon: (
-      <div style={{ 
-        width: '50px', 
-        height: '50px', 
-        borderRadius: '50%', 
-        background: 'rgba(34,197,94,0.15)', 
-        border: '2px solid rgba(34,197,94,0.4)', 
-        display: 'flex', 
-        alignItems: 'center', 
+      <div style={{
+        width: '50px',
+        height: '50px',
+        borderRadius: '50%',
+        background: 'rgba(34,197,94,0.15)',
+        border: '2px solid rgba(34,197,94,0.4)',
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
         boxShadow: '0 0 22px rgba(34,197,94,0.3)',
         overflow: 'hidden'
@@ -144,14 +145,17 @@ const BOTTOM_FEATURES = [
 
 /* ── Feature Card (for right wave) ───────────────────────── */
 function FloatingFeatureCard({ icon, text, color, top, right, delay, horizontal = false, width, className }: { icon: React.ReactNode; text: React.ReactNode; color: string; top: string; right: string; delay: number; horizontal?: boolean; width?: string; className?: string }) {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+
   const positionVars = {
     ['--card-top' as any]: top,
     ['--card-right' as any]: right,
   } as React.CSSProperties;
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, x: 40, scale: 0.94 }} 
+    <motion.div
+      initial={{ opacity: 0, x: 40, scale: 0.94 }}
       animate={{ opacity: 1, x: 0, scale: 1 }}
       transition={{ delay, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={className}
@@ -165,9 +169,11 @@ function FloatingFeatureCard({ icon, text, color, top, right, delay, horizontal 
         minWidth: width || (horizontal ? '170px' : '160px'),
         maxWidth: width || (horizontal ? '190px' : '180px'),
         border: `1px solid ${color}40`,
-        background: 'rgba(2,8,24,0.88)',
+        background: isLight ? 'rgba(248,250,252,0.92)' : 'rgba(2,8,24,0.88)',
         backdropFilter: 'blur(16px)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07)',
+        boxShadow: isLight
+          ? '0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(0,0,0,0.05)'
+          : '0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07)',
         animation: `floatB 9s ease-in-out infinite ${delay * 0.5}s`,
         pointerEvents: 'auto',
         userSelect: 'text',
@@ -178,7 +184,7 @@ function FloatingFeatureCard({ icon, text, color, top, right, delay, horizontal 
         <div style={{ flexShrink: 0, userSelect: 'none' }}>
           {icon}
         </div>
-        <div style={{ fontSize: '12px', fontWeight: 700, color: '#fff', lineHeight: 1.4, textAlign: horizontal ? 'left' : 'center', userSelect: 'text' }}>
+        <div style={{ fontSize: '12px', fontWeight: 700, color: isLight ? '#13343b' : '#fff', lineHeight: 1.4, textAlign: horizontal ? 'left' : 'center', userSelect: 'text' }}>
           {text}
         </div>
       </div>
@@ -276,16 +282,18 @@ function RightWave() {
 
 /* ── cert marquee ─────────────────────────────────────────── */
 function CertMarquee() {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const doubled = [...CERTS, ...CERTS];
   return (
     <div style={{ position:'relative', overflow:'hidden', borderTop:'1px solid rgba(56,189,248,0.18)', borderBottom:'1px solid rgba(56,189,248,0.18)', padding:'10px 0' }}>
-      <div style={{ position:'absolute', left:0, top:0, bottom:0, width:72, background:'linear-gradient(to right,#01040a,transparent)', zIndex:2, pointerEvents:'none' }} />
-      <div style={{ position:'absolute', right:0, top:0, bottom:0, width:72, background:'linear-gradient(to left,#01040a,transparent)', zIndex:2, pointerEvents:'none' }} />
+      <div style={{ position:'absolute', left:0, top:0, bottom:0, width:72, background:`linear-gradient(to right,${isLight ? '#fcfcf9' : '#01040a'},transparent)`, zIndex:2, pointerEvents:'none' }} />
+      <div style={{ position:'absolute', right:0, top:0, bottom:0, width:72, background:`linear-gradient(to left,${isLight ? '#fcfcf9' : '#01040a'},transparent)`, zIndex:2, pointerEvents:'none' }} />
       <div style={{ display:'flex', width:'max-content', animation:'marquee 28s linear infinite' }}>
         {doubled.map((c,i) => (
-          <span key={i} style={{ display:'inline-flex', alignItems:'center', gap:12, paddingRight:24, fontFamily:'monospace', fontSize:11, letterSpacing:'0.14em', color:'rgba(186,230,253,0.45)' }}>
+          <span key={i} style={{ display:'inline-flex', alignItems:'center', gap:12, paddingRight:24, fontFamily:'monospace', fontSize:11, letterSpacing:'0.14em', color: isLight ? 'rgba(19,52,59,0.5)' : 'rgba(186,230,253,0.45)' }}>
             {c}
-            <span style={{ color:'rgba(186,230,253,0.2)' }}>|</span>
+            <span style={{ color: isLight ? 'rgba(19,52,59,0.2)' : 'rgba(186,230,253,0.2)' }}>|</span>
           </span>
         ))}
       </div>
@@ -296,6 +304,8 @@ function CertMarquee() {
 /* ── main ─────────────────────────────────────────────────── */
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
 
   useEffect(() => {
     const slideInterval = setInterval(() => {
@@ -307,7 +317,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section style={{ position:'relative', minHeight:'100vh', width:'100%', overflow:'hidden', background:'#01040a', color:'#fff', display:'flex', flexDirection:'column' }}>
+    <section style={{ position:'relative', minHeight:'100vh', width:'100%', overflow:'hidden', background: isLight ? '#fcfcf9' : '#01040a', color: isLight ? '#13343b' : '#fff', display:'flex', flexDirection:'column' }}>
       <style>{`
         .hff { font-family:'Inter',system-ui,sans-serif; }
 
@@ -384,7 +394,7 @@ export default function HeroSection() {
           <motion.div initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.45 }}
             style={{ display:'inline-flex', alignItems:'center', gap:8, width:'fit-content', padding:'7px 13px', borderRadius:999, border:'1px solid rgba(56,189,248,0.32)', background:'rgba(56,189,248,0.07)', backdropFilter:'blur(8px)' }}
           >
-            <span style={{ fontFamily:'monospace', fontSize:11, letterSpacing:'0.14em', color:'rgba(186,230,253,0.88)', textTransform:'uppercase' }}>
+            <span style={{ fontFamily:'monospace', fontSize:11, letterSpacing:'0.14em', color: isLight ? 'rgba(19,52,59,0.88)' : 'rgba(186,230,253,0.88)', textTransform:'uppercase' }}>
               A Globally Trusted Edtech
             </span>
           </motion.div>
@@ -412,7 +422,7 @@ export default function HeroSection() {
                     fontSize: 'clamp(30px, 5.2vw, 70px)',
                     lineHeight: 1.1,
                     letterSpacing: '-0.045em',
-                    color: '#fff',
+                    color: isLight ? '#13343b' : '#fff',
                     textAlign: 'left',
                     position: 'absolute',
                     left: 0,
@@ -432,12 +442,12 @@ export default function HeroSection() {
             style={{ display:'flex', flexWrap:'wrap', gap:10 }}
           >
             <Link href="/courses" className="h-btn-p"
-              style={{ textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8, padding:'13px 24px', borderRadius:10, background:'#fff', color:'#0a0f1e', fontWeight:800, fontSize:14, letterSpacing:'-0.02em', boxShadow:'0 8px 28px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)' }}
+              style={{ textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8, padding:'13px 24px', borderRadius:10, background: isLight ? '#13343b' : '#fff', color: isLight ? '#ffffff' : '#0a0f1e', fontWeight:800, fontSize:14, letterSpacing:'-0.02em', boxShadow:'0 8px 28px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)' }}
             >
               Enroll Now <ArrowRight size={15} strokeWidth={2.6} />
             </Link>
             <Link href="/services" className="h-btn-s"
-              style={{ textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8, padding:'13px 24px', borderRadius:10, border:'1px solid rgba(255,255,255,0.13)', background:'rgba(255,255,255,0.04)', backdropFilter:'blur(8px)', color:'rgba(255,255,255,0.78)', fontWeight:600, fontSize:14, letterSpacing:'-0.02em', transition:'all .18s ease' }}
+              style={{ textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8, padding:'13px 24px', borderRadius:10, border: isLight ? '1px solid rgba(19,52,59,0.2)' : '1px solid rgba(255,255,255,0.13)', background: isLight ? 'rgba(19,52,59,0.05)' : 'rgba(255,255,255,0.04)', backdropFilter:'blur(8px)', color: isLight ? 'rgba(19,52,59,0.78)' : 'rgba(255,255,255,0.78)', fontWeight:600, fontSize:14, letterSpacing:'-0.02em', transition:'all .18s ease' }}
             >
               Our Services <Sparkles size={14} color="#7dd3fc" />
             </Link>
@@ -445,7 +455,7 @@ export default function HeroSection() {
 
           {/* urgency */}
           <motion.p initial={{ opacity:0 }} animate={{ opacity:1 }} transition={{ delay:0.4 }}
-            style={{ margin:0, fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase', color:'rgba(186,230,253,0.6)', fontWeight:600 }}
+            style={{ margin:0, fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase', color: isLight ? 'rgba(19,52,59,0.5)' : 'rgba(186,230,253,0.6)', fontWeight:600 }}
           >
             Next live batch starts in 5 days · Seats filling fast
           </motion.p>
@@ -455,7 +465,7 @@ export default function HeroSection() {
             style={{ display:'flex', flexWrap:'wrap', gap:14 }}
           >
             {TRUST.map(t => (
-              <span key={t} style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, color:'rgba(255,255,255,0.48)' }}>
+              <span key={t} style={{ display:'inline-flex', alignItems:'center', gap:6, fontSize:12, color: isLight ? 'rgba(19,52,59,0.6)' : 'rgba(255,255,255,0.48)' }}>
                 <CheckCircle2 size={13} color="rgba(56,189,248,0.8)" />
                 {t}
               </span>

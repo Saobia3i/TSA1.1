@@ -12,6 +12,8 @@ import {
   Settings,
   LogOut,
   Home,
+  Sun,
+  Moon,
 } from "lucide-react";
 import Linkedin from "@mui/icons-material/LinkedIn";
 import Instagram from "@mui/icons-material/Instagram";
@@ -23,6 +25,7 @@ import Image from "next/image";
 import { MapIcon, UserGroupIcon, ShareIcon  } from "@heroicons/react/24/outline";
 import { logout } from "@/app/actions/auth";
 import NewspaperIcon from '@mui/icons-material/Newspaper';
+import { useTheme } from "@/lib/ThemeContext";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -78,6 +81,31 @@ export default function Navbar({ user = null }: NavbarProps) {
   const pathname = usePathname();
   const aboutRef = useRef<HTMLDivElement>(null);
   const socialsRef = useRef<HTMLDivElement>(null);
+  const { theme, toggleTheme } = useTheme();
+  const isLight = theme === "light";
+
+  // Theme-derived colors
+  const navBg = isLight
+    ? scrolled ? "rgba(252, 252, 249, 0.85)" : "rgba(252, 252, 249, 0.6)"
+    : scrolled ? "rgba(0, 0, 0, 0.3)" : "rgba(0, 0, 0, 0.1)";
+  const navBorder = isLight
+    ? scrolled ? "1px solid rgba(33, 128, 141, 0.3)" : "1px solid rgba(33, 128, 141, 0.1)"
+    : scrolled ? "1px solid rgba(0, 212, 255, 0.2)" : "1px solid rgba(255, 255, 255, 0.03)";
+  const navShadow = isLight
+    ? scrolled ? "0 4px 20px rgba(33, 128, 141, 0.12)" : "none"
+    : scrolled ? "0 4px 20px rgba(0, 212, 255, 0.15)" : "none";
+  const textColor = isLight ? "#13343b" : "white";
+  const accentColor = isLight ? "#21808d" : "#00d4ff";
+  const accentGlow = isLight
+    ? "0 0 15px rgba(33, 128, 141, 0.4)"
+    : "0 0 15px rgba(0, 212, 255, 0.8)";
+  const dropdownBg = isLight ? "rgba(252, 252, 249, 0.97)" : "rgba(0, 0, 0, 0.92)";
+  const dropdownBorder = isLight ? "1px solid rgba(33, 128, 141, 0.3)" : "1px solid rgba(0, 212, 255, 0.3)";
+  const dropdownShadow = isLight
+    ? "0 20px 60px rgba(33, 128, 141, 0.15), inset 0 0 20px rgba(33, 128, 141, 0.03)"
+    : "0 20px 60px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.05)";
+  const mobileMenuBg = isLight ? "rgba(252, 252, 249, 0.98)" : "rgba(0, 0, 0, 0.95)";
+  const mobileMenuBorder = isLight ? "1px solid rgba(33, 128, 141, 0.2)" : "1px solid rgba(0, 212, 255, 0.3)";
   const userRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -200,17 +228,13 @@ export default function Navbar({ user = null }: NavbarProps) {
           left: 0,
           right: 0,
           zIndex: 1000,
-          backgroundColor: scrolled
-            ? "rgba(0, 0, 0, 0.3)"
-            : "rgba(0, 0, 0, 0.1)",
+          backgroundColor: navBg,
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
-          borderBottom: scrolled
-            ? "1px solid rgba(0, 212, 255, 0.2)"
-            : "1px solid rgba(255, 255, 255, 0.03)",
+          borderBottom: navBorder,
           transform: isVisible ? "translateY(0)" : "translateY(-100%)",
           transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-          boxShadow: scrolled ? "0 4px 20px rgba(0, 212, 255, 0.15)" : "none",
+          boxShadow: navShadow,
         }}
       >
         <div
@@ -250,11 +274,11 @@ export default function Navbar({ user = null }: NavbarProps) {
               style={{
                 fontSize: "clamp(12px, 14px)",
                 fontWeight: 700,
-                color: "white",
+                color: isLight ? "#13343b" : "white",
                 letterSpacing: "2px",
                 fontFamily: '"Nunito Sans", sans-serif',
                 textTransform: "uppercase",
-                textShadow: "0 0 20px rgba(0, 212, 255, 0.6)",
+                textShadow: isLight ? "none" : "0 0 20px rgba(0, 212, 255, 0.6)",
               }}
             >
               TENSOR SECURITY ACADEMY
@@ -277,26 +301,22 @@ export default function Navbar({ user = null }: NavbarProps) {
                   href={link.href}
                   prefetch={true}
                   style={{
-                    color: pathname === link.href ? "#00d4ff" : "white",
+                    color: pathname === link.href ? accentColor : textColor,
                     fontSize: "15px",
                     textDecoration: "none",
                     transition: "all 0.3s ease",
                     fontWeight: 600,
                     fontFamily: '"Nunito Sans", sans-serif',
                     letterSpacing: "0.5px",
-                    textShadow:
-                      pathname === link.href
-                        ? "0 0 15px rgba(0, 212, 255, 0.8)"
-                        : "none",
+                    textShadow: pathname === link.href ? accentGlow : "none",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "#00d4ff";
-                    e.currentTarget.style.textShadow =
-                      "0 0 15px rgba(0, 212, 255, 0.8)";
+                    e.currentTarget.style.color = accentColor;
+                    e.currentTarget.style.textShadow = accentGlow;
                   }}
                   onMouseLeave={(e) => {
                     if (pathname !== link.href) {
-                      e.currentTarget.style.color = "white";
+                      e.currentTarget.style.color = textColor;
                       e.currentTarget.style.textShadow = "none";
                     }
                   }}
@@ -318,7 +338,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                   style={{
                     background: "transparent",
                     border: "none",
-                    color: isAboutActive ? "#00d4ff" : "white",
+                    color: isAboutActive ? accentColor : textColor,
                     fontSize: "15px",
                     cursor: "pointer",
                     display: "inline-flex",
@@ -329,18 +349,15 @@ export default function Navbar({ user = null }: NavbarProps) {
                     letterSpacing: "0.5px",
                     padding: 0,
                     transition: "all 0.3s ease",
-                    textShadow: isAboutActive
-                      ? "0 0 15px rgba(0, 212, 255, 0.8)"
-                      : "none",
+                    textShadow: isAboutActive ? accentGlow : "none",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "#00d4ff";
-                    e.currentTarget.style.textShadow =
-                      "0 0 15px rgba(0, 212, 255, 0.8)";
+                    e.currentTarget.style.color = accentColor;
+                    e.currentTarget.style.textShadow = accentGlow;
                   }}
                   onMouseLeave={(e) => {
                     if (!isAboutActive) {
-                      e.currentTarget.style.color = "white";
+                      e.currentTarget.style.color = textColor;
                       e.currentTarget.style.textShadow = "none";
                     }
                   }}
@@ -368,15 +385,14 @@ export default function Navbar({ user = null }: NavbarProps) {
                     left: "50%",
                     transform: "translateX(-50%)",
                     marginTop: "16px",
-                    background: "rgba(0, 0, 0, 0.92)",
+                    background: dropdownBg,
                     backdropFilter: "blur(30px)",
                     WebkitBackdropFilter: "blur(30px)",
                     borderRadius: "16px",
-                    border: "1px solid rgba(0, 212, 255, 0.3)",
+                    border: dropdownBorder,
                     padding: "8px",
                     minWidth: "240px",
-                    boxShadow:
-                      "0 20px 60px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.05)",
+                    boxShadow: dropdownShadow,
                     zIndex: 1000,
                   }}
                 >
@@ -395,7 +411,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                           padding: "14px 18px",
                           borderRadius: "12px",
                           textDecoration: "none",
-                          color: pathname === link.href ? "#00d4ff" : "white",
+                          color: pathname === link.href ? accentColor : textColor,
                           fontSize: "14px",
                           transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                           fontFamily: '"Nunito Sans", sans-serif',
@@ -403,17 +419,22 @@ export default function Navbar({ user = null }: NavbarProps) {
                           border: "1px solid transparent",
                           background:
                             pathname === link.href
-                              ? "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.1))"
+                              ? isLight
+                                ? "linear-gradient(135deg, rgba(33, 128, 141, 0.12), rgba(19, 52, 59, 0.08))"
+                                : "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.1))"
                               : "transparent",
                         }}
                         onMouseEnter={(e) => {
                           if (pathname !== link.href) {
-                            e.currentTarget.style.background =
-                              "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
-                            e.currentTarget.style.borderColor =
-                              "rgba(0, 212, 255, 0.4)";
-                            e.currentTarget.style.boxShadow =
-                              "0 0 20px rgba(0, 212, 255, 0.3)";
+                            e.currentTarget.style.background = isLight
+                              ? "linear-gradient(135deg, rgba(33, 128, 141, 0.1), rgba(19, 52, 59, 0.06))"
+                              : "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
+                            e.currentTarget.style.borderColor = isLight
+                              ? "rgba(33, 128, 141, 0.4)"
+                              : "rgba(0, 212, 255, 0.4)";
+                            e.currentTarget.style.boxShadow = isLight
+                              ? "0 0 20px rgba(33, 128, 141, 0.2)"
+                              : "0 0 20px rgba(0, 212, 255, 0.3)";
                             e.currentTarget.style.transform = "translateX(4px)";
                           }
                         }}
@@ -431,7 +452,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                             width: "18px",
                             height: "18px",
                             strokeWidth: 2,
-                            color: "#ffffff",
+                            color: textColor,
                           }}
                         />
                         <span>{link.label}</span>
@@ -449,9 +470,9 @@ export default function Navbar({ user = null }: NavbarProps) {
                 aria-label="Social media links"
                 aria-expanded={socialsOpen}
                 style={{
-                  background: "transparent", // remove gradient background
-                  border: "none", // remove border
-                  color: "white",
+                  background: "transparent",
+                  border: "none",
+                  color: textColor,
                   fontSize: "15px",
                   cursor: "pointer",
                   display: "inline-flex",
@@ -460,23 +481,21 @@ export default function Navbar({ user = null }: NavbarProps) {
                   fontWeight: 600,
                   fontFamily: '"Nunito Sans", sans-serif',
                   letterSpacing: "0.5px",
-                  padding: 0, // no padding pill
+                  padding: 0,
                   transition: "all 0.3s ease",
                   textShadow: "none",
-                  boxShadow: "none", // ensure no glow box
+                  boxShadow: "none",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = "#00d4ff";
-                  e.currentTarget.style.textShadow =
-                    "0 0 15px rgba(0, 212, 255, 0.8)";
-                  e.currentTarget.style.boxShadow = "none"; // keep flat
+                  e.currentTarget.style.color = accentColor;
+                  e.currentTarget.style.textShadow = accentGlow;
+                  e.currentTarget.style.boxShadow = "none";
                   e.currentTarget.style.background = "transparent";
                   e.currentTarget.style.borderColor = "transparent";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = "white";
+                  e.currentTarget.style.color = textColor;
                   e.currentTarget.style.textShadow = "none";
-
                   e.currentTarget.style.boxShadow = "none";
                   e.currentTarget.style.background = "transparent";
                   e.currentTarget.style.borderColor = "transparent";
@@ -527,15 +546,14 @@ export default function Navbar({ user = null }: NavbarProps) {
                     top: "100%",
                     right: 0,
                     marginTop: "16px",
-                    background: "rgba(0, 0, 0, 0.92)",
+                    background: dropdownBg,
                     backdropFilter: "blur(30px)",
                     WebkitBackdropFilter: "blur(30px)",
                     borderRadius: "16px",
-                    border: "1px solid rgba(0, 212, 255, 0.3)",
+                    border: dropdownBorder,
                     padding: "8px",
                     minWidth: "220px",
-                    boxShadow:
-                      "0 20px 60px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.05)",
+                    boxShadow: dropdownShadow,
                     zIndex: 1000,
                   }}
                 >
@@ -555,7 +573,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                           padding: "14px 18px",
                           borderRadius: "12px",
                           textDecoration: "none",
-                          color: "white",
+                          color: textColor,
                           fontSize: "14px",
                           transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                           fontFamily: '"Nunito Sans", sans-serif',
@@ -563,13 +581,16 @@ export default function Navbar({ user = null }: NavbarProps) {
                           border: "1px solid transparent",
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background =
-                            "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
-                          e.currentTarget.style.transform = "translateX(3px) ,translateY(3px)";
-                          e.currentTarget.style.borderColor =
-                            "rgba(0, 212, 255, 0.4)";
-                          e.currentTarget.style.boxShadow =
-                            "0 0 15px rgba(0, 212, 255, 0.3)";
+                          e.currentTarget.style.background = isLight
+                            ? "linear-gradient(135deg, rgba(33, 128, 141, 0.1), rgba(19, 52, 59, 0.06))"
+                            : "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
+                          e.currentTarget.style.transform = "translateX(3px)";
+                          e.currentTarget.style.borderColor = isLight
+                            ? "rgba(33, 128, 141, 0.4)"
+                            : "rgba(0, 212, 255, 0.4)";
+                          e.currentTarget.style.boxShadow = isLight
+                            ? "0 0 15px rgba(33, 128, 141, 0.2)"
+                            : "0 0 15px rgba(0, 212, 255, 0.3)";
                         }}
                         onMouseLeave={(e) => {
                           e.currentTarget.style.background = "transparent";
@@ -583,16 +604,20 @@ export default function Navbar({ user = null }: NavbarProps) {
                             width: "34px",
                             height: "34px",
                             borderRadius: "50%",
-                            border: "2px solid rgba(255, 255, 255, 0.4)",
+                            border: isLight
+                              ? "2px solid rgba(33, 128, 141, 0.4)"
+                              : "2px solid rgba(255, 255, 255, 0.4)",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            background: "rgba(255, 255, 255, 0.05)",
+                            background: isLight
+                              ? "rgba(33, 128, 141, 0.08)"
+                              : "rgba(255, 255, 255, 0.05)",
                             transition: "all 0.3s ease",
                           }}
                         >
                           <IconComponent
-                            sx={{ color: "#ffffff", fontSize: "18px" }}
+                            sx={{ color: isLight ? "#21808d" : "#ffffff", fontSize: "18px" }}
                           />
                         </div>
                         <span>{social.name}</span>
@@ -617,9 +642,9 @@ export default function Navbar({ user = null }: NavbarProps) {
                       fontSize: "14px",
                       fontWeight: 700,
                       borderRadius: "10px",
-                      border: "2px solid rgba(0, 212, 255, 0.5)",
+                      border: isLight ? "2px solid rgba(33, 128, 141, 0.6)" : "2px solid rgba(0, 212, 255, 0.5)",
                       background: "transparent",
-                      color: "#00d4ff",
+                      color: accentColor,
                       cursor: "pointer",
                       display: "inline-flex",
                       alignItems: "center",
@@ -628,10 +653,12 @@ export default function Navbar({ user = null }: NavbarProps) {
                       transition: "all 0.3s ease",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow =
-                        "0 0 20px rgba(0, 212, 255, 0.5)";
-                      e.currentTarget.style.background =
-                        "rgba(0, 212, 255, 0.1)";
+                      e.currentTarget.style.boxShadow = isLight
+                        ? "0 0 20px rgba(33, 128, 141, 0.3)"
+                        : "0 0 20px rgba(0, 212, 255, 0.5)";
+                      e.currentTarget.style.background = isLight
+                        ? "rgba(33, 128, 141, 0.1)"
+                        : "rgba(0, 212, 255, 0.1)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.boxShadow = "none";
@@ -689,10 +716,11 @@ export default function Navbar({ user = null }: NavbarProps) {
                   aria-label="User menu"
                   aria-expanded={userDropdownOpen}
                   style={{
-                    background:
-                      "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.15))",
-                    border: "1px solid rgba(0, 212, 255, 0.3)",
-                    color: "white",
+                    background: isLight
+                      ? "linear-gradient(135deg, rgba(33, 128, 141, 0.12), rgba(19, 52, 59, 0.08))"
+                      : "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.15))",
+                    border: isLight ? "1px solid rgba(33, 128, 141, 0.35)" : "1px solid rgba(0, 212, 255, 0.3)",
+                    color: textColor,
                     fontSize: "14px",
                     cursor: "pointer",
                     display: "inline-flex",
@@ -706,25 +734,31 @@ export default function Navbar({ user = null }: NavbarProps) {
                     backdropFilter: "blur(10px)",
                     WebkitBackdropFilter: "blur(10px)",
                     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                    boxShadow: "0 4px 15px rgba(0, 212, 255, 0.2)",
+                    boxShadow: isLight ? "0 4px 15px rgba(33, 128, 141, 0.15)" : "0 4px 15px rgba(0, 212, 255, 0.2)",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow =
-                      "0 0 25px rgba(0, 212, 255, 0.5), 0 0 50px rgba(124, 58, 237, 0.3)";
+                    e.currentTarget.style.boxShadow = isLight
+                      ? "0 0 25px rgba(33, 128, 141, 0.3)"
+                      : "0 0 25px rgba(0, 212, 255, 0.5), 0 0 50px rgba(124, 58, 237, 0.3)";
                     e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.background =
-                      "linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(124, 58, 237, 0.25))";
-                    e.currentTarget.style.borderColor =
-                      "rgba(0, 212, 255, 0.5)";
+                    e.currentTarget.style.background = isLight
+                      ? "linear-gradient(135deg, rgba(33, 128, 141, 0.2), rgba(19, 52, 59, 0.12))"
+                      : "linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(124, 58, 237, 0.25))";
+                    e.currentTarget.style.borderColor = isLight
+                      ? "rgba(33, 128, 141, 0.5)"
+                      : "rgba(0, 212, 255, 0.5)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow =
-                      "0 4px 15px rgba(0, 212, 255, 0.2)";
+                    e.currentTarget.style.boxShadow = isLight
+                      ? "0 4px 15px rgba(33, 128, 141, 0.15)"
+                      : "0 4px 15px rgba(0, 212, 255, 0.2)";
                     e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.background =
-                      "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.15))";
-                    e.currentTarget.style.borderColor =
-                      "rgba(0, 212, 255, 0.3)";
+                    e.currentTarget.style.background = isLight
+                      ? "linear-gradient(135deg, rgba(33, 128, 141, 0.12), rgba(19, 52, 59, 0.08))"
+                      : "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.15))";
+                    e.currentTarget.style.borderColor = isLight
+                      ? "rgba(33, 128, 141, 0.35)"
+                      : "rgba(0, 212, 255, 0.3)";
                   }}
                 >
                   <User style={{ width: "18px", height: "18px" }} />
@@ -749,22 +783,21 @@ export default function Navbar({ user = null }: NavbarProps) {
                       top: "100%",
                       right: 0,
                       marginTop: "16px",
-                      background: "rgba(0, 0, 0, 0.92)",
+                      background: dropdownBg,
                       backdropFilter: "blur(30px)",
                       WebkitBackdropFilter: "blur(30px)",
                       borderRadius: "16px",
-                      border: "1px solid rgba(0, 212, 255, 0.3)",
+                      border: dropdownBorder,
                       padding: "8px",
                       minWidth: "260px",
-                      boxShadow:
-                        "0 20px 60px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.05)",
+                      boxShadow: dropdownShadow,
                       zIndex: 1000,
                     }}
                   >
                     <div
                       style={{
                         padding: "14px 18px",
-                        borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+                        borderBottom: isLight ? "1px solid rgba(33, 128, 141, 0.15)" : "1px solid rgba(255, 255, 255, 0.1)",
                         marginBottom: "8px",
                       }}
                     >
@@ -772,7 +805,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                         style={{
                           fontSize: "14px",
                           fontWeight: 700,
-                          color: "#00d4ff",
+                          color: accentColor,
                           marginBottom: "4px",
                           fontFamily: '"Nunito Sans", sans-serif',
                         }}
@@ -782,7 +815,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                       <p
                         style={{
                           fontSize: "12px",
-                          color: "#9ca3af",
+                          color: isLight ? "#62697a" : "#9ca3af",
                           fontFamily: '"Nunito Sans", sans-serif',
                         }}
                       >
@@ -801,7 +834,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                         padding: "14px 18px",
                         borderRadius: "12px",
                         textDecoration: "none",
-                        color: pathname === "/dashboard" ? "#00d4ff" : "white",
+                        color: pathname === "/dashboard" ? accentColor : textColor,
                         fontSize: "14px",
                         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                         fontFamily: '"Nunito Sans", sans-serif',
@@ -809,17 +842,18 @@ export default function Navbar({ user = null }: NavbarProps) {
                         border: "1px solid transparent",
                         background:
                           pathname === "/dashboard"
-                            ? "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.1))"
+                            ? isLight
+                              ? "linear-gradient(135deg, rgba(33, 128, 141, 0.12), rgba(19, 52, 59, 0.08))"
+                              : "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.1))"
                             : "transparent",
                       }}
                       onMouseEnter={(e) => {
                         if (pathname !== "/dashboard") {
-                          e.currentTarget.style.background =
-                            "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
-                          e.currentTarget.style.borderColor =
-                            "rgba(0, 212, 255, 0.4)";
-                          e.currentTarget.style.boxShadow =
-                            "0 0 20px rgba(0, 212, 255, 0.3)";
+                          e.currentTarget.style.background = isLight
+                            ? "linear-gradient(135deg, rgba(33, 128, 141, 0.1), rgba(19, 52, 59, 0.06))"
+                            : "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
+                          e.currentTarget.style.borderColor = isLight ? "rgba(33, 128, 141, 0.4)" : "rgba(0, 212, 255, 0.4)";
+                          e.currentTarget.style.boxShadow = isLight ? "0 0 20px rgba(33, 128, 141, 0.2)" : "0 0 20px rgba(0, 212, 255, 0.3)";
                           e.currentTarget.style.transform = "translateX(4px)";
                         }
                       }}
@@ -849,8 +883,8 @@ export default function Navbar({ user = null }: NavbarProps) {
                         textDecoration: "none",
                         color:
                           pathname === "/dashboard/settings"
-                            ? "#00d4ff"
-                            : "white",
+                            ? accentColor
+                            : textColor,
                         fontSize: "14px",
                         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                         fontFamily: '"Nunito Sans", sans-serif',
@@ -858,17 +892,18 @@ export default function Navbar({ user = null }: NavbarProps) {
                         border: "1px solid transparent",
                         background:
                           pathname === "/dashboard/settings"
-                            ? "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.1))"
+                            ? isLight
+                              ? "linear-gradient(135deg, rgba(33, 128, 141, 0.12), rgba(19, 52, 59, 0.08))"
+                              : "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.1))"
                             : "transparent",
                       }}
                       onMouseEnter={(e) => {
                         if (pathname !== "/dashboard/settings") {
-                          e.currentTarget.style.background =
-                            "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
-                          e.currentTarget.style.borderColor =
-                            "rgba(0, 212, 255, 0.4)";
-                          e.currentTarget.style.boxShadow =
-                            "0 0 20px rgba(0, 212, 255, 0.3)";
+                          e.currentTarget.style.background = isLight
+                            ? "linear-gradient(135deg, rgba(33, 128, 141, 0.1), rgba(19, 52, 59, 0.06))"
+                            : "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
+                          e.currentTarget.style.borderColor = isLight ? "rgba(33, 128, 141, 0.4)" : "rgba(0, 212, 255, 0.4)";
+                          e.currentTarget.style.boxShadow = isLight ? "0 0 20px rgba(33, 128, 141, 0.2)" : "0 0 20px rgba(0, 212, 255, 0.3)";
                           e.currentTarget.style.transform = "translateX(4px)";
                         }
                       }}
@@ -887,7 +922,7 @@ export default function Navbar({ user = null }: NavbarProps) {
 
                     <div
                       style={{
-                        borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+                        borderTop: isLight ? "1px solid rgba(33, 128, 141, 0.15)" : "1px solid rgba(255, 255, 255, 0.1)",
                         marginTop: "8px",
                         paddingTop: "8px",
                       }}
@@ -935,6 +970,45 @@ export default function Navbar({ user = null }: NavbarProps) {
             )}
           </div>
 
+          {/* THEME TOGGLE */}
+          <button
+            onClick={toggleTheme}
+            aria-label={isLight ? "Switch to dark mode" : "Switch to light mode"}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: isLight
+                ? "linear-gradient(135deg, rgba(33, 128, 141, 0.12), rgba(19, 52, 59, 0.08))"
+                : "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.12))",
+              border: isLight ? "1px solid rgba(33, 128, 141, 0.35)" : "1px solid rgba(0, 212, 255, 0.35)",
+              borderRadius: "10px",
+              color: accentColor,
+              cursor: "pointer",
+              padding: "8px",
+              zIndex: 1000,
+              transition: "all 0.3s ease",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.boxShadow = isLight
+                ? "0 0 15px rgba(33, 128, 141, 0.3)"
+                : "0 0 15px rgba(0, 212, 255, 0.4)";
+              e.currentTarget.style.transform = "scale(1.08)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.boxShadow = "none";
+              e.currentTarget.style.transform = "scale(1)";
+            }}
+          >
+            {isLight ? (
+              <Moon style={{ width: "18px", height: "18px" }} />
+            ) : (
+              <Sun style={{ width: "18px", height: "18px" }} />
+            )}
+          </button>
+
           {/* MOBILE MENU BUTTON */}
           <button
             className="mobile-only-button"
@@ -945,15 +1019,16 @@ export default function Navbar({ user = null }: NavbarProps) {
               display: "none",
               alignItems: "center",
               justifyContent: "center",
-              background:
-                "linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.2))",
-              border: "1px solid rgba(0, 212, 255, 0.4)",
+              background: isLight
+                ? "linear-gradient(135deg, rgba(33, 128, 141, 0.15), rgba(19, 52, 59, 0.1))"
+                : "linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.2))",
+              border: isLight ? "1px solid rgba(33, 128, 141, 0.4)" : "1px solid rgba(0, 212, 255, 0.4)",
               borderRadius: "10px",
-              color: "#00d4ff",
+              color: accentColor,
               cursor: "pointer",
               padding: "10px",
               zIndex: 1000,
-              boxShadow: "0 4px 15px rgba(0, 212, 255, 0.3)",
+              boxShadow: isLight ? "0 4px 15px rgba(33, 128, 141, 0.2)" : "0 4px 15px rgba(0, 212, 255, 0.3)",
               backdropFilter: "blur(10px)",
               WebkitBackdropFilter: "blur(10px)",
             }}
@@ -971,10 +1046,10 @@ export default function Navbar({ user = null }: NavbarProps) {
           <div
             className="mobile-menu-enter"
             style={{
-              backgroundColor: "rgba(0, 0, 0, 0.95)",
+              backgroundColor: mobileMenuBg,
               backdropFilter: "blur(25px)",
               WebkitBackdropFilter: "blur(25px)",
-              borderTop: "1px solid rgba(0, 212, 255, 0.3)",
+              borderTop: mobileMenuBorder,
               maxHeight: "calc(100vh - 70px)",
               overflowY: "auto",
             }}
@@ -991,17 +1066,17 @@ export default function Navbar({ user = null }: NavbarProps) {
                 <div
                   style={{
                     padding: "14px 18px",
-                    background: "rgba(0, 212, 255, 0.1)",
+                    background: isLight ? "rgba(33, 128, 141, 0.08)" : "rgba(0, 212, 255, 0.1)",
                     borderRadius: "12px",
                     marginBottom: "16px",
-                    border: "1px solid rgba(0, 212, 255, 0.3)",
+                    border: isLight ? "1px solid rgba(33, 128, 141, 0.3)" : "1px solid rgba(0, 212, 255, 0.3)",
                   }}
                 >
                   <p
                     style={{
                       fontSize: "16px",
                       fontWeight: 700,
-                      color: "#00d4ff",
+                      color: accentColor,
                       marginBottom: "4px",
                       fontFamily: '"Nunito Sans", sans-serif',
                     }}
@@ -1011,7 +1086,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                   <p
                     style={{
                       fontSize: "13px",
-                      color: "#9ca3af",
+                      color: isLight ? "#62697a" : "#9ca3af",
                       fontFamily: '"Nunito Sans", sans-serif',
                     }}
                   >
@@ -1031,7 +1106,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                       padding: "14px 18px",
                       borderRadius: "12px",
                       textDecoration: "none",
-                      color: "white",
+                      color: pathname === link.href ? accentColor : textColor,
                       fontSize: "16px",
                       fontFamily: '"Nunito Sans", sans-serif',
                       fontWeight: 600,
@@ -1039,15 +1114,17 @@ export default function Navbar({ user = null }: NavbarProps) {
                       display: "block",
                       background:
                         pathname === link.href
-                          ? "linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.15))"
+                          ? isLight
+                            ? "linear-gradient(135deg, rgba(33, 128, 141, 0.12), rgba(19, 52, 59, 0.08))"
+                            : "linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.15))"
                           : "transparent",
                       border:
                         pathname === link.href
-                          ? "1px solid rgba(0, 212, 255, 0.5)"
+                          ? isLight ? "1px solid rgba(33, 128, 141, 0.4)" : "1px solid rgba(0, 212, 255, 0.5)"
                           : "1px solid transparent",
                       boxShadow:
                         pathname === link.href
-                          ? "0 4px 15px rgba(0, 212, 255, 0.3)"
+                          ? isLight ? "0 4px 15px rgba(33, 128, 141, 0.15)" : "0 4px 15px rgba(0, 212, 255, 0.3)"
                           : "none",
                     }}
                   >
@@ -1065,9 +1142,9 @@ export default function Navbar({ user = null }: NavbarProps) {
                       width: "100%",
                       padding: "14px 18px",
                       background: "transparent",
-                      border: "1px solid rgba(0, 212, 255, 0.3)",
+                      border: isLight ? "1px solid rgba(33, 128, 141, 0.3)" : "1px solid rgba(0, 212, 255, 0.3)",
                       borderRadius: "12px",
-                      color: "#00d4ff",
+                      color: accentColor,
                       fontSize: "16px",
                       fontWeight: 700,
                       fontFamily: '"Nunito Sans", sans-serif',
@@ -1111,7 +1188,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                               padding: "12px 18px 12px 32px",
                               borderRadius: "12px",
                               textDecoration: "none",
-                              color: "white",
+                              color: pathname === link.href ? accentColor : textColor,
                               fontSize: "15px",
                               fontFamily: '"Nunito Sans", sans-serif',
                               fontWeight: 600,
@@ -1121,11 +1198,13 @@ export default function Navbar({ user = null }: NavbarProps) {
                               gap: "10px",
                               background:
                                 pathname === link.href
-                                  ? "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.1))"
+                                  ? isLight
+                                    ? "linear-gradient(135deg, rgba(33, 128, 141, 0.12), rgba(19, 52, 59, 0.08))"
+                                    : "linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.1))"
                                   : "transparent",
                               border:
                                 pathname === link.href
-                                  ? "1px solid rgba(0, 212, 255, 0.4)"
+                                  ? isLight ? "1px solid rgba(33, 128, 141, 0.4)" : "1px solid rgba(0, 212, 255, 0.4)"
                                   : "1px solid transparent",
                               marginBottom: "4px",
                             }}
@@ -1152,9 +1231,9 @@ export default function Navbar({ user = null }: NavbarProps) {
                       width: "100%",
                       padding: "14px 18px",
                       background: "transparent",
-                      border: "1px solid rgba(124, 58, 237, 0.3)",
+                      border: isLight ? "1px solid rgba(33, 128, 141, 0.3)" : "1px solid rgba(124, 58, 237, 0.3)",
                       borderRadius: "12px",
-                      color: "#a855f7",
+                      color: isLight ? accentColor : "#a855f7",
                       fontSize: "16px",
                       fontWeight: 700,
                       fontFamily: '"Nunito Sans", sans-serif',
@@ -1199,7 +1278,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                               padding: "14px 18px",
                               borderRadius: "12px",
                               textDecoration: "none",
-                              color: "white",
+                              color: textColor,
                               fontSize: "14px",
                               transition:
                                 "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -1208,14 +1287,12 @@ export default function Navbar({ user = null }: NavbarProps) {
                               border: "1px solid transparent",
                             }}
                             onMouseEnter={(e) => {
-                              e.currentTarget.style.background =
-                                "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
-                              e.currentTarget.style.transform =
-                                "translateX(6px)";
-                              e.currentTarget.style.borderColor =
-                                "rgba(0, 212, 255, 0.4)";
-                              e.currentTarget.style.boxShadow =
-                                "0 0 15px rgba(0, 212, 255, 0.3)";
+                              e.currentTarget.style.background = isLight
+                                ? "linear-gradient(135deg, rgba(33, 128, 141, 0.1), rgba(19, 52, 59, 0.06))"
+                                : "linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(124, 58, 237, 0.08))";
+                              e.currentTarget.style.transform = "translateX(6px)";
+                              e.currentTarget.style.borderColor = isLight ? "rgba(33, 128, 141, 0.4)" : "rgba(0, 212, 255, 0.4)";
+                              e.currentTarget.style.boxShadow = isLight ? "0 0 15px rgba(33, 128, 141, 0.2)" : "0 0 15px rgba(0, 212, 255, 0.3)";
                             }}
                             onMouseLeave={(e) => {
                               e.currentTarget.style.background = "transparent";
@@ -1229,17 +1306,16 @@ export default function Navbar({ user = null }: NavbarProps) {
                                 width: "34px",
                                 height: "34px",
                                 borderRadius: "50%",
-                                border: "2px solid rgba(255, 255, 255, 0.4)",
+                                border: isLight ? "2px solid rgba(33, 128, 141, 0.4)" : "2px solid rgba(255, 255, 255, 0.4)",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
-                                background: "rgba(255, 255, 255, 0.05)",
+                                background: isLight ? "rgba(33, 128, 141, 0.08)" : "rgba(255, 255, 255, 0.05)",
                                 transition: "all 0.3s ease",
                               }}
                             >
-                              {/* For Material-UI Icons (LinkedIn, Instagram, X) */}
                               <IconComponent
-                                sx={{ color: "#ffffff", fontSize: "20px" }}
+                                sx={{ color: isLight ? "#21808d" : "#ffffff", fontSize: "20px" }}
                               />
                             </div>
                             <span>{social.name}</span>
@@ -1272,9 +1348,9 @@ export default function Navbar({ user = null }: NavbarProps) {
                           fontSize: "16px",
                           fontWeight: 700,
                           borderRadius: "12px",
-                          border: "2px solid rgba(0, 212, 255, 0.5)",
+                          border: isLight ? "2px solid rgba(33, 128, 141, 0.6)" : "2px solid rgba(0, 212, 255, 0.5)",
                           background: "transparent",
-                          color: "#00d4ff",
+                          color: accentColor,
                           cursor: "pointer",
                           display: "flex",
                           alignItems: "center",
@@ -1328,7 +1404,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                         padding: "14px 18px",
                         borderRadius: "12px",
                         textDecoration: "none",
-                        color: "white",
+                        color: pathname === "/dashboard" ? accentColor : textColor,
                         fontSize: "16px",
                         fontFamily: '"Nunito Sans", sans-serif',
                         fontWeight: 600,
@@ -1337,12 +1413,14 @@ export default function Navbar({ user = null }: NavbarProps) {
                         gap: "12px",
                         background:
                           pathname === "/dashboard"
-                            ? "linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.15))"
+                            ? isLight
+                              ? "linear-gradient(135deg, rgba(33, 128, 141, 0.12), rgba(19, 52, 59, 0.08))"
+                              : "linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.15))"
                             : "transparent",
                         border:
                           pathname === "/dashboard"
-                            ? "1px solid rgba(0, 212, 255, 0.5)"
-                            : "1px solid rgba(0, 212, 255, 0.3)",
+                            ? isLight ? "1px solid rgba(33, 128, 141, 0.4)" : "1px solid rgba(0, 212, 255, 0.5)"
+                            : isLight ? "1px solid rgba(33, 128, 141, 0.2)" : "1px solid rgba(0, 212, 255, 0.3)",
                         marginTop: "16px",
                       }}
                     >
@@ -1358,7 +1436,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                         padding: "14px 18px",
                         borderRadius: "12px",
                         textDecoration: "none",
-                        color: "white",
+                        color: pathname === "/dashboard/settings" ? accentColor : textColor,
                         fontSize: "16px",
                         fontFamily: '"Nunito Sans", sans-serif',
                         fontWeight: 600,
@@ -1367,9 +1445,11 @@ export default function Navbar({ user = null }: NavbarProps) {
                         gap: "12px",
                         background:
                           pathname === "/dashboard/settings"
-                            ? "linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.15))"
+                            ? isLight
+                              ? "linear-gradient(135deg, rgba(33, 128, 141, 0.12), rgba(19, 52, 59, 0.08))"
+                              : "linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.15))"
                             : "transparent",
-                        border: "1px solid rgba(168, 85, 247, 0.3)",
+                        border: isLight ? "1px solid rgba(33, 128, 141, 0.2)" : "1px solid rgba(168, 85, 247, 0.3)",
                       }}
                     >
                       <Settings style={{ width: "20px", height: "20px" }} />

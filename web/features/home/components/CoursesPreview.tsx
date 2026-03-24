@@ -9,9 +9,12 @@ import { GlowingCard } from '@/components/ui/animated-cards';
 import CourseDetailsModal from '@/features/courses/components/CourseDetailsModal';
 import { AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useTheme } from "@/lib/ThemeContext";
 
 
 export default function CoursesPreview() {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const featuredCourses = getFeaturedCourses();
   const allCourses = getAllCourses();
   const courseSectionRef = useRef<HTMLElement>(null);
@@ -83,7 +86,7 @@ export default function CoursesPreview() {
           >
             Featured Courses
           </h2>
-          <p style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: '#9ca3af', fontFamily: 'var(--font-nunito)' }}>
+          <p style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: isLight ? 'rgba(98,108,113,0.9)' : '#9ca3af', fontFamily: 'var(--font-nunito)' }}>
             Start your cybersecurity journey with expert-led training
           </p>
         </motion.div>
@@ -149,7 +152,7 @@ export default function CoursesPreview() {
                       <GlowingCard glowColor="#22d3ee">
                         <div style={{
                           padding: 'clamp(20px, 4vw, 28px)',
-                          backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                          backgroundColor: isLight ? 'rgba(235,236,237,0.9)' : 'rgba(17, 24, 39, 0.95)',
                           borderRadius: '20px',
                           minHeight: 'clamp(350px, 55vh, 400px)',
                           display: 'flex',
@@ -221,8 +224,8 @@ export default function CoursesPreview() {
                           <h3 style={{ 
                             fontSize: 'clamp(20px, 4vw, 24px)', 
                             fontWeight: 700, 
-                            color: 'white', 
-                            marginBottom: '10px', 
+                            color: isLight ? '#13343b' : 'white',
+                            marginBottom: '10px',
                             fontFamily: 'var(--font-nunito)',
                             lineHeight: 1.25,
                             position: 'relative',
@@ -233,9 +236,9 @@ export default function CoursesPreview() {
 
                           <p style={{ 
                             fontSize: 'clamp(12px, 2vw, 13px)', 
-                            color: '#d1d5db', 
-                            lineHeight: 1.5, 
-                            marginBottom: '16px', 
+                            color: isLight ? '#4a5568' : '#d1d5db',
+                            lineHeight: 1.5,
+                            marginBottom: '16px',
                             fontFamily: 'var(--font-nunito)', 
                             flex: 1,
                             position: 'relative',
@@ -356,7 +359,7 @@ export default function CoursesPreview() {
                   borderRadius: '7px',
                   background: courseIndex === i 
                     ? 'linear-gradient(135deg, #22d3ee, #a855f7)'
-                    : 'rgba(255, 255, 255, 0.25)',
+                    : isLight ? 'rgba(33,128,141,0.25)' : 'rgba(255, 255, 255, 0.25)',
                   cursor: 'pointer',
                   boxShadow: courseIndex === i ? '0 0 25px rgba(34, 211, 238, 0.5)' : 'none',
                 }}

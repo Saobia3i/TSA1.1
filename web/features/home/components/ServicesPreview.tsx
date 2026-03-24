@@ -5,8 +5,11 @@ import Link from 'next/link';
 import { useRef, useState, useEffect } from 'react';
 import { getAllServices } from '@/features/services/data/services';
 import { GlowingCard } from '@/components/ui/animated-cards';
+import { useTheme } from "@/lib/ThemeContext";
 
 export default function ServicesPreview() {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const featuredServices = getAllServices().slice(0, 6);
   const serviceSectionRef = useRef<HTMLElement>(null);
   const [serviceIndex, setServiceIndex] = useState(0);
@@ -35,7 +38,7 @@ export default function ServicesPreview() {
       ref={serviceSectionRef}
       style={{ 
         padding: 'clamp(36px, 6vw, 60px) clamp(14px, 4vw, 24px)',
-        backgroundColor: 'rgba(17, 24, 39, 0.3)',
+        backgroundColor: isLight ? 'rgba(235,236,237,0.4)' : 'rgba(17, 24, 39, 0.3)',
         position: 'relative',
       }}
     >
@@ -97,7 +100,7 @@ export default function ServicesPreview() {
         >
           Our Services
         </h2>
-        <p style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: '#9ca3af', fontFamily: 'var(--font-nunito)' }}>
+        <p style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: isLight ? 'rgba(98,108,113,0.9)' : '#9ca3af', fontFamily: 'var(--font-nunito)' }}>
           Professional cybersecurity and tech solutions
         </p>
       </motion.div>
@@ -114,8 +117,9 @@ export default function ServicesPreview() {
               height: '100%',
               boxSizing: 'border-box',
               border: '1px solid rgba(34, 211, 238, 0.22)',
-              background:
-                'radial-gradient(circle at 10% 0%, rgba(34, 211, 238, 0.12), transparent 45%), radial-gradient(circle at 90% 100%, rgba(168, 85, 247, 0.12), transparent 40%), rgba(2, 6, 23, 0.82)',
+              background: isLight
+                ? 'radial-gradient(circle at 10% 0%, rgba(34, 211, 238, 0.12), transparent 45%), radial-gradient(circle at 90% 100%, rgba(168, 85, 247, 0.12), transparent 40%), rgba(235,236,237,0.9)'
+                : 'radial-gradient(circle at 10% 0%, rgba(34, 211, 238, 0.12), transparent 45%), radial-gradient(circle at 90% 100%, rgba(168, 85, 247, 0.12), transparent 40%), rgba(2, 6, 23, 0.82)',
               boxShadow:
                 '0 16px 48px rgba(2, 6, 23, 0.55), inset 0 1px 0 rgba(255,255,255,0.06)',
               overflow: 'hidden',
@@ -180,7 +184,7 @@ export default function ServicesPreview() {
                   <h3 className="service-card-title" style={{
                     fontSize: 'clamp(17px, 3.2vw, 24px)',
                     fontWeight: 700,
-                    color: 'white',
+                    color: isLight ? '#13343b' : 'white',
                     fontFamily: 'var(--font-nunito)',
                     lineHeight: 1.25,
                     flexShrink: 0,
@@ -202,7 +206,7 @@ export default function ServicesPreview() {
                   }}>
                     <p className="service-card-desc" style={{
                       fontSize: 'clamp(12px, 1.55vw, 15px)',
-                      color: '#d1d5db',
+                      color: isLight ? '#4a5568' : '#d1d5db',
                       lineHeight: 1.6,
                       fontFamily: 'var(--font-nunito)',
                       maxWidth: '520px',
@@ -264,7 +268,7 @@ export default function ServicesPreview() {
                 border: 'none',
                 background: serviceIndex === i 
                   ? 'linear-gradient(135deg, #22d3ee, #a855f7)'
-                  : 'rgba(255, 255, 255, 0.25)',
+                  : isLight ? 'rgba(33,128,141,0.25)' : 'rgba(255, 255, 255, 0.25)',
                 cursor: 'pointer',
                 boxShadow: serviceIndex === i ? '0 0 20px rgba(34, 211, 238, 0.5)' : 'none',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -281,7 +285,7 @@ export default function ServicesPreview() {
             animate={{ opacity: 1 }}
             style={{
               fontSize: '12px',
-              color: '#9ca3af',
+              color: isLight ? 'rgba(98,108,113,0.9)' : '#9ca3af',
               textAlign: 'center' as const,
               marginTop: '20px',
               fontFamily: 'var(--font-nunito)',

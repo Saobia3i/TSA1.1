@@ -29,7 +29,7 @@ const ToolsPreview = dynamic(() => import("@/features/home/components/ToolsPrevi
   ssr: false
 });
 
-import Consultantpreview from "@/features/home/components/Consultantpreview";
+import Consultantpreview from "@/features/home/components/ConsultantPreview";
 //import { Metadata } from 'next'
 
 // export const metadata: Metadata = {

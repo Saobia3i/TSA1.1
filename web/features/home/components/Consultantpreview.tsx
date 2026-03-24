@@ -6,8 +6,11 @@ import { ArrowRight, Award, Globe, Shield, Briefcase, Target } from 'lucide-reac
 import { useRef, useState, useEffect } from 'react';
 import { getFeaturedConsultants } from '@/features/consultant/Consultantdata';
 import Image from 'next/image';
+import { useTheme } from "@/lib/ThemeContext";
 
 export default function ConsultantPreview() {
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const consultant = getFeaturedConsultants()[0]; // Get the featured consultant
   const [isMobile, setIsMobile] = useState(false);
 
@@ -106,9 +109,9 @@ export default function ConsultantPreview() {
           >
             Meet Our Senior Consultant
           </h2>
-          <p style={{ 
-            fontSize: 'clamp(16px, 2.5vw, 18px)', 
-            color: '#9ca3af',
+          <p style={{
+            fontSize: 'clamp(16px, 2.5vw, 18px)',
+            color: isLight ? 'rgba(98,108,113,0.9)' : '#9ca3af',
             maxWidth: '700px',
             margin: '0 auto',
             lineHeight: 1.6,
@@ -135,7 +138,9 @@ export default function ConsultantPreview() {
             whileHover={{ y: -8 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
             style={{
-              background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.98), rgba(17, 24, 39, 0.95))',
+              background: isLight
+              ? 'linear-gradient(135deg, rgba(235,236,237,0.95), rgba(240,241,242,0.9))'
+              : 'linear-gradient(135deg, rgba(17, 24, 39, 0.98), rgba(17, 24, 39, 0.95))',
               borderRadius: 'clamp(18px, 4vw, 30px)',
               overflow: 'hidden',
               border: '2px solid rgba(34, 211, 238, 0.2)',
@@ -265,14 +270,14 @@ export default function ConsultantPreview() {
                       <div style={{
                         fontSize: 'clamp(13px, 3vw, 16px)',
                         fontWeight: 700,
-                        color: 'white',
+                        color: isLight ? '#13343b' : 'white',
                         fontFamily: 'var(--font-nunito)',
                       }}>
                         {stat.label}
                       </div>
                       <div style={{
                         fontSize: 'clamp(10px, 2.2vw, 11px)',
-                        color: '#9ca3af',
+                        color: isLight ? 'rgba(98,108,113,0.9)' : '#9ca3af',
                         fontFamily: 'var(--font-nunito)',
                       }}>
                         {stat.sublabel}
@@ -299,7 +304,7 @@ export default function ConsultantPreview() {
                     style={{
                       fontSize: 'clamp(22px, 6vw, 36px)',
                       fontWeight: 800,
-                      color: 'white',
+                      color: isLight ? '#13343b' : 'white',
                       marginBottom: '8px',
                       fontFamily: 'var(--font-nunito)',
                       lineHeight: 1.2,
@@ -330,7 +335,7 @@ export default function ConsultantPreview() {
                     transition={isMobile ? { duration: 0.25, delay: 0.1 } : { delay: 0.4 }}
                     style={{
                       fontSize: 'clamp(13px, 2vw, 14px)',
-                      color: '#9ca3af',
+                      color: isLight ? 'rgba(98,108,113,0.9)' : '#9ca3af',
                       fontFamily: 'var(--font-nunito)',
                       overflowWrap: 'anywhere',
                     }}
@@ -347,7 +352,7 @@ export default function ConsultantPreview() {
                   transition={isMobile ? { duration: 0.25, delay: 0.15 } : { delay: 0.45 }}
                   style={{
                     fontSize: 'clamp(14px, 2.5vw, 16px)',
-                    color: '#d1d5db',
+                    color: isLight ? '#4a5568' : '#d1d5db',
                     lineHeight: 1.7,
                     fontFamily: 'var(--font-nunito)',
                   }}
@@ -395,7 +400,7 @@ export default function ConsultantPreview() {
                         }} />
                         <span style={{
                           fontSize: 'clamp(13px, 2vw, 14px)',
-                          color: '#e5e7eb',
+                          color: isLight ? '#374151' : '#e5e7eb',
                           lineHeight: 1.6,
                           fontFamily: 'var(--font-nunito)',
                           overflowWrap: 'anywhere',

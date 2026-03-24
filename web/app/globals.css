@@ -1,44 +1,224 @@
 /* Fonts loaded via next/font in layout.tsx — no render blocking */
 @import "tailwindcss";
 
+/* ============================================================
+   DESIGN SYSTEM — COLOR REFERENCE GUIDE
+   ============================================================
+
+   HOW THEMING WORKS:
+   - Dark mode is DEFAULT (no data-theme attribute needed)
+   - Light mode activates when <html data-theme="light">
+   - Navbar.tsx reads useTheme() and applies isLight conditionally
+     because it uses inline styles — so Navbar colors are in Navbar.tsx
+   - Any NEW page/component you build:
+       → Use CSS variables below (e.g. var(--color-background))
+         and light mode changes automatically from [data-theme="light"]
+       → OR use inline styles + useTheme() like Navbar does
+
+   ============================================================
+   DARK MODE COLOR PALETTE (what every existing component uses)
+   ============================================================
+
+   ── PAGE / BODY ──────────────────────────────────────────────
+   Page background:       #000000  (body bg, see body::before)
+   Background glow:       radial-gradient purples/blues (body::after)
+   StarfieldBackground:   linear-gradient(#0a0118 → #1a0b2e → #16213e)
+   CSSAuroraBackground:   linear-gradient(#0f172a → #1e293b → #111827)
+
+   ── CARDS / SURFACES ─────────────────────────────────────────
+   Card background:       rgba(17, 24, 39, 0.7–0.98)   [#111827 = Tailwind gray-900]
+   Card background alt:   rgba(2, 6, 23, 0.82)
+   EnrollmentForm card:   rgba(38, 40, 40, 0.8) → rgba(17, 24, 39, 0.98)
+   Footer background:     #111827
+   Login/Signup card:     rgba(0, 0, 0, 0.85)
+   Modal overlay:         rgba(0, 0, 0, 0.9) + blur(10px)
+
+   ── CARD BORDERS ─────────────────────────────────────────────
+   Default card border:   rgba(255, 255, 255, 0.15)
+   Pinned news border:    rgba(34, 211, 238, 0.95)       [bright cyan]
+   Normal news border:    rgba(255, 255, 255, 0.25)
+   Highlighted border:    rgba(34, 211, 238, 0.6)        [cyan glow]
+   Login card border:     rgba(0, 212, 255, 0.3)
+   Signup card border:    rgba(236, 72, 153, 0.3)        [pink]
+   EnrollmentForm border: rgba(50, 184, 198, 0.2)        [teal]
+   Footer top border:     rgba(34, 211, 238, 0.3)
+
+   ── PRIMARY ACCENT (Cyan) ────────────────────────────────────
+   Cyan bright:           #22d3ee   ← used EVERYWHERE as primary accent
+   Cyan alt:              #06b6d4   ← darker cyan variant
+   Cyan brightest:        #00d4ff   ← login/navbar glow
+   Cyan light:            #38bdf8   ← hero section highlights
+   Cyan soft:             #7dd3fc   ← stripe animation, soft highlights
+   Teal (enrollment):     #32B8C6   ← EnrollmentForm, form buttons
+
+   Used in: ServiceCard icon, Footer headings, nav dots (active),
+            ServicesPreview icon, ConsultantPreview badge,
+            GlowingCard glow default, ToolsPreview card color,
+            NewsCard pinned border, PackageCard check icon
+
+   ── SECONDARY ACCENT (Purple / Pink) ────────────────────────
+   Purple main:           #a855f7   ← gradient pair with cyan
+   Purple medium:         #8b5cf6
+   Purple dark:           #7c3aed
+   Purple light:          #c084fc
+   Pink/Magenta:          #ec4899   ← Signup page, badge trending
+   Pink light:            #f472b6
+   Dark teal (btn text):  #13343B   ← text on teal buttons
+
+   Primary gradient:   linear-gradient(135deg, #22d3ee, #a855f7)
+   Used in: page titles, buttons, nav active dots, badges,
+            CoursesPage accent line, ServicesPage accent line
+
+   ── ORANGE / WARNING ─────────────────────────────────────────
+   Orange:                #f97316   ← HeroSection icon, expansion count
+   Red (error):           #ef4444   ← error states, logout button
+   Red dark:              #dc2626   ← error input border
+
+   ── STATUS / UTILITY COLORS ──────────────────────────────────
+   Success green:         #22c55e   ← active status badge, WhatsApp btn
+   WhatsApp green:        #25D366   ← WhatsApp chat bubble button
+   Google blue-green:     #34A853   ← Google OAuth button
+
+   ── TEXT COLORS ──────────────────────────────────────────────
+   Primary text:          #ffffff   ← all main text on dark bg
+   Secondary text:        #9ca3af   ← muted text, email, subtitles
+   Light gray text:       #e5e7eb
+   Medium gray:           #d1d5db
+   Placeholder:           #6b7280
+
+   ── STAR RATING ──────────────────────────────────────────────
+   Star gradient:         linear-gradient(135deg, #fbbf24, #ff6366)
+
+   ── BADGE VARIANTS (CoursesPreview) ──────────────────────────
+   Trending badge:        linear-gradient(135deg, #ec4899, #f97316)
+   Coming Soon badge:     linear-gradient(135deg, #8b5cf6, #6366f1)
+   Default badge:         linear-gradient(135deg, #06b6d4, #a855f7)
+
+   ── COURSE CARDS (CourseCard.tsx) ────────────────────────────
+   Each course has a `course.color` prop (hex). Used as:
+   Border:                ${course.color}40   (40% opacity)
+   Icon bg:               linear-gradient(${course.color}40, ${course.color}20)
+   Badge bg:              ${course.color}30
+   Badge border:          ${course.color}60
+
+   ── TOOLS PREVIEW (ToolsPreview.tsx) ─────────────────────────
+   Tool card colors array: #ec4899, #a855f7, #22d3ee, #ef4444
+   Card bg:               rgba(17, 24, 39, 0.5)
+   Hover border/shadow:   uses tool.color
+
+   ── NEBULA / STAR COLORS (StarfieldBackground) ───────────────
+   Stars:    purple rgba(147,51,234), blue rgba(59,130,246),
+             pink rgba(236,72,153), white rgba(255,255,255),
+             slate rgba(203,213,225)
+   Nebula:   purple 0.4, blue 0.35, pink 0.3 opacity
+   Glitter:  linear-gradient(#22d3ee, #a855f7, #ec4899)
+
+   ============================================================
+   LIGHT MODE OVERRIDES
+   ============================================================
+
+   STRATEGY:
+   - Page background → warm white/cream (not stark white)
+   - Cards → light gray/white with subtle border
+   - Text → dark teal / near-black (readable, not pure black)
+   - Primary accent stays cyan/teal (just darker shade for contrast)
+   - Gradients (cyan→purple titles, badges) stay the same — they work on both themes
+   - Glows reduced — too harsh on light bg
+   - Dark page-specific backgrounds (login, signup, starfield) stay dark
+     because those are intentional full-dark experiences
+
+   WHEN BUILDING NEW PAGES:
+   Use these CSS variables and light mode just works:
+     --color-background   → page/body background
+     --color-surface      → card background
+     --color-surface-alt  → alternative card (slightly different shade)
+     --color-text         → primary text
+     --color-text-muted   → secondary/muted text
+     --color-primary      → cyan accent (buttons, icons, links)
+     --color-primary-hover
+     --color-border       → card/input borders
+     --color-card-glow    → glow shadow color for cards
+     --color-section-bg   → section divider backgrounds
+
+   ============================================================ */
+
 :root {
-  /* Font family */
+  /* ── Font ─────────────────────────────────────────────────── */
   --font-nunito: 'Nunito Sans', system-ui, -apple-system, sans-serif;
-  
-  /* Primitive Color Tokens */
+  --font-family-base: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* ── Primitive Color Tokens ──────────────────────────────── */
   --color-white: rgba(255, 255, 255, 1);
   --color-black: rgba(0, 0, 0, 1);
-  --color-cream-50: rgba(252, 252, 249, 1);
-  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);      /* light mode page bg */
+  --color-cream-100: rgba(245, 244, 240, 1);     /* light mode section bg */
+  --color-gray-200: rgba(235, 236, 237, 1);      /* light mode card bg */
   --color-gray-300: rgba(167, 169, 169, 1);
   --color-gray-400: rgba(119, 124, 124, 1);
   --color-slate-500: rgba(98, 108, 113, 1);
-  --color-slate-900: rgba(19, 52, 59, 1);
-  --color-charcoal-700: rgba(31, 33, 33, 1);
-  --color-charcoal-800: rgba(38, 40, 40, 1);
-  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);        /* dark teal — text on light */
+  --color-charcoal-700: rgba(31, 33, 33, 1);     /* dark mode surface */
+  --color-charcoal-800: rgba(38, 40, 40, 1);     /* dark mode surface alt */
+  --color-teal-300: rgba(50, 184, 198, 1);       /* dark mode primary accent */
   --color-teal-400: rgba(45, 166, 178, 1);
-  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);       /* light mode primary accent */
   --color-teal-600: rgba(29, 116, 128, 1);
 
-  /* RGB versions for opacity control */
+  /* RGB versions for rgba() composition */
   --color-teal-500-rgb: 33, 128, 141;
   --color-teal-300-rgb: 50, 184, 198;
   --color-slate-900-rgb: 19, 52, 59;
 
-  /* Semantic Color Tokens (Dark Mode - Default) */
+  /* ── DARK MODE Semantic Tokens (DEFAULT) ─────────────────────
+     These apply unless [data-theme="light"] overrides them.
+     ─────────────────────────────────────────────────────────── */
+
+  /* Page / body background — dark mode: pure black (body uses #000 directly) */
   --color-background: var(--color-charcoal-700);
+
+  /* Card / surface background — dark mode: rgba(17, 24, 39, 0.7–0.98) */
   --color-surface: var(--color-charcoal-800);
+
+  /* Alternative surface (slightly lighter card) */
+  --color-surface-alt: rgba(17, 24, 39, 0.6);
+
+  /* Section background (between sections, subtle separator) */
+  --color-section-bg: rgba(17, 24, 39, 0.2);
+
+  /* Primary text — dark mode: near-white #f5f5f5 */
   --color-text: var(--color-gray-200);
+
+  /* Secondary / muted text — dark mode: #9ca3af */
+  --color-text-muted: rgba(156, 163, 175, 1);
+
+  /* Secondary text (existing alias) */
   --color-text-secondary: rgba(167, 169, 169, 0.7);
+
+  /* Primary accent — dark mode: bright cyan #32b8c6 */
   --color-primary: var(--color-teal-300);
   --color-primary-hover: var(--color-teal-400);
   --color-primary-active: var(--color-teal-500);
+
+  /* Card / input border — dark mode: rgba(255,255,255,0.15) */
   --color-border: rgba(119, 124, 124, 0.3);
+  --color-border-card: rgba(255, 255, 255, 0.15);
+
+  /* Accent border (highlighted cards, pinned items) */
+  --color-border-accent: rgba(34, 211, 238, 0.6);
+
+  /* Card glow shadow — dark mode: cyan glow */
+  --color-card-glow: rgba(34, 211, 238, 0.15);
+
+  /* Button primary text */
   --color-btn-primary-text: var(--color-slate-900);
 
-  /* Typography */
-  --font-family-base: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Footer background — stays dark always */
+  --color-footer-bg: #111827;
+  --color-footer-border: rgba(34, 211, 238, 0.3);
+  --color-footer-text: #ffffff;
+  --color-footer-heading: #22d3ee;
+
+  /* ── Typography Scale ────────────────────────────────────── */
   --font-size-xs: 11px;
   --font-size-sm: 12px;
   --font-size-base: 14px;
@@ -56,7 +236,7 @@
   --line-height-normal: 1.5;
   --letter-spacing-tight: -0.01em;
 
-  /* Spacing */
+  /* ── Spacing ─────────────────────────────────────────────── */
   --space-0: 0;
   --space-1: 1px;
   --space-2: 2px;
@@ -70,31 +250,131 @@
   --space-24: 24px;
   --space-32: 32px;
 
-  /* Border Radius */
+  /* ── Border Radius ───────────────────────────────────────── */
   --radius-sm: 6px;
   --radius-base: 8px;
   --radius-md: 10px;
   --radius-lg: 12px;
   --radius-full: 9999px;
 
-  /* Shadows */
+  /* ── Shadows ─────────────────────────────────────────────── */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
   --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
-  /* Animation */
+  /* ── Animation ───────────────────────────────────────────── */
   --duration-fast: 150ms;
   --duration-normal: 250ms;
   --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Navbar */
+  /* ── Layout ──────────────────────────────────────────────── */
   --navbar-height: 70px;
 
-  /* Focus */
+  /* ── Focus ───────────────────────────────────────────────── */
   --focus-ring: 0 0 0 3px rgba(34, 117, 195, 0.4);
   --focus-outline: 2px solid var(--color-primary);
+}
+
+/* ============================================================
+   LIGHT MODE — [data-theme="light"]
+   ============================================================
+
+   These override only the semantic tokens above.
+   Hardcoded colors in existing components (cyan gradients,
+   badges, course colors, star colors, etc.) are NOT touched —
+   they look fine on light bg. Only backgrounds, card surfaces,
+   text, and borders are adjusted for readability.
+
+   DARK MODE colors (unchanged, for reference):
+     body bg:         #000000
+     card bg:         rgba(17, 24, 39, 0.7~0.98)
+     text:            #f5f5f5 (white)
+     muted text:      #9ca3af
+     primary accent:  #32b8c6 (teal-300 bright)
+     border card:     rgba(255, 255, 255, 0.15)
+     card glow:       rgba(34, 211, 238, 0.15)
+
+   ============================================================ */
+
+[data-theme="light"] {
+  /* Page background → warm cream (not stark white — easier on eyes) */
+  --color-background: var(--color-cream-50);        /* #fcfcf9 */
+
+  /* Card / surface → light gray (clearly separate from page bg) */
+  --color-surface: var(--color-gray-200);           /* #ebeced */
+
+  /* Alternative surface (hover states, nested cards) */
+  --color-surface-alt: rgba(255, 255, 255, 0.8);
+
+  /* Section background (between-section separators) */
+  --color-section-bg: rgba(235, 236, 237, 0.5);
+
+  /* Primary text → dark teal (not pure black — matches brand) */
+  --color-text: var(--color-slate-900);             /* #13343b */
+
+  /* Muted text → medium gray */
+  --color-text-muted: rgba(98, 108, 113, 0.9);     /* slate-500 */
+
+  /* Secondary text alias */
+  --color-text-secondary: rgba(98, 108, 113, 0.85);
+
+  /* Primary accent → darker teal (enough contrast on light bg)
+     Dark mode uses #32b8c6 (light cyan) — on white that's too faint.
+     Light mode uses #21808d (teal-500) — darker, still on-brand. */
+  --color-primary: var(--color-teal-500);           /* #21808d */
+  --color-primary-hover: var(--color-teal-400);     /* #2da6b2 */
+  --color-primary-active: var(--color-teal-600);    /* #1d7480 */
+
+  /* Card border → subtle teal tint (not harsh gray) */
+  --color-border: rgba(33, 128, 141, 0.2);
+  --color-border-card: rgba(33, 128, 141, 0.18);
+
+  /* Accent border (highlighted / active cards) */
+  --color-border-accent: rgba(33, 128, 141, 0.55);
+
+  /* Card glow shadow → teal tint (much softer than dark mode cyan) */
+  --color-card-glow: rgba(33, 128, 141, 0.1);
+
+  /* Button primary text → white (on teal-500 button, white reads fine) */
+  --color-btn-primary-text: var(--color-white);
+
+  /* Footer stays dark always — brand identity */
+  /* --color-footer-bg, --color-footer-border etc. NOT overridden */
+}
+
+/* Light mode — page background */
+[data-theme="light"] body {
+  background: var(--color-cream-50) !important;
+}
+
+[data-theme="light"] body::before {
+  background: var(--color-cream-50) !important;
+}
+
+/* Light mode — ambient background glow (replaces dark purple/blue aura) */
+[data-theme="light"] body::after {
+  background:
+    radial-gradient(circle at 20% 50%, rgba(33, 128, 141, 0.10) 0%, transparent 50%),
+    radial-gradient(circle at 80% 30%, rgba(45, 166, 178, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 60% 70%, rgba(19, 52, 59, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(50, 184, 198, 0.06) 0%, transparent 50%) !important;
+  opacity: 0.7 !important;
+}
+
+/* Light mode — headings use dark text */
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+  color: var(--color-text);
+}
+
+[data-theme="light"] p {
+  color: var(--color-text);
 }
 
 /* ============================================
