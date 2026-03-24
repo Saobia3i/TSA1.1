@@ -2,7 +2,7 @@
 'use client';
 
 import { PackageCard } from '../components/PackageCard';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import type { Service } from '../data/services';
@@ -23,6 +23,27 @@ interface Props {
 export default function ServiceDetailsPage({ service }: Props) {
   const [selectedPackage, setSelectedPackage] = useState<string>("");
   const [showBookingForm, setShowBookingForm] = useState(false);
+  const bookingSectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showBookingForm) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      bookingSectionRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [showBookingForm, selectedPackage]);
+
+  const openBookingForm = (packageName?: string) => {
+    if (packageName) {
+      setSelectedPackage(packageName);
+    }
+    setShowBookingForm(true);
+  };
 
   return (
     <div style={{ 
@@ -167,7 +188,7 @@ export default function ServiceDetailsPage({ service }: Props) {
               key={pkg.name}
               pkg={pkg}
               index={index}
-              onSelect={setSelectedPackage}
+              onSelect={openBookingForm}
             />
           ))}
         </div>
@@ -204,17 +225,19 @@ export default function ServiceDetailsPage({ service }: Props) {
               e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.5)';
               e.currentTarget.style.transform = 'translateY(0)';
             }}
-            onClick={() => setShowBookingForm(true)}
+            onClick={() => openBookingForm()}
           >
             Book an appointment
           </button>
         </div>
 
         {showBookingForm && (
-          <ServiceBooking
-            serviceTitle={service.title}
-            selectedPackage={selectedPackage}
-          />
+          <div ref={bookingSectionRef}>
+            <ServiceBooking
+              serviceTitle={service.title}
+              selectedPackage={selectedPackage}
+            />
+          </div>
         )}
       </div>
     </div>
