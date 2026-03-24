@@ -30,8 +30,29 @@ export default function EnrollmentForm({
   const [success, setSuccess] = useState(false);
   const [countryCode, setCountryCode] = useState('+880');
   const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [countryCodeSearch, setCountryCodeSearch] = useState('');
+  const [countryCodeMenuOpen, setCountryCodeMenuOpen] = useState(false);
   const hasAutoSubmittedRef = useRef(false);
   const pendingStorageKey = useMemo(() => `tsa:pending-enrollment:${courseId}`, [courseId]);
+  const countryCodeFieldRef = useRef<HTMLDivElement>(null);
+
+  const selectedCountryCode = useMemo(
+    () => COUNTRY_CODES.find((option) => option.value === countryCode) ?? COUNTRY_CODES[0],
+    [countryCode]
+  );
+
+  const filteredCountryCodes = useMemo(() => {
+    const query = countryCodeSearch.trim().toLowerCase();
+    if (!query) return COUNTRY_CODES;
+
+    return COUNTRY_CODES.filter((option) => {
+      const normalizedValue = option.value.replace(/-[A-Z]{2}$/, '');
+      return (
+        option.label.toLowerCase().includes(query) ||
+        normalizedValue.toLowerCase().includes(query)
+      );
+    });
+  }, [countryCodeSearch]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -62,6 +83,31 @@ export default function EnrollmentForm({
     setCountryCode(match[1]);
     setWhatsappNumber(match[2]);
   }, [pendingStorageKey, session?.user?.contact]);
+
+  useEffect(() => {
+    setCountryCodeSearch(selectedCountryCode.label);
+  }, [selectedCountryCode]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        countryCodeFieldRef.current &&
+        !countryCodeFieldRef.current.contains(event.target as Node)
+      ) {
+        setCountryCodeMenuOpen(false);
+        setCountryCodeSearch(selectedCountryCode.label);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [selectedCountryCode]);
+
+  useEffect(() => {
+    if (!countryCodeMenuOpen && !countryCodeSearch.trim()) {
+      setCountryCodeSearch(selectedCountryCode.label);
+    }
+  }, [countryCodeMenuOpen, countryCodeSearch, selectedCountryCode]);
 
   const loginCallbackUrl = useMemo(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -254,19 +300,72 @@ export default function EnrollmentForm({
         <div className="whatsapp-grid">
           <div className="field-group field-group-code">
             <label htmlFor="countryCode" className="field-label">Country Code</label>
-            <select
-              id="countryCode"
-              value={countryCode}
-              onChange={(e) => setCountryCode(e.target.value)}
-              className="field-input field-select"
-              required
-            >
-              {COUNTRY_CODES.map((option) => (
-                <option key={`${option.value}-${option.label}`} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="country-code-picker" ref={countryCodeFieldRef}>
+              <div className="country-code-input-wrap">
+                <input
+                  id="countryCode"
+                  type="text"
+                  value={countryCodeSearch}
+                  onChange={(e) => {
+                    setCountryCodeSearch(e.target.value);
+                    setCountryCodeMenuOpen(true);
+                  }}
+                  onFocus={() => {
+                    setCountryCodeMenuOpen(true);
+                    if (countryCodeSearch === selectedCountryCode.label) {
+                      setCountryCodeSearch('');
+                    }
+                  }}
+                  className="field-input country-code-search"
+                  placeholder="Search country or code"
+                  autoComplete="off"
+                  spellCheck={false}
+                  aria-expanded={countryCodeMenuOpen}
+                  aria-haspopup="listbox"
+                />
+                <button
+                  type="button"
+                  className="country-code-toggle"
+                  onClick={() => {
+                    setCountryCodeMenuOpen((prev) => !prev);
+                    if (!countryCodeMenuOpen && countryCodeSearch === selectedCountryCode.label) {
+                      setCountryCodeSearch('');
+                    }
+                  }}
+                  aria-label="Toggle country code options"
+                >
+                  <span className={`country-code-chevron ${countryCodeMenuOpen ? 'country-code-chevron-open' : ''}`}>
+                    ▼
+                  </span>
+                </button>
+              </div>
+
+              {countryCodeMenuOpen && (
+                <div className="country-code-dropdown">
+                  <div className="country-code-options" role="listbox" aria-label="Country code options">
+                    {filteredCountryCodes.length > 0 ? (
+                      filteredCountryCodes.map((option) => (
+                        <button
+                          key={`${option.value}-${option.label}`}
+                          type="button"
+                          className={`country-code-option ${countryCode === option.value ? 'country-code-option-active' : ''}`}
+                          onMouseDown={(event) => {
+                            event.preventDefault();
+                            setCountryCode(option.value);
+                            setCountryCodeSearch(option.label);
+                            setCountryCodeMenuOpen(false);
+                          }}
+                        >
+                          {option.label}
+                        </button>
+                      ))
+                    ) : (
+                      <div className="country-code-empty">No matching country code found.</div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <div className="field-group">
             <label htmlFor="whatsappNumber" className="field-label">WhatsApp Number</label>
@@ -359,13 +458,25 @@ export default function EnrollmentForm({
         .info-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
         .info-row .label { color: rgba(245,245,245,0.6); font-weight: 500; }
         .info-row .value { color: #F5F5F5; font-weight: 600; }
-        .whatsapp-grid { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; margin-bottom: 12px; }
+        .whatsapp-grid { display: grid; grid-template-columns: minmax(190px, 230px) minmax(0, 1fr); gap: 12px; margin-bottom: 12px; }
         .field-group { display: flex; flex-direction: column; gap: 8px; }
         .field-group-code { min-width: 0; }
         .field-label { color: rgba(245,245,245,0.72); font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
         .field-input { width: 100%; border: 1px solid rgba(50,184,198,0.22); border-radius: 10px; background: rgba(19,52,59,0.42); color: #F5F5F5; padding: 13px 14px; font-size: 14px; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
         .field-select { appearance: none; }
         .field-input:focus { border-color: rgba(50,184,198,0.7); box-shadow: 0 0 0 3px rgba(50,184,198,0.12); }
+        .country-code-picker { position: relative; }
+        .country-code-input-wrap { position: relative; }
+        .country-code-search { padding-right: 44px; }
+        .country-code-toggle { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: none; background: transparent; color: rgba(245,245,245,0.72); cursor: pointer; padding: 0; }
+        .country-code-chevron { flex-shrink: 0; font-size: 11px; color: rgba(245,245,245,0.72); transition: transform 0.2s ease; }
+        .country-code-chevron-open { transform: rotate(180deg); }
+        .country-code-dropdown { position: absolute; top: calc(100% + 8px); left: 0; z-index: 30; width: max(100%, 280px); max-width: min(360px, calc(100vw - 48px)); border: 1px solid rgba(50,184,198,0.22); border-radius: 12px; background: rgba(19,52,59,0.96); box-shadow: 0 16px 40px rgba(0,0,0,0.38); backdrop-filter: blur(16px); padding: 10px; overflow: hidden; }
+        .country-code-options { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+        .country-code-option, .country-code-empty { width: 100%; display: block; text-align: left; border-radius: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.4; box-sizing: border-box; }
+        .country-code-option { border: 1px solid transparent; background: transparent; color: rgba(245,245,245,0.86); cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease; white-space: normal; overflow: visible; text-overflow: clip; min-height: 44px; }
+        .country-code-option:hover, .country-code-option-active { background: rgba(50,184,198,0.12); border-color: rgba(50,184,198,0.28); color: #32B8C6; }
+        .country-code-empty { color: rgba(245,245,245,0.55); }
         .field-note { margin: 0 0 16px; color: rgba(245,245,245,0.6); font-size: 12px; line-height: 1.5; }
         .enroll-button { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; background: linear-gradient(135deg,#32B8C6,#21808D); color: #13343B; font-size: 16px; font-weight: 600; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1); position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(50,184,198,0.3), 0 0 0 1px rgba(50,184,198,0.2), inset 0 1px 0 rgba(255,255,255,0.2); }
         .enroll-button::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent); transition: left 0.5s ease; }
@@ -387,6 +498,8 @@ export default function EnrollmentForm({
           .card-title { font-size: 16px; }
           .course-name { font-size: 18px; }
           .whatsapp-grid { grid-template-columns: 1fr; }
+          .country-code-dropdown { width: 100%; max-width: 100%; }
+          .country-code-options { max-height: 220px; }
           .enroll-button { padding: 12px 20px; font-size: 15px; }
           .trust-section { flex-direction: column; gap: 8px; }
         }
