@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { useSession } from "next-auth/react";
-import { COUNTRY_OPTIONS } from "@/lib/countries";
+import { COUNTRY_OPTIONS, findMatchingCountry } from "@/lib/countries";
 import { normalizeInternationalWhatsappNumber } from "@/lib/validators";
 
 interface ServiceBookingProps {
@@ -34,6 +34,20 @@ const BUDGET_OPTIONS = [
   "Prefer to discuss",
 ];
 
+const POPULAR_COUNTRIES = [
+  "Brazil",
+  "United States",
+  "Portugal",
+  "Australia",
+  "Colombia",
+  "Spain",
+  "United Kingdom",
+  "Bangladesh",
+  "Canada",
+  "France",
+  "Germany",
+];
+
 export default function ServiceBooking({
   serviceTitle,
   selectedPackage,
@@ -61,6 +75,20 @@ export default function ServiceBooking({
   });
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [error, setError] = useState("");
+  const [countryError, setCountryError] = useState("");
+  const [countryMenuOpen, setCountryMenuOpen] = useState(false);
+  const countryFieldRef = useRef<HTMLDivElement>(null);
+
+  const filteredCountries = useMemo(() => {
+    const query = form.country.trim().toLowerCase();
+    if (!query) {
+      return COUNTRY_OPTIONS;
+    }
+
+    return COUNTRY_OPTIONS.filter((country) =>
+      country.toLowerCase().includes(query)
+    );
+  }, [form.country]);
 
   const onChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -70,7 +98,29 @@ export default function ServiceBooking({
       setForm((prev) => ({ ...prev, [target.name]: target.checked }));
       return;
     }
+
+    if (target.name === "country") {
+      setCountryError("");
+    }
+
     setForm((prev) => ({ ...prev, [target.name]: target.value }));
+  };
+
+  const normalizeCountrySelection = (value: string) => {
+    const matchedCountry = findMatchingCountry(value);
+    if (!value.trim()) {
+      setCountryError("");
+      setForm((prev) => ({ ...prev, country: "" }));
+      return;
+    }
+
+    if (matchedCountry) {
+      setCountryError("");
+      setForm((prev) => ({ ...prev, country: matchedCountry }));
+      return;
+    }
+
+    setCountryError("Choose a valid country from the suggestions.");
   };
 
   useEffect(() => {
@@ -97,6 +147,21 @@ export default function ServiceBooking({
     }));
   }, [session]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        countryFieldRef.current &&
+        !countryFieldRef.current.contains(event.target as Node)
+      ) {
+        setCountryMenuOpen(false);
+        normalizeCountrySelection(form.country);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [form.country]);
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("loading");
@@ -109,6 +174,12 @@ export default function ServiceBooking({
 
       if (!form.country) {
         throw new Error("Please select your country.");
+      }
+
+      const matchedCountry = findMatchingCountry(form.country);
+      if (!matchedCountry) {
+        setCountryError("Choose a valid country from the suggestions.");
+        throw new Error("Please select a valid country.");
       }
 
       const normalizedWhatsapp = normalizeInternationalWhatsappNumber(
@@ -246,20 +317,71 @@ export default function ServiceBooking({
             <label htmlFor="country">
               Country <span className="req">*</span>
             </label>
-            <select
-              id="country"
-              name="country"
-              value={form.country}
-              onChange={onChange}
-              required
-            >
-              <option value="">Select your country</option>
-              {COUNTRY_OPTIONS.map((country) => (
-                <option key={country} value={country}>
+            <div className="country-combobox" ref={countryFieldRef}>
+              <input
+                id="country"
+                name="country"
+                value={form.country}
+                onChange={(e) => {
+                  onChange(e);
+                  setCountryMenuOpen(true);
+                }}
+                onFocus={() => setCountryMenuOpen(true)}
+                placeholder="Search and select your country"
+                autoComplete="off"
+                required
+              />
+              {countryMenuOpen && (
+                <div className="country-dropdown" role="listbox" aria-label="Country options">
+                  {filteredCountries.length > 0 ? (
+                    filteredCountries.map((country) => (
+                      <button
+                        key={country}
+                        type="button"
+                        className={`country-option ${
+                          form.country === country ? "country-option-active" : ""
+                        }`}
+                        onMouseDown={(event) => {
+                          event.preventDefault();
+                          setCountryError("");
+                          setForm((prev) => ({ ...prev, country }));
+                          setCountryMenuOpen(false);
+                        }}
+                      >
+                        {country}
+                      </button>
+                    ))
+                  ) : (
+                    <div className="country-empty">
+                      No matching country found. Please choose a valid country.
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="country-shortcuts">
+              {POPULAR_COUNTRIES.map((country) => (
+                <button
+                  key={country}
+                  type="button"
+                  className={`country-chip ${
+                    form.country === country ? "country-chip-active" : ""
+                  }`}
+                  onClick={() => {
+                    setCountryError("");
+                    setForm((prev) => ({ ...prev, country }));
+                    setCountryMenuOpen(false);
+                  }}
+                >
                   {country}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
+            <small className="field-hint">
+              Start typing and pick from the suggestions, or tap a common country
+              below.
+            </small>
+            {countryError && <small className="field-error">{countryError}</small>}
           </div>
           <div className="field full">
             <label htmlFor="requirements">
@@ -529,6 +651,106 @@ export default function ServiceBooking({
           font-size: 12px;
           text-transform: none;
           letter-spacing: 0;
+        }
+
+        .field-hint,
+        .field-error {
+          font-family: var(--font-space-mono);
+          font-size: 12px;
+          line-height: 1.5;
+        }
+
+        .field-hint {
+          color: rgba(255, 255, 255, 0.58);
+        }
+
+        .field-error {
+          color: #fca5a5;
+        }
+
+        .country-shortcuts {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .country-combobox {
+          position: relative;
+        }
+
+        .country-dropdown {
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 0;
+          right: 0;
+          z-index: 20;
+          max-height: 260px;
+          overflow-y: auto;
+          padding: 8px;
+          border-radius: 14px;
+          border: 1px solid rgba(34, 211, 238, 0.24);
+          background: rgba(7, 11, 22, 0.96);
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+          backdrop-filter: blur(18px);
+        }
+
+        .country-option,
+        .country-empty {
+          width: 100%;
+          padding: 10px 12px;
+          border-radius: 10px;
+          font-size: 13px;
+          font-family: var(--font-space-mono);
+          text-align: left;
+        }
+
+        .country-option {
+          border: 1px solid transparent;
+          background: transparent;
+          color: rgba(255, 255, 255, 0.86);
+          cursor: pointer;
+          transition: background 0.2s ease, border 0.2s ease, color 0.2s ease;
+        }
+
+        .country-option:hover,
+        .country-option-active {
+          background: rgba(34, 211, 238, 0.12);
+          border-color: rgba(34, 211, 238, 0.28);
+          color: #22d3ee;
+        }
+
+        .country-empty {
+          color: rgba(255, 255, 255, 0.55);
+        }
+
+        .country-chip {
+          padding: 8px 12px;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          background: rgba(17, 24, 39, 0.6);
+          color: rgba(255, 255, 255, 0.82);
+          font-size: 12px;
+          font-family: var(--font-space-mono);
+          cursor: pointer;
+          transition: border 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+        }
+
+        .country-chip:hover,
+        .country-chip-active {
+          border-color: rgba(34, 211, 238, 0.75);
+          color: #22d3ee;
+          box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.18);
+        }
+
+        @media (max-width: 640px) {
+          .country-dropdown {
+            max-height: 220px;
+          }
+
+          .country-chip {
+            width: fit-content;
+            max-width: 100%;
+          }
         }
 
         .submit {
