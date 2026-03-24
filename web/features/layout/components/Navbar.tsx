@@ -183,13 +183,87 @@ export default function Navbar({ user = null }: NavbarProps) {
           width: 100%;
         }
 
-        @media (max-width: 1024px) {
+        .nav-shell {
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 0 20px;
+          height: 70px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+        }
+
+        .nav-brand {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          text-decoration: none;
+          z-index: 1000;
+          flex-shrink: 1;
+          min-width: 0;
+          max-width: calc(100% - 72px);
+        }
+
+        .nav-wordmark {
+          font-weight: 700;
+          color: white;
+          letter-spacing: 2px;
+          font-family: "Nunito Sans", sans-serif;
+          text-transform: uppercase;
+          text-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+          white-space: nowrap;
+        }
+
+        .desktop-only-nav {
+          display: flex;
+          align-items: center;
+          gap: 36px;
+          flex-shrink: 0;
+        }
+
+        .desktop-auth-group {
+          display: flex;
+          gap: 12px;
+          flex-shrink: 0;
+        }
+
+        @media (max-width: 1180px) {
+          .nav-shell {
+            padding: 0 16px;
+            gap: 12px;
+          }
+
           .desktop-only-nav { display: none !important; }
           .mobile-only-button { display: flex !important; }
+
+          .nav-brand {
+            max-width: calc(100% - 64px);
+          }
+
+          .nav-wordmark {
+            font-size: 12px;
+            letter-spacing: 1.2px;
+          }
         }
-        @media (min-width: 1025px) {
+
+        @media (min-width: 1181px) {
           .desktop-only-nav { display: flex !important; }
           .mobile-only-button { display: none !important; }
+        }
+
+        @media (min-width: 1181px) and (max-width: 1380px) {
+          .nav-shell {
+            padding: 0 16px;
+          }
+
+          .desktop-only-nav {
+            gap: 22px;
+          }
+
+          .desktop-auth-group {
+            gap: 10px;
+          }
         }
       `}</style>
 
@@ -213,29 +287,13 @@ export default function Navbar({ user = null }: NavbarProps) {
           boxShadow: scrolled ? "0 4px 20px rgba(0, 212, 255, 0.15)" : "none",
         }}
       >
-        <div
-          style={{
-            maxWidth: "1280px",
-            margin: "0 auto",
-            padding: "0 20px",
-            height: "70px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+        <div className="nav-shell">
           {/* LOGO */}
           <Link
             href="/"
             aria-label="Tensor Security Academy - Home"
             prefetch={true}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              textDecoration: "none",
-              zIndex: 1000,
-            }}
+            className="nav-brand"
           >
             <Image
               src="https://ik.imagekit.io/ekb0d0it0/logofinal1.webp"
@@ -246,26 +304,11 @@ export default function Navbar({ user = null }: NavbarProps) {
               quality={90}
               style={{ objectFit: "contain" }}
             />
-            <span
-              style={{
-                fontSize: "clamp(12px, 14px)",
-                fontWeight: 700,
-                color: "white",
-                letterSpacing: "2px",
-                fontFamily: '"Nunito Sans", sans-serif',
-                textTransform: "uppercase",
-                textShadow: "0 0 20px rgba(0, 212, 255, 0.6)",
-              }}
-            >
-              TENSOR SECURITY ACADEMY
-            </span>
+            <span className="nav-wordmark">TENSOR SECURITY ACADEMY</span>
           </Link>
 
           {/* DESKTOP NAV */}
-          <div
-            style={{ display: "flex", alignItems: "center", gap: "36px" }}
-            className="desktop-only-nav"
-          >
+          <div className="desktop-only-nav">
             {navLinks.map((link) => (
               <div
                 key={link.href}
@@ -605,7 +648,7 @@ export default function Navbar({ user = null }: NavbarProps) {
 
             {/* CONDITIONAL: Login/Signup OR User Dropdown */}
             {!user ? (
-              <div style={{ display: "flex", gap: "12px" }}>
+              <div className="desktop-auth-group">
                 <Link
                   href="/login"
                   prefetch={true}
@@ -626,6 +669,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                       gap: "8px",
                       fontFamily: '"Nunito Sans", sans-serif',
                       transition: "all 0.3s ease",
+                      whiteSpace: "nowrap",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.boxShadow =
@@ -665,6 +709,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                       fontFamily: '"Nunito Sans", sans-serif',
                       boxShadow: "0 4px 15px rgba(236, 72, 153, 0.2)",
                       transition: "all 0.3s ease",
+                      whiteSpace: "nowrap",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.boxShadow =
