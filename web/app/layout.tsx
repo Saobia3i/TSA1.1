@@ -7,8 +7,78 @@ import RegisterSW from "./RegisterSW";
 import PWAUpdateManager from "@/components/PWAUpdateManager";
 import { Providers } from "./providers";
 import WhatsAppChatBubble from "@/features/home/components/WhatsAppChatBubble";
+import { siteConfig } from "@/config/site";
 
 const BASE_URL = "https://tensorsecurityacademy.com";
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": ["EducationalOrganization", "Organization"],
+  "@id": `${BASE_URL}/#organization`,
+  name: siteConfig.name,
+  alternateName: "TSA",
+  url: BASE_URL,
+  description: siteConfig.description,
+  slogan: "Cybersecurity Training and Professional Services",
+  logo: {
+    "@type": "ImageObject",
+    url: `${BASE_URL}/logo.png`,
+  },
+  image: [siteConfig.ogImage, `${BASE_URL}/logo.png`],
+  sameAs: [
+    siteConfig.links.linkedin,
+    siteConfig.links.instagram,
+    siteConfig.links.facebook,
+    siteConfig.links.x,
+    "https://www.youtube.com/@TensorSecurityAcademy",
+  ],
+  areaServed: "Worldwide",
+  knowsAbout: [
+    "Cybersecurity Training",
+    "Ethical Hacking",
+    "Penetration Testing",
+    "Blockchain Security",
+    "Web Application Security",
+    "Network Security",
+    "Cloud Security",
+    "Security Operations",
+    "Incident Response",
+    "Cybersecurity Consulting",
+  ],
+  offers: [
+    {
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: "Cybersecurity Training",
+      },
+    },
+    {
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: "Cybersecurity Professional Services",
+      },
+    },
+  ],
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${BASE_URL}/#website`,
+  url: BASE_URL,
+  name: siteConfig.name,
+  description: siteConfig.description,
+  publisher: {
+    "@id": `${BASE_URL}/#organization`,
+  },
+  inLanguage: "en",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${BASE_URL}/courses?search={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
+};
 
 const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
@@ -28,7 +98,7 @@ export const metadata: Metadata = {
     template: "%s | Tensor Security Academy",
   },
   description:
-    "Master cybersecurity with hands-on training in ethical hacking, penetration testing, blockchain security, and network security. Industry-recognized certifications, expert instructors, and practical labs for beginners to advanced professionals.",
+    siteConfig.description,
   keywords: [
     // Core Cybersecurity Keywords (High Volume)
     "cybersecurity",
@@ -88,6 +158,8 @@ export const metadata: Metadata = {
   authors: [{ name: "Tensor Security Academy" }],
   creator: "Tensor Security Academy",
   publisher: "Tensor Security Academy",
+  applicationName: "Tensor Security Academy",
+  referrer: "origin-when-cross-origin",
 
   robots: {
     index: true,
@@ -108,7 +180,7 @@ export const metadata: Metadata = {
     siteName: "Tensor Security Academy",
     title: "Cybersecurity & Blockchain Training - Tensor Security Academy",
     description:
-      "Learn cybersecurity and blockchain security through hands-on courses, industry certifications, and practical labs. Expert-led training for ethical hacking, penetration testing, and security operations.",
+      siteConfig.description,
     images: [
       {
         url: "/og-image.png",
@@ -123,7 +195,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Tensor Security Academy - Cybersecurity Training",
     description:
-      "Master ethical hacking, blockchain security, and penetration testing with industry-leading courses and certifications.",
+      siteConfig.description,
     creator: "@tensorsecurity",
     images: ["/twitter-image.png"],
   },
@@ -187,59 +259,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "EducationalOrganization",
-              name: "Tensor Security Academy",
-              description:
-                "Professional cybersecurity and blockchain security training platform",
-              url: BASE_URL,
-              logo: {
-                "@type": "ImageObject",
-                url: "https://tensorsecurityacademy.com/logo.png", // or your actual logo path
-                width: "623",
-                height: "623",
-              },
-
-              // Add organization image
-              image: {
-                "@type": "ImageObject",
-                url: "https://tensorsecurityacademy.com/og-image.png",
-                // width: '1200',
-                // height: '630'
-              },
-
-              sameAs: [
-                "https://x.com/Tensor_Security",
-                "https://www.linkedin.com/company/tensorsecurityacademy",
-              ],
-              offers: {
-                "@type": "AggregateOffer",
-                itemOffered: [
-                  {
-                    "@type": "Course",
-                    name: "Cybersecurity Training",
-                    description: "Comprehensive cybersecurity courses",
-                    provider: {
-                      "@type": "Organization",
-                      name: "Tensor Security Academy",
-                    },
-                  },
-                  {
-                    "@type": "Course",
-                    name: "Blockchain Security Training",
-                    description:
-                      "Specialized blockchain and cryptocurrency security",
-                    provider: {
-                      "@type": "Organization",
-                      name: "Tensor Security Academy",
-                    },
-                  },
-                ],
-              },
-              areaServed: "Worldwide",
-              availableLanguage: "English",
-            }),
+            __html: JSON.stringify([organizationJsonLd, websiteJsonLd]),
           }}
         />
         {/* CRITICAL FIX: Render-blocking CSS inline (150ms → 0ms) */}
