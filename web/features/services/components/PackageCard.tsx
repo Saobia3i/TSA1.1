@@ -13,9 +13,12 @@ interface PackageCardProps {
   };
   index: number;
   onSelect?: (packageName: string) => void;
+  isSelected?: boolean;
 }
 
-export function PackageCard({ pkg, index, onSelect }: PackageCardProps) {
+export function PackageCard({ pkg, index, onSelect, isSelected = false }: PackageCardProps) {
+  const isEmphasized = pkg.highlight;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -24,10 +27,10 @@ export function PackageCard({ pkg, index, onSelect }: PackageCardProps) {
       whileHover={{ y: -12, boxShadow: '0 30px 60px rgba(34, 211, 238, 0.5)' }}
       style={{
         padding: '40px 32px',
-        background: pkg.highlight 
+        background: pkg.highlight
           ? 'linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(168, 85, 247, 0.1))'
           : 'rgba(17, 24, 39, 0.9)',
-        border: pkg.highlight 
+        border: pkg.highlight
           ? '3px solid rgba(34, 211, 238, 0.6)' 
           : '2px solid rgba(255, 255, 255, 0.9)',
         borderRadius: '24px',
@@ -38,7 +41,7 @@ export function PackageCard({ pkg, index, onSelect }: PackageCardProps) {
         overflow: 'hidden',
         backdropFilter: 'blur(20px)',
         transition: 'all 0.3s ease',
-        boxShadow: pkg.highlight 
+        boxShadow: pkg.highlight
           ? '0 20px 50px rgba(34, 211, 238, 0.3)' 
           : '0 15px 40px rgba(0, 0, 0, 0.6)'
       }}
@@ -132,8 +135,10 @@ export function PackageCard({ pkg, index, onSelect }: PackageCardProps) {
           style={{
             width: '100%',
             padding: '16px 24px',
-            background: 'transparent',
-            border: pkg.highlight 
+            background: isSelected
+              ? 'linear-gradient(135deg, rgba(34, 211, 238, 0.18), rgba(168, 85, 247, 0.14))'
+              : 'transparent',
+            border: (pkg.highlight || isSelected)
               ? '2px solid rgba(34, 211, 238, 0.8)' 
               : '2px solid rgba(255, 255, 255, 0.9)',
             borderRadius: '12px',
@@ -144,27 +149,27 @@ export function PackageCard({ pkg, index, onSelect }: PackageCardProps) {
             fontFamily: 'var(--font-space-mono)',
             transition: 'all 0.3s ease',
             backdropFilter: 'blur(10px)',
-            boxShadow: pkg.highlight 
+            boxShadow: (pkg.highlight || isSelected)
               ? '0 0 20px rgba(34, 211, 238, 0.3), inset 0 0 20px rgba(34, 211, 238, 0.1)' 
               : '0 0 15px rgba(255, 255, 255, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.05)'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.boxShadow = pkg.highlight 
+            e.currentTarget.style.boxShadow = (pkg.highlight || isSelected)
               ? '0 0 30px rgba(34, 211, 238, 0.5), inset 0 0 30px rgba(34, 211, 238, 0.2)' 
               : '0 0 25px rgba(255, 255, 255, 0.5), inset 0 0 25px rgba(255, 255, 255, 0.1)';
-            e.currentTarget.style.borderColor = pkg.highlight ? 'rgba(34, 211, 238, 1)' : 'rgba(255, 255, 255, 0.9)';
+            e.currentTarget.style.borderColor = (pkg.highlight || isSelected) ? 'rgba(34, 211, 238, 1)' : 'rgba(255, 255, 255, 0.9)';
             e.currentTarget.style.transform = 'translateY(-2px)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = pkg.highlight 
+            e.currentTarget.style.boxShadow = (pkg.highlight || isSelected)
               ? '0 0 20px rgba(34, 211, 238, 0.3), inset 0 0 20px rgba(34, 211, 238, 0.1)' 
               : '0 0 15px rgba(255, 255, 255, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.05)';
-            e.currentTarget.style.borderColor = pkg.highlight ? 'rgba(34, 211, 238, 0.8)' : 'rgba(255, 255, 255, 0.8)';
+            e.currentTarget.style.borderColor = (pkg.highlight || isSelected) ? 'rgba(34, 211, 238, 0.8)' : 'rgba(255, 255, 255, 0.8)';
             e.currentTarget.style.transform = 'translateY(0)';
           }}
           onClick={() => onSelect?.(pkg.name)}
         >
-          Select {pkg.name}
+          {isSelected ? `Selected: ${pkg.name}` : `Select ${pkg.name}`}
         </button>
       </div>
     </motion.div>

@@ -189,6 +189,7 @@ export default function ServiceDetailsPage({ service }: Props) {
               pkg={pkg}
               index={index}
               onSelect={openBookingForm}
+              isSelected={selectedPackage === pkg.name}
             />
           ))}
         </div>
