@@ -79,9 +79,14 @@ export default function Navbar({ user = null }: NavbarProps) {
   const aboutRef = useRef<HTMLDivElement>(null);
   const socialsRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
+  const scrollLockYRef = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
+      if (mobileMenuOpen) {
+        return;
+      }
+
       const currentScrollY = window.scrollY;
       
       // Set scrolled state
@@ -101,7 +106,7 @@ export default function Navbar({ user = null }: NavbarProps) {
     
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, mobileMenuOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -127,12 +132,31 @@ export default function Navbar({ user = null }: NavbarProps) {
 
   useEffect(() => {
     if (mobileMenuOpen) {
+      scrollLockYRef.current = window.scrollY;
       document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollLockYRef.current}px`;
+      document.body.style.width = "100%";
+      document.body.style.left = "0";
+      document.body.style.right = "0";
     } else {
       document.body.style.overflow = "unset";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      if (scrollLockYRef.current) {
+        window.scrollTo(0, scrollLockYRef.current);
+      }
     }
     return () => {
       document.body.style.overflow = "unset";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
     };
   }, [mobileMenuOpen]);
 
@@ -282,10 +306,10 @@ export default function Navbar({ user = null }: NavbarProps) {
           borderBottom: scrolled
             ? "1px solid rgba(0, 212, 255, 0.2)"
             : "1px solid rgba(255, 255, 255, 0.03)",
-          transform: isVisible ? "translateY(0)" : "translateY(-100%)",
-          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-          boxShadow: scrolled ? "0 4px 20px rgba(0, 212, 255, 0.15)" : "none",
-        }}
+              transform: isVisible || mobileMenuOpen ? "translateY(0)" : "translateY(-100%)",
+              transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+              boxShadow: scrolled ? "0 4px 20px rgba(0, 212, 255, 0.15)" : "none",
+            }}
       >
         <div className="nav-shell">
           {/* LOGO */}
@@ -1016,12 +1040,22 @@ export default function Navbar({ user = null }: NavbarProps) {
           <div
             className="mobile-menu-enter"
             style={{
+              position: "fixed",
+              top: "70px",
+              left: 0,
+              right: 0,
+              bottom: 0,
               backgroundColor: "rgba(0, 0, 0, 0.95)",
               backdropFilter: "blur(25px)",
               WebkitBackdropFilter: "blur(25px)",
               borderTop: "1px solid rgba(0, 212, 255, 0.3)",
-              maxHeight: "calc(100vh - 70px)",
+              height: "calc(100dvh - 70px)",
+              maxHeight: "calc(100dvh - 70px)",
               overflowY: "auto",
+              overscrollBehavior: "contain",
+              WebkitOverflowScrolling: "touch",
+              touchAction: "pan-y",
+              zIndex: 999,
             }}
           >
             <div
@@ -1030,6 +1064,8 @@ export default function Navbar({ user = null }: NavbarProps) {
                 display: "flex",
                 flexDirection: "column",
                 gap: "8px",
+                minHeight: "max-content",
+                paddingBottom: "32px",
               }}
             >
               {user && (
