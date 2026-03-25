@@ -29,23 +29,25 @@ html {
 }
 
 .backButton {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border: 1px solid #ffffff;
-  border-radius: 12px;
+  background: rgba(17, 24, 39, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
   padding: 10px 20px;
-  color: white;
+  color: #ffffff;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   margin-bottom: 40px;
   margin-top: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
+  line-height: 1;
+  font-family: var(--font-nunito);
 }
 
 /* Hero Section */
@@ -57,23 +59,27 @@ html {
 }
 
 .heroTitle {
-  font-size: clamp(28px, 6vw, 54px);
-  font-weight: 800;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
   background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #06b6d4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 16px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  font-family: var(--font-nunito);
 }
 
 .heroSubtitle {
-  font-size: clamp(14px, 3vw, 18px);
-  color: #ffffff;
-  max-width: 700px;
+  font-size: clamp(14px, 2vw, 16px);
+  color: #9ca3af;
+  max-width: 680px;
   margin: 0 auto;
   line-height: 1.6;
   padding: 0 16px;
+  font-family: var(--font-nunito);
+  font-weight: 500;
 }
 
 /* Section */
@@ -97,46 +103,56 @@ html {
 }
 
 .sectionTitle {
-  font-size: clamp(24px, 4vw, 42px);
-  font-weight: 800;
-  color: #ffffff;
-  margin-bottom: 20px;
-  letter-spacing: -0.02em;
-}
-
-.sectionTitleGradient {
-  font-size: clamp(26px, 5vw, 48px);
-  font-weight: 900;
-  background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #06b6d4 100%);
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
+  background: linear-gradient(135deg, #22d3ee, #a855f7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 20px;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  font-family: var(--font-nunito);
+}
+
+.sectionTitleGradient {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
+  background: linear-gradient(135deg, #22d3ee, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  font-family: var(--font-nunito);
+  text-transform: none;
 }
 
 .sectionDescription {
-  font-size: clamp(14px, 2.5vw, 16px);
-  color: #ffffff;
-  max-width: 700px;
+  font-size: clamp(14px, 2vw, 16px);
+  color: #9ca3af;
+  max-width: 680px;
   margin: 0 auto;
-  line-height: 1.7;
+  line-height: 1.6;
   font-weight: 500;
   padding: 0 16px;
+  font-family: var(--font-nunito);
 }
 
 .sectionSubtitle {
-  font-size: clamp(15px, 3vw, 19px);
-  color: #ffffff;
-  max-width: 700px;
+  font-size: clamp(14px, 2vw, 16px);
+  color: #9ca3af;
+  max-width: 680px;
   margin: 0 auto;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(124, 58, 237, 0.1));
-  padding: 12px 24px;
-  border-radius: 50px;
-  border: 1px solid #ffffff;
+  font-weight: 500;
+  letter-spacing: normal;
+  background: none;
+  padding: 0 16px;
+  border-radius: 0;
+  border: none;
+  line-height: 1.6;
+  font-family: var(--font-nunito);
 }
 
 /* Roadmap Container */
@@ -475,20 +491,22 @@ html {
 }
 
 .quickNavButton {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 12px 24px;
+  padding: clamp(10px, 1.8vw, 12px) clamp(20px, 3.5vw, 26px);
   background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.1));
-  border: 1.5px solid rgba(0, 212, 255, 0.4);
-  border-radius: 12px;
+  border: 2px solid rgba(34, 211, 238, 0.6);
+  border-radius: 10px;
   color: #00d4ff;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: clamp(12px, 1.6vw, 13px);
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: var(--font-nunito);
   text-decoration: none;
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.32);
 }
 
 .quickNavButtonAlt {
@@ -576,23 +594,26 @@ html {
 }
 
 .joinMovementTitle {
-  font-size: clamp(28px, 5vw, 48px);
-  font-weight: 900;
-  background: linear-gradient(135deg, #00d4ff, #7c3aed);
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
+  background: linear-gradient(135deg, #22d3ee, #a855f7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: clamp(16px, 3vw, 24px);
-  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  font-family: var(--font-nunito);
 }
 
 .joinMovementDescription {
-  font-size: clamp(14px, 2.6vw, 17px);
-  color: #ffffff;
-  max-width: 800px;
+  font-size: clamp(14px, 2vw, 16px);
+  color: #9ca3af;
+  max-width: 680px;
   margin: 0 auto;
-  line-height: 1.8;
+  line-height: 1.6;
   font-weight: 500;
+  font-family: var(--font-nunito);
 }
 
 .opportunityGrid {
@@ -734,20 +755,23 @@ html {
 
 .opportunityButton {
   width: 100%;
-  padding: clamp(16px, 3vw, 20px);
-  font-size: clamp(15px, 2.7vw, 17px);
-  font-weight: 900;
-  border-radius: 14px;
+  padding: clamp(10px, 1.8vw, 12px) clamp(20px, 3.5vw, 26px);
+  font-size: clamp(12px, 1.6vw, 13px);
+  font-weight: 600;
+  border-radius: 10px;
   border: 2px solid #ffffff;
   backdrop-filter: blur(10px);
   color: #ffffff;
   cursor: pointer;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  letter-spacing: normal;
+  text-transform: none;
   text-decoration: none;
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s ease;
+  font-family: var(--font-nunito);
 }
 
 .opportunityButtonCyan {

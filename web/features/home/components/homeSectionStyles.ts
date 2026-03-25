@@ -29,7 +29,7 @@ export const primarySectionButtonStyle: CSSProperties = {
   borderRadius: '10px',
   border: '2px solid rgba(34, 211, 238, 0.6)',
   background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
-  color: '#22d3ee',
+  color: '#ffffff',
   cursor: 'pointer',
   fontFamily: 'var(--font-nunito)',
   boxShadow: '0 0 14px rgba(34, 211, 238, 0.32)',
@@ -38,4 +38,38 @@ export const primarySectionButtonStyle: CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   gap: '10px',
+};
+
+export const pageTitleStyle: CSSProperties = {
+  ...sectionTitleStyle,
+  fontSize: 'clamp(32px, 5vw, 48px)',
+  marginBottom: '16px',
+  textAlign: 'center',
+};
+
+export const pageSubtitleStyle: CSSProperties = {
+  ...sectionSubtitleStyle,
+  fontSize: 'clamp(14px, 2vw, 16px)',
+  textAlign: 'center',
+  margin: '0 auto',
+};
+
+export const backButtonStyle: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '8px',
+  padding: '10px 20px',
+  fontSize: '14px',
+  fontWeight: 600,
+  borderRadius: '10px',
+  border: '2px solid rgba(255, 255, 255, 0.3)',
+  background: 'rgba(17, 24, 39, 0.7)',
+  color: '#ffffff',
+  cursor: 'pointer',
+  fontFamily: 'var(--font-nunito)',
+  boxShadow: 'none',
+  transition: 'all 0.3s ease',
+  textDecoration: 'none',
+  lineHeight: 1,
 };

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Award, Globe, Shield, Briefcase, Target } from 'lucide-react';
+import { Award, Globe, Shield, Briefcase, Target } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { getFeaturedConsultants } from '@/features/consultant/Consultantdata';
 import Image from 'next/image';
@@ -409,7 +409,6 @@ export default function ConsultantPreview() {
                       style={{ ...primarySectionButtonStyle, width: '100%', lineHeight: 1.35 }}
                     >
                       View Full Profile & Expertise
-                      <ArrowRight style={{ width: '20px', height: '20px' }} />
                     </motion.button>
                   </Link>
                 </motion.div>

@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { getAllCourses, getFeaturedCourses, type Course } from '@/features/courses/data/courses';
@@ -303,7 +302,7 @@ export default function CoursesPreview() {
                               borderRadius: '10px',
                               border: '2px solid rgba(34, 211, 238, 0.6)',
                               background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
-                              color: '#22d3ee',
+                              color: '#ffffff',
                               cursor: 'pointer',
                               fontFamily: 'var(--font-nunito)',
                               transition: 'all 0.3s ease',
@@ -312,7 +311,7 @@ export default function CoursesPreview() {
                               zIndex: 5,
                             }}
                           >
-                            Learn More →
+                            Learn More
                           </motion.button>
                         </div>
                       </GlowingCard>
@@ -373,7 +372,6 @@ export default function CoursesPreview() {
               style={primarySectionButtonStyle}
             >
               View All Courses
-              <ArrowRight style={{ width: '18px', height: '18px' }} />
             </motion.button>
           </Link>
         </motion.div>

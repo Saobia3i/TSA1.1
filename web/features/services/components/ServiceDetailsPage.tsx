@@ -7,6 +7,12 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import type { Service } from '../data/services';
 import ServiceBooking from '@/components/forms/ServiceBooking';
+import {
+  backButtonStyle,
+  pageSubtitleStyle,
+  pageTitleStyle,
+  primarySectionButtonStyle,
+} from '@/features/home/components/homeSectionStyles';
 
 interface ServiceData {
   slug: string;
@@ -56,18 +62,7 @@ export default function ServiceDetailsPage({ service }: Props) {
         <Link href="/services" style={{ textDecoration: 'none', display: 'inline-flex', marginBottom: '60px' }}>
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              background: 'rgba(17, 24, 39, 0.7)',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
-              borderRadius: '12px',
-              padding: '14px 24px',
-              color: 'white',
-              fontSize: '15px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              fontFamily: 'var(--font-space-mono)',
+              ...backButtonStyle,
               transition: 'all 0.3s ease',
               backdropFilter: 'blur(10px)'
             }}
@@ -81,13 +76,9 @@ export default function ServiceDetailsPage({ service }: Props) {
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
           <h1
             style={{
-              fontSize: 'clamp(36px, 6vw, 56px)',
-              fontWeight: 800,
+              ...pageTitleStyle,
               background: 'linear-gradient(135deg, #22d3ee 0%, #a855f7 50%, #ec4899 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
               marginBottom: '20px',
-              fontFamily: 'var(--font-space-mono)',
               textShadow: '0 0 30px rgba(34, 211, 238, 0.5)'
             }}
           >
@@ -146,10 +137,10 @@ export default function ServiceDetailsPage({ service }: Props) {
           >
             <p
               style={{
+                ...pageSubtitleStyle,
                 fontSize: '18px',
                 color: '#fff',
                 lineHeight: 1.7,
-                fontFamily: 'var(--font-space-mono)',
                 margin: '20px 0',
                 fontWeight: 600,
                 textAlign: 'center'
@@ -177,7 +168,7 @@ export default function ServiceDetailsPage({ service }: Props) {
           <h2 style={{ fontSize: '32px', fontWeight: 700, color: 'white', marginBottom: '16px', fontFamily: 'var(--font-space-mono)' }}>
             Choose Your Package
           </h2>
-          <p style={{ fontSize: '16px', color: '#9ca3af', fontFamily: 'var(--font-space-mono)' }}>
+          <p style={{ ...pageSubtitleStyle }}>
             Select the perfect plan for your security needs
           </p>
         </div>
@@ -198,18 +189,14 @@ export default function ServiceDetailsPage({ service }: Props) {
           <button
             type="button"
             style={{
-              display: 'inline-flex',
-              alignItems: 'center',
+              ...primarySectionButtonStyle,
               gap: '14px',
               padding: '20px 48px',
               background: 'transparent',
               border: '2px solid rgba(34, 211, 238, 0.5)',
-              borderRadius: '16px',
               color: 'white',
               fontSize: '16px',
               fontWeight: 700,
-              cursor: 'pointer',
-              fontFamily: 'var(--font-nunito-sans)',
               boxShadow: '0 0 20px rgba(34, 211, 238, 0.3)',
               transition: 'all 0.3s ease',
               backdropFilter: 'blur(10px)',
