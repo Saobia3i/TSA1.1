@@ -5,7 +5,12 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { IconPinnedFilled } from '@tabler/icons-react';
 import { getAllNews, NewsItem } from '@/features/news/data/NewsData';
-import { primarySectionButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
+import {
+  homePreviewButtonStyle,
+  homePreviewCardButtonStyle,
+  sectionSubtitleStyle,
+  sectionTitleStyle,
+} from '@/features/home/components/homeSectionStyles';
 
 const isValidNewsItem = (item: NewsItem | null | undefined): item is NewsItem => {
   return Boolean(item && typeof item.id === 'number' && item.title && item.date);
@@ -343,6 +348,7 @@ export default function NewsPreview() {
                           gap: '8px',
                           flexWrap: 'wrap',
                           alignItems: 'center',
+                          justifyContent: 'center',
                           paddingTop: '12px',
                           borderTop: '1px solid rgba(255,255,255,0.08)',
                         }}
@@ -356,17 +362,7 @@ export default function NewsPreview() {
                             }}
                             whileTap={{ scale: 0.97 }}
                             style={{
-                              padding: '9px 16px',
-                              fontSize: '12px',
-                              fontWeight: 700,
-                              borderRadius: '10px',
-                              border: '2px solid rgba(34, 211, 238, 0.6)',
-                              background:
-                                'linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(168, 85, 247, 0.12))',
-                              color: '#22d3ee',
-                              cursor: 'pointer',
-                              transition: 'all 0.3s ease',
-                              fontFamily: 'var(--font-space-mono)',
+                              ...homePreviewCardButtonStyle,
                             }}
                           >
                             Read More
@@ -541,6 +537,7 @@ export default function NewsPreview() {
                           gap: '8px',
                           flexWrap: 'wrap',
                           alignItems: 'center',
+                          justifyContent: 'center',
                           paddingTop: '12px',
                           borderTop: '1px solid rgba(255,255,255,0.08)',
                         }}
@@ -554,17 +551,7 @@ export default function NewsPreview() {
                             }}
                             whileTap={{ scale: 0.97 }}
                             style={{
-                              padding: '9px 16px',
-                              fontSize: '12px',
-                              fontWeight: 700,
-                              borderRadius: '10px',
-                              border: '2px solid rgba(34, 211, 238, 0.6)',
-                              background:
-                                'linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(168, 85, 247, 0.12))',
-                              color: '#22d3ee',
-                              cursor: 'pointer',
-                              transition: 'all 0.3s ease',
-                              fontFamily: 'var(--font-space-mono)',
+                              ...homePreviewCardButtonStyle,
                             }}
                           >
                             Read More
@@ -630,7 +617,7 @@ export default function NewsPreview() {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            style={primarySectionButtonStyle}
+            style={homePreviewButtonStyle}
           >
             View All News
           </motion.button>

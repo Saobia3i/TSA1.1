@@ -6,6 +6,12 @@ import Link from 'next/link';
 import { Search, ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import { getAllNews } from '@/features/news/data/NewsData';
+import {
+  backButtonStyle,
+  pageSubtitleStyle,
+  pageTitleStyle,
+  primarySectionButtonStyle,
+} from '@/features/home/components/homeSectionStyles';
 
 export default function NewsPage() {
   const allNews = getAllNews();
@@ -52,19 +58,8 @@ export default function NewsPage() {
             whileHover={{ scale: 1.05, x: -5 }}
             whileTap={{ scale: 0.95 }}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              background: 'rgba(17, 24, 39, 0.7)',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
-              borderRadius: '10px',
-              padding: 'clamp(8px, 2vw, 10px) clamp(14px, 3vw, 20px)',
-              color: 'white',
-              fontSize: 'clamp(12px, 2vw, 14px)',
-              fontWeight: 600,
-              cursor: 'pointer',
+              ...backButtonStyle,
               marginBottom: 'clamp(24px, 5vw, 40px)',
-              fontFamily: 'var(--font-space-mono)',
             }}
           >
             <ArrowLeft style={{ width: '18px', height: '18px', minWidth: '18px' }} />
@@ -107,16 +102,8 @@ export default function NewsPage() {
           </div>
           <h1
             style={{
-              fontSize: 'clamp(28px, 7vw, 56px)',
-              fontWeight: 800,
-              background: 'linear-gradient(135deg, #22d3ee, #a855f7)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              ...pageTitleStyle,
               marginBottom: 'clamp(10px, 2vw, 14px)',
-              fontFamily: 'var(--font-space-mono)',
-              letterSpacing: '0.6px',
-              textTransform: 'uppercase',
-              textShadow: '0 10px 30px rgba(34, 211, 238, 0.2)',
               wordBreak: 'break-word',
             }}
           >
@@ -133,7 +120,7 @@ export default function NewsPage() {
               maxWidth: '680px',
             }}
           />
-          <p style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: '#9ca3af', maxWidth: '700px', margin: '0', lineHeight: 1.5 }}>
+          <p style={{ ...pageSubtitleStyle, maxWidth: '700px', margin: '0', lineHeight: 1.5 }}>
             Latest announcements, blogs, webinars and community highlights
           </p>
         </div>
@@ -372,18 +359,15 @@ export default function NewsPage() {
 
                         <div
                           style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '8px',
+                            ...primarySectionButtonStyle,
                             padding: 'clamp(8px, 1.5vw, 10px) clamp(14px, 2.5vw, 20px)',
                             background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))',
                             border: '2px solid rgba(34, 211, 238, 0.4)',
-                            borderRadius: '10px',
                             color: '#22d3ee',
                             fontSize: 'clamp(11px, 1.8vw, 14px)',
                             fontWeight: 700,
-                            fontFamily: 'var(--font-space-mono)',
                             alignSelf: 'flex-start',
+                            boxShadow: 'none',
                           }}
                         >
                           Read Article

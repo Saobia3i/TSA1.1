@@ -14,6 +14,12 @@ import { getAllCourses, type Course } from "@/features/courses/data/courses";
 import CourseCard from "@/features/courses/components/CourseCard";
 import CourseDetailsModal from "@/features/courses/components/CourseDetailsModal";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  backButtonStyle,
+  pageSubtitleStyle,
+  pageTitleStyle,
+  primarySectionButtonStyle,
+} from "@/features/home/components/homeSectionStyles";
 //import { Metadata } from 'next'
 const ITEMS_PER_PAGE = 6;
 // export const metadata: Metadata = {
@@ -80,22 +86,11 @@ export default function CoursesPage() {
           {/* Back Button */}
           <Link href="/" style={{ textDecoration: "none" }}>
             <motion.button
-              whileHover={{ scale: 1.05, x: -5 }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                background: "rgba(17, 24, 39, 0.7)",
-                border: "2px solid rgba(255, 255, 255, 0.3)",
-                borderRadius: "10px",
-                padding: "10px 20px",
-                color: "white",
-                fontSize: "14px",
-                fontWeight: 600,
-                cursor: "pointer",
+            whileHover={{ scale: 1.05, x: -5 }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+                ...backButtonStyle,
                 marginBottom: "40px",
-                fontFamily: "var(--font-nunito)",
               }}
             >
               <ArrowLeft style={{ width: "18px", height: "18px" }} />
@@ -107,24 +102,14 @@ export default function CoursesPage() {
           <div style={{ textAlign: "center", marginBottom: "50px" }}>
             <h1
               style={{
-                fontSize: "clamp(32px, 5vw, 48px)",
-                fontWeight: 700,
-                background: "linear-gradient(to right, #22d3ee, #a855f7)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                marginBottom: "16px",
-                fontFamily: "var(--font-nunito)",
+                ...pageTitleStyle,
               }}
             >
               Our Courses
             </h1>
             <p
               style={{
-                fontSize: "16px",
-                color: "#9ca3af",
-                maxWidth: "700px",
-                margin: "0 auto",
-                fontFamily: "var(--font-nunito)",
+                ...pageSubtitleStyle,
               }}
             >
               Master cybersecurity with expert-led live training programs
@@ -137,23 +122,18 @@ export default function CoursesPage() {
     target="_blank"
     rel="noopener noreferrer"
     whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(168, 85, 247, 0.4)' }}
-    whileTap={{ scale: 0.95 }}
-    style={{
-      display: "inline-flex",
-      alignItems: "center",
-      gap: "12px",
-      padding: "14px 28px",
-      fontSize: "16px",
-      fontWeight: 700,
-      borderRadius: "12px",
-      background: "linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))",
-      border: "2px solid rgba(34, 211, 238, 0.4)",
-      color: "white",
-      cursor: "pointer",
-      fontFamily: "var(--font-nunito)",
-      backdropFilter: "blur(10px)",
-      boxShadow: "0 8px 25px rgba(34, 211, 238, 0.3)",
-      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+	    whileTap={{ scale: 0.95 }}
+	    style={{
+	      ...primarySectionButtonStyle,
+	      gap: "12px",
+	      padding: "14px 28px",
+	      fontSize: "16px",
+	      background: "linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))",
+	      border: "2px solid rgba(34, 211, 238, 0.4)",
+	      color: "white",
+	      backdropFilter: "blur(10px)",
+	      boxShadow: "0 8px 25px rgba(34, 211, 238, 0.3)",
+	      transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
     }}
   >
     TSA Whitepaper

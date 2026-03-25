@@ -15,6 +15,12 @@ import {
   Lock,
 } from "lucide-react";
 import Link from "next/link";
+import {
+  backButtonStyle,
+  pageSubtitleStyle,
+  pageTitleStyle,
+  primarySectionButtonStyle,
+} from "@/features/home/components/homeSectionStyles";
 
 const customTools = [
   {
@@ -103,20 +109,10 @@ export default function ToolsPage() {
             }}
             whileTap={{ scale: 0.95 }}
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
+              ...backButtonStyle,
               background: "rgba(17, 24, 39, 0.8)",
               backdropFilter: "blur(20px)",
-              border: "2px solid rgba(34, 211, 238, 0.4)",
-              borderRadius: "12px",
-              padding: "12px 24px",
-              color: "#22d3ee",
-              fontSize: "14px",
-              fontWeight: 700,
-              cursor: "pointer",
               marginBottom: "60px",
-              fontFamily: "var(--font-nunito)",
               boxShadow: "0 0 20px rgba(34, 211, 238, 0.2)",
               transition: "all 0.3s ease",
             }}
@@ -138,13 +134,9 @@ export default function ToolsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
             style={{
-              fontSize: "clamp(36px, 6vw, 64px)",
-              fontWeight: 900,
+              ...pageTitleStyle,
               background: "linear-gradient(135deg, #22d3ee, #a855f7, #ec4899)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
               marginBottom: "24px",
-              fontFamily: "var(--font-nunito)",
               letterSpacing: "2px",
             }}
           >
@@ -155,13 +147,12 @@ export default function ToolsPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
             style={{
-              fontSize: "18px",
+              ...pageSubtitleStyle,
               color: "#d1d5db",
+              fontSize: "18px",
               maxWidth: "800px",
               margin: "0 auto",
               lineHeight: 1.8,
-              fontFamily: "var(--font-nunito)",
-              fontWeight: 500,
             }}
           >
             Open-source offensive security tools built by TSA to empower
@@ -245,21 +236,16 @@ export default function ToolsPage() {
                   }}
                   whileTap={{ scale: 0.95 }}
                   style={{
+                    ...primarySectionButtonStyle,
                     width: "100%",
                     padding: "14px 24px",
                     fontSize: "16px",
                     fontWeight: 700,
-                    borderRadius: "12px",
                     border: `2px solid ${tool.color}60`,
                     background: `linear-gradient(135deg, ${tool.color}20, ${tool.color}10)`,
                     backdropFilter: "blur(10px)",
                     color: "#ffffff",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     gap: "10px",
-                    fontFamily: "var(--font-nunito)",
                     boxShadow: `0 0 20px ${tool.color}40`,
                     transition: "all 0.1s ease",
                   }}
@@ -341,17 +327,15 @@ export default function ToolsPage() {
             >
               <button
                 style={{
+                  ...primarySectionButtonStyle,
                   width: "100%",
                   padding: "14px 24px",
                   fontSize: "16px",
                   fontWeight: 700,
-                  borderRadius: "12px",
                   border: "2px solid rgba(34, 211, 238, 0.6)",
                   background:
                     "linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(34, 211, 238, 0.1))",
                   color: "#22d3ee",
-                  cursor: "pointer",
-                  fontFamily: "var(--font-nunito)",
                   transition: "all 0.3s ease",
                 }}
                 onMouseEnter={(e) => {
@@ -480,22 +464,18 @@ export default function ToolsPage() {
                 style={{ textDecoration: "none", display: "inline-block" }}
               >
                 <button
-                  style={{
-                    padding: "16px 40px",
-                    fontSize: "clamp(14px, 2.5vw, 16px)",
-                    fontWeight: 700,
-                    borderRadius: "12px",
-                    border: "2px solid rgba(16, 185, 129, 0.6)",
-                    background:
-                      "linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1))",
-                    color: "#10b981",
-                    cursor: "pointer",
-                    fontFamily: "var(--font-nunito)",
-                    transition: "all 0.3s ease",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "10px",
-                  }}
+	                  style={{
+	                    ...primarySectionButtonStyle,
+	                    padding: "16px 40px",
+	                    fontSize: "clamp(14px, 2.5vw, 16px)",
+	                    fontWeight: 700,
+	                    border: "2px solid rgba(16, 185, 129, 0.6)",
+	                    background:
+	                      "linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1))",
+	                    color: "#10b981",
+	                    transition: "all 0.3s ease",
+	                    gap: "10px",
+	                  }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background =
                       "linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.2))";
@@ -840,22 +820,18 @@ export default function ToolsPage() {
                 style={{ textDecoration: "none", display: "inline-block" }}
               >
                 <button
-                  style={{
-                    padding: "16px 40px",
-                    fontSize: "clamp(14px, 2.5vw, 16px)",
-                    fontWeight: 700,
-                    borderRadius: "12px",
-                    border: "2px solid rgba(236, 72, 153, 0.6)",
-                    background:
-                      "linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1))",
-                    color: "#ec4899",
-                    cursor: "pointer",
-                    fontFamily: "var(--font-nunito)",
-                    transition: "all 0.3s ease",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "10px",
-                  }}
+	                  style={{
+	                    ...primarySectionButtonStyle,
+	                    padding: "16px 40px",
+	                    fontSize: "clamp(14px, 2.5vw, 16px)",
+	                    fontWeight: 700,
+	                    border: "2px solid rgba(236, 72, 153, 0.6)",
+	                    background:
+	                      "linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1))",
+	                    color: "#ec4899",
+	                    transition: "all 0.3s ease",
+	                    gap: "10px",
+	                  }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background =
                       "linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(236, 72, 153, 0.2))";

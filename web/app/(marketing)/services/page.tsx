@@ -7,6 +7,11 @@ import { Search, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { ServiceCard } from '@/features/services/components/ServiceCard';
 import { getAllServices } from '@/features/services/data/services';
+import {
+  backButtonStyle,
+  pageSubtitleStyle,
+  pageTitleStyle,
+} from '@/features/home/components/homeSectionStyles';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -33,19 +38,8 @@ export default function ServicesPage() {
             whileHover={{ scale: 1.05, x: -5 }}
             whileTap={{ scale: 0.95 }}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              background: 'rgba(17, 24, 39, 0.7)',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
-              borderRadius: '10px',
-              padding: '10px 20px',
-              color: 'white',
-              fontSize: '14px',
-              fontWeight: 600,
-              cursor: 'pointer',
+              ...backButtonStyle,
               marginBottom: '40px',
-              fontFamily: 'var(--font-space-mono)',
             }}
           >
             <ArrowLeft style={{ width: '18px', height: '18px' }} />
@@ -56,18 +50,12 @@ export default function ServicesPage() {
         <div style={{ textAlign: 'center', marginBottom: '50px' }}>
           <h1
             style={{
-              fontSize: 'clamp(32px, 5vw, 48px)',
-              fontWeight: 700,
-              background: 'linear-gradient(to right, #22d3ee, #a855f7)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              marginBottom: '16px',
-              fontFamily: 'var(--font-space-mono)',
+              ...pageTitleStyle,
             }}
           >
             Our Services
           </h1>
-          <p style={{ fontSize: '16px', color: '#9ca3af', maxWidth: '700px', margin: '0 auto' }}>
+          <p style={pageSubtitleStyle}>
             Professional cybersecurity and tech solutions for businesses
           </p>
         </div>

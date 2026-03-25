@@ -5,6 +5,11 @@ import Image from "next/image";
 import { IconArrowLeft, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { getNewsById, NewsBlock } from "../data/NewsData";
 import { useState, useEffect } from "react";
+import {
+  backButtonStyle,
+  pageSubtitleStyle,
+  pageTitleStyle,
+} from '@/features/home/components/homeSectionStyles';
 
 type NewsDetailsProps = {
   id: number;
@@ -41,6 +46,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
           <Link 
             href="/news"
             className="inline-flex items-center gap-3 btn bg-[var(--color-surface)] hover:bg-[var(--color-primary)] hover:text-[var(--color-btn-primary-text)] border border-[var(--color-border)] text-[var(--color-text)] font-medium px-8 py-4 rounded-[var(--radius-lg)] shadow-lg mb-12"
+            style={backButtonStyle}
           >
             <IconArrowLeft className="w-5 h-5" />
             Back to News
@@ -62,16 +68,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
             href="/news"
             className="inline-flex items-center gap-2 group"
             style={{
-              padding: '12px 24px',
-              fontSize: '14px',
-              fontWeight: 600,
-              borderRadius: '12px',
-              border: '2px solid rgba(34, 211, 238, 0.6)',
-              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
-              color: '#22d3ee',
-              cursor: 'pointer',
-              fontFamily: 'var(--font-family-base)',
-              transition: 'all 0.3s ease',
+              ...backButtonStyle,
               boxShadow: '0 0 20px rgba(34, 211, 238, 0.4)',
               textDecoration: 'none',
             }}
@@ -225,14 +222,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
             <h1 
               className="leading-tight mb-6"
               style={{
-                fontSize: 'clamp(2rem, 5.5vw, 3.4rem)',
-                fontWeight: 700,
-                background: 'linear-gradient(135deg, #22d3ee, #a855f7)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                fontFamily: 'var(--font-family-base)',
-                letterSpacing: '0.4px',
-                textTransform: 'uppercase',
+                ...pageTitleStyle,
                 marginTop: '40px',
               }}
             >
@@ -254,9 +244,9 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
             <p 
               className="leading-relaxed max-w-2xl"
               style={{
+                ...pageSubtitleStyle,
                 fontSize: 'var(--font-size-lg)',
                 color: 'var(--color-text-secondary)',
-                fontFamily: 'var(--font-family-base)',
                 marginTop: '32px',
               }}
             >

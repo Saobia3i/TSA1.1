@@ -22,6 +22,10 @@ import { useRef } from 'react';
 import { getFeaturedConsultants } from '@/features/consultant/Consultantdata';
 import Link from 'next/link';
 import Image from 'next/image';
+import {
+  backButtonStyle,
+  primarySectionButtonStyle,
+} from '@/features/home/components/homeSectionStyles';
 
 export default function ConsultantDetailPage() {
   const router = useRouter();
@@ -86,19 +90,10 @@ export default function ConsultantDetailPage() {
           whileHover={{ x: -5 }}
           whileTap={{ scale: 0.95 }}
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
+            ...backButtonStyle,
             padding: 'clamp(10px, 2vw, 12px) clamp(18px, 3vw, 24px)',
-            background: 'rgba(17, 24, 39, 0.8)',
-            border: '2px solid rgba(34, 211, 238, 0.3)',
-            borderRadius: '12px',
-            color: '#22d3ee',
-            fontSize: 'clamp(13px, 2vw, 14px)',
-            fontWeight: 600,
-            cursor: 'pointer',
+            background: 'rgba(17, 24, 39, 0.7)',
             backdropFilter: 'blur(10px)',
-            fontFamily: 'var(--font-nunito)',
           }}
         >
           <ArrowLeft style={{ width: 'clamp(16px, 3vw, 18px)', height: 'clamp(16px, 3vw, 18px)' }} />
@@ -327,15 +322,12 @@ export default function ConsultantDetailPage() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         style={{
+                          ...primarySectionButtonStyle,
                           padding: 'clamp(10px, 2vw, 12px) clamp(18px, 3vw, 24px)',
                           background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.32), rgba(168, 85, 247, 0.28))',
                           border: '2px solid rgba(34, 211, 238, 0.75)',
-                          borderRadius: '12px',
                           color: '#a5f3fc',
                           fontSize: 'clamp(12px, 2.5vw, 14px)',
-                          fontWeight: 600,
-                          cursor: 'pointer',
-                          fontFamily: 'var(--font-nunito)',
                           whiteSpace: 'nowrap',
                           boxShadow: '0 8px 24px rgba(34, 211, 238, 0.22)',
                         }}
@@ -350,18 +342,13 @@ export default function ConsultantDetailPage() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         style={{
+                          ...primarySectionButtonStyle,
                           padding: 'clamp(10px, 2vw, 12px) clamp(18px, 3vw, 24px)',
                           background: 'rgba(168, 85, 247, 0.15)',
                           border: '2px solid rgba(168, 85, 247, 0.4)',
-                          borderRadius: '12px',
                           color: '#a855f7',
                           fontSize: 'clamp(12px, 2.5vw, 14px)',
-                          fontWeight: 600,
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
                           gap: '8px',
-                          fontFamily: 'var(--font-nunito)',
                         }}
                       >
                         <Mail style={{ width: 'clamp(14px, 3vw, 16px)', height: 'clamp(14px, 3vw, 16px)' }} />
@@ -1146,15 +1133,13 @@ export default function ConsultantDetailPage() {
               whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(34, 211, 238, 0.6)' }}
               whileTap={{ scale: 0.95 }}
               style={{
+                ...primarySectionButtonStyle,
                 padding: 'clamp(12px, 3vw, 16px) clamp(24px, 5vw, 36px)',
                 background: 'linear-gradient(135deg, #22d3ee, #a855f7)',
                 border: 'none',
-                borderRadius: 'clamp(10px, 3vw, 14px)',
                 color: 'white',
                 fontSize: 'clamp(13px, 2.5vw, 15px)',
                 fontWeight: 700,
-                cursor: 'pointer',
-                fontFamily: 'var(--font-nunito)',
               }}
             >
               Explore Courses

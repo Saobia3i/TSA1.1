@@ -3,7 +3,12 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {  Github } from 'lucide-react';
-import { primarySectionButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
+import {
+  homePreviewButtonStyle,
+  homePreviewCardButtonStyle,
+  sectionSubtitleStyle,
+  sectionTitleStyle,
+} from '@/features/home/components/homeSectionStyles';
 
 const featuredTools = [
   {
@@ -126,19 +131,11 @@ export default function ToolsPreview() {
 
                   <div
                     style={{
-                      width: '100%',
-                      padding: 'clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 16px)',
-                      fontSize: 'clamp(11px, 1.8vw, 13px)',
-                      fontWeight: 600,
-                      borderRadius: '8px',
+                      ...homePreviewCardButtonStyle,
                       border: `2px solid ${item.color}60`,
                       background: `linear-gradient(135deg, ${item.color}20, ${item.color}10)`,
                       color: '#ffffff',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
                       gap: '6px',
-                      fontFamily: 'var(--font-nunito)',
                       boxShadow: `0 0 12px ${item.color}24`,
                     }}
                   >
@@ -175,7 +172,7 @@ export default function ToolsPreview() {
           <motion.button
             whileHover={{ scale: 1.04, boxShadow: '0 0 25px rgba(34, 211, 238, 0.6), 0 0 50px rgba(168, 85, 247, 0.4)' }}
             whileTap={{ scale: 0.96 }}
-            style={primarySectionButtonStyle}
+            style={homePreviewButtonStyle}
           >
             View More Tools
           </motion.button>
