@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
@@ -36,7 +36,7 @@ const TOTAL_CYCLE  = STRIPES * SERIAL_GAP + 1.2;
 const STRIPE_COLORS = ['#7dd3fc','#a78bfa','#38bdf8','#c084fc','#7dd3fc','#818cf8','#38bdf8','#a78bfa','#7dd3fc','#c084fc','#38bdf8','#a78bfa','#818cf8','#7dd3fc'];
 
 /* ── CountUp component ───────────────────────────────────── */
-function CountUp5() {
+const CountUp5 = memo(function CountUp5() {
   const [count, setCount] = useState(1);
 
   useEffect(() => {
@@ -74,10 +74,10 @@ function CountUp5() {
       {count}+
     </motion.span>
   );
-}
+});
 
 /* ── USFlag ──────────────────────────────────────────────── */
-function USFlagIcon({ size = 80 }: { size?: number }) {
+const USFlagIcon = memo(function USFlagIcon({ size = 80 }: { size?: number }) {
   return (
     <Image
       src={`https://ik.imagekit.io/7yw4jtfbt/TSA/FLAG.png?tr=w-${size * 2},h-${size * 2},q-85,f-webp`}
@@ -88,7 +88,7 @@ function USFlagIcon({ size = 80 }: { size?: number }) {
       style={{ objectFit: 'cover', borderRadius: '50%' }}
     />
   );
-}
+});
 
 /* ── TOP FEATURES (from Feature.tsx) ─────────────────────── */
 /* ── BOTTOM FEATURES (from Feature.tsx) ──────────────────── */
@@ -143,7 +143,7 @@ const BOTTOM_FEATURES = [
 ];
 
 /* ── Feature Card (for right wave) ───────────────────────── */
-function FloatingFeatureCard({ icon, text, color, top, right, delay, horizontal = false, width, className }: { icon: React.ReactNode; text: React.ReactNode; color: string; top: string; right: string; delay: number; horizontal?: boolean; width?: string; className?: string }) {
+const FloatingFeatureCard = memo(function FloatingFeatureCard({ icon, text, color, top, right, delay, horizontal = false, width, className }: { icon: React.ReactNode; text: React.ReactNode; color: string; top: string; right: string; delay: number; horizontal?: boolean; width?: string; className?: string }) {
   const positionVars = {
     ['--card-top' as any]: top,
     ['--card-right' as any]: right,
@@ -184,10 +184,10 @@ function FloatingFeatureCard({ icon, text, color, top, right, delay, horizontal 
       </div>
     </motion.div>
   );
-}
+});
 
 /* ── right wave + cards ──────────────────────────────────── */
-function RightWave() {
+const RightWave = memo(function RightWave() {
   const TOP_X    = 480;
   const BOT_X    = 880;
   const DX       = BOT_X - TOP_X;
@@ -270,12 +270,12 @@ function RightWave() {
       <FloatingFeatureCard className="ff-card expansion-card" icon={BOTTOM_FEATURES[0].icon} text={BOTTOM_FEATURES[0].text} color={BOTTOM_FEATURES[0].color} top="72%" right="2%" delay={1.2} horizontal width="220px" />
     </div>
   );
-}
+});
 
 
 
 /* ── cert marquee ─────────────────────────────────────────── */
-function CertMarquee() {
+const CertMarquee = memo(function CertMarquee() {
   const doubled = [...CERTS, ...CERTS];
   return (
     <div style={{ position:'relative', overflow:'hidden', borderTop:'1px solid rgba(56,189,248,0.18)', borderBottom:'1px solid rgba(56,189,248,0.18)', padding:'10px 0' }}>
@@ -291,11 +291,12 @@ function CertMarquee() {
       </div>
     </div>
   );
-}
+});
 
 /* ── main ─────────────────────────────────────────────────── */
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showDeferredVisuals, setShowDeferredVisuals] = useState(false);
 
   useEffect(() => {
     const slideInterval = setInterval(() => {
@@ -303,6 +304,28 @@ export default function HeroSection() {
     }, SLIDE_INTERVAL);
     return () => {
       clearInterval(slideInterval);
+    };
+  }, []);
+
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let idleId: number | null = null;
+
+    const activateVisuals = () => setShowDeferredVisuals(true);
+
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(activateVisuals, { timeout: 180 });
+    } else {
+      timeoutId = setTimeout(activateVisuals, 120);
+    }
+
+    return () => {
+      if (idleId !== null && typeof window !== 'undefined' && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     };
   }, []);
 
@@ -365,14 +388,18 @@ export default function HeroSection() {
       <div style={{ position:'absolute', inset:0, pointerEvents:'none', zIndex:0, background:'radial-gradient(ellipse 80% 50% at 20% -5%,rgba(56,189,248,0.13) 0%,transparent 60%), radial-gradient(ellipse 50% 40% at 85% 55%,rgba(99,102,241,0.09) 0%,transparent 55%)' }} />
       <div style={{ position:'absolute', inset:0, pointerEvents:'none', zIndex:0, backgroundImage:'linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px)', backgroundSize:'52px 52px', maskImage:'radial-gradient(ellipse 100% 60% at 30% 10%,black 20%,transparent 75%)', WebkitMaskImage:'radial-gradient(ellipse 100% 60% at 30% 10%,black 20%,transparent 75%)' }} />
 
-      {/* desktop wave */}
-      <div className="h-wave-desk" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none' }}>
-        <RightWave />
-      </div>
-      {/* mobile wave */}
-      <div className="h-wave-mob" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none' }}>
-        <RightWave />
-      </div>
+      {showDeferredVisuals && (
+        <>
+          {/* desktop wave */}
+          <div className="h-wave-desk" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none' }}>
+            <RightWave />
+          </div>
+          {/* mobile wave */}
+          <div className="h-wave-mob" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none' }}>
+            <RightWave />
+          </div>
+        </>
+      )}
 
       {/* content */}
       <div className="hff h-grid" style={{ position:'relative', zIndex:2 }}>

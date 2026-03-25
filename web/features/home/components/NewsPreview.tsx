@@ -180,9 +180,9 @@ export default function NewsPreview() {
       {/* News Cards Container - Fixed Wrapper */}
       <div
         style={{
-          maxWidth: '680px',
+          maxWidth: '620px',
           margin: '0 auto',
-          paddingBottom: '80px',
+          paddingBottom: '72px',
         }}
       >
         {/* Carousel Container with Overflow Hidden */}
@@ -191,14 +191,16 @@ export default function NewsPreview() {
             position: 'relative',
             width: '100%',
             overflow: 'hidden',
+            borderRadius: '24px',
           }}
         >
           {/* Sliding Flex Container */}
           <div
             style={{
               display: 'flex',
-              transform: `translateX(-${index * 100}%)`,
-              transition: isTransitioning ? 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+              transform: `translate3d(-${index * 100}%, 0, 0)`,
+              transition: isTransitioning ? 'transform 0.52s cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
+              backfaceVisibility: 'hidden',
             }}
           >
             {/* Render all featured items */}
@@ -211,22 +213,36 @@ export default function NewsPreview() {
                     minWidth: '100%',
                     width: '100%',
                     flexShrink: 0,
+                    padding: '8px',
                   }}
                 >
                   <div
                     style={{
-                      background: 'rgba(17, 24, 39, 0.85)',
+                      background:
+                        'linear-gradient(180deg, rgba(17, 24, 39, 0.96) 0%, rgba(10, 15, 28, 0.98) 100%)',
                       border: item.isPinned
-                        ? '2px solid rgba(34, 211, 238, 0.95)'
-                        : '2px solid rgba(255, 255, 255, 0.25)',
-                      borderRadius: '14px',
+                        ? '1px solid rgba(34, 211, 238, 0.65)'
+                        : '1px solid rgba(148, 163, 184, 0.22)',
+                      borderRadius: '20px',
                       overflow: 'hidden',
                       boxShadow: item.isPinned
-                        ? '0 8px 24px rgba(0, 0, 0, 0.4), 0 0 30px rgba(34, 211, 238, 0.2)'
-                        : '0 8px 24px rgba(0, 0, 0, 0.4)',
-                      backdropFilter: 'blur(10px)',
+                        ? '0 18px 42px rgba(2, 6, 23, 0.42), 0 0 0 1px rgba(34, 211, 238, 0.16), inset 0 1px 0 rgba(255,255,255,0.06)'
+                        : '0 18px 42px rgba(2, 6, 23, 0.36), inset 0 1px 0 rgba(255,255,255,0.04)',
+                      backdropFilter: 'blur(12px)',
+                      position: 'relative',
                     }}
                   >
+                    <div
+                      aria-hidden
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: item.isPinned
+                          ? 'radial-gradient(circle at top right, rgba(34, 211, 238, 0.14), transparent 34%), radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.12), transparent 32%)'
+                          : 'radial-gradient(circle at top right, rgba(34, 211, 238, 0.08), transparent 28%), radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.08), transparent 30%)',
+                        pointerEvents: 'none',
+                      }}
+                    />
                     {/* Fixed height image container */}
                     <div
                       style={{
@@ -235,6 +251,7 @@ export default function NewsPreview() {
                         position: 'relative',
                         overflow: 'hidden',
                         backgroundColor: 'rgba(17, 24, 39, 0.8)',
+                        borderBottom: '1px solid rgba(255,255,255,0.08)',
                       }}
                     >
                       {itemHeroImage ? (
@@ -272,18 +289,26 @@ export default function NewsPreview() {
                       )}
                     </div>
 
-                    <div style={{ padding: 'clamp(14px, 2.5vw, 20px)' }}>
+                    <div
+                      style={{
+                        padding: 'clamp(16px, 2.6vw, 20px)',
+                        position: 'relative',
+                        zIndex: 1,
+                      }}
+                    >
                       {item.isPinned && (
                         <div
                           style={{
                             fontSize: '11px',
                             color: '#22d3ee',
                             fontWeight: 700,
-                            marginBottom: '6px',
-                            letterSpacing: '0.3px',
+                            marginBottom: '10px',
+                            letterSpacing: '0.8px',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '5px',
+                            textTransform: 'uppercase',
+                            fontFamily: 'var(--font-space-mono)',
                           }}
                         >
                           <IconPinnedFilled size={13} />
@@ -293,34 +318,42 @@ export default function NewsPreview() {
 
                       <h3
                         style={{
-                          fontSize: 'clamp(16px, 2.2vw, 20px)',
+                          fontSize: 'clamp(15px, 2vw, 18px)',
                           fontWeight: 800,
                           color: 'white',
-                          marginBottom: '6px',
+                          marginBottom: '8px',
                           fontFamily: 'var(--font-space-mono)',
-                          lineHeight: 1.3,
+                          lineHeight: 1.35,
+                          letterSpacing: '0.2px',
                         }}
                       >
                         {item.title}
                       </h3>
 
-                      <p
+                      <div
                         style={{
-                          color: '#9ca3af',
-                          marginBottom: '8px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          padding: '5px 10px',
+                          marginBottom: '12px',
+                          borderRadius: '999px',
+                          background: 'rgba(148, 163, 184, 0.1)',
+                          border: '1px solid rgba(148, 163, 184, 0.16)',
+                          color: '#94a3b8',
                           fontSize: 'clamp(10px, 1.3vw, 12px)',
                           fontFamily: 'var(--font-space-mono)',
                         }}
                       >
                         {item.date}
-                      </p>
+                      </div>
 
                       <p
                         style={{
-                          fontSize: 'clamp(12px, 1.5vw, 13px)',
-                          color: '#d1d5db',
-                          lineHeight: 1.5,
-                          marginBottom: '14px',
+                          fontSize: 'clamp(11.5px, 1.45vw, 13px)',
+                          color: '#cbd5e1',
+                          lineHeight: 1.65,
+                          marginBottom: '16px',
                           maxWidth: '100%',
                         }}
                       >
@@ -333,6 +366,8 @@ export default function NewsPreview() {
                           gap: '8px',
                           flexWrap: 'wrap',
                           alignItems: 'center',
+                          paddingTop: '12px',
+                          borderTop: '1px solid rgba(255,255,255,0.08)',
                         }}
                       >
                         <Link href={`/news/${item.id}`} style={{ textDecoration: 'none' }}>
@@ -344,10 +379,10 @@ export default function NewsPreview() {
                             }}
                             whileTap={{ scale: 0.97 }}
                             style={{
-                              padding: '9px 18px',
-                              fontSize: '13px',
+                              padding: '9px 16px',
+                              fontSize: '12px',
                               fontWeight: 700,
-                              borderRadius: '8px',
+                              borderRadius: '10px',
                               border: '2px solid rgba(34, 211, 238, 0.6)',
                               background:
                                 'linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(168, 85, 247, 0.12))',
@@ -378,22 +413,36 @@ export default function NewsPreview() {
                     minWidth: '100%',
                     width: '100%',
                     flexShrink: 0,
+                    padding: '8px',
                   }}
                 >
                   <div
                     style={{
-                      background: 'rgba(17, 24, 39, 0.85)',
+                      background:
+                        'linear-gradient(180deg, rgba(17, 24, 39, 0.96) 0%, rgba(10, 15, 28, 0.98) 100%)',
                       border: firstItem.isPinned
-                        ? '2px solid rgba(34, 211, 238, 0.95)'
-                        : '2px solid rgba(255, 255, 255, 0.25)',
-                      borderRadius: '14px',
+                        ? '1px solid rgba(34, 211, 238, 0.65)'
+                        : '1px solid rgba(148, 163, 184, 0.22)',
+                      borderRadius: '20px',
                       overflow: 'hidden',
                       boxShadow: firstItem.isPinned
-                        ? '0 8px 24px rgba(0, 0, 0, 0.4), 0 0 30px rgba(34, 211, 238, 0.2)'
-                        : '0 8px 24px rgba(0, 0, 0, 0.4)',
-                      backdropFilter: 'blur(10px)',
+                        ? '0 18px 42px rgba(2, 6, 23, 0.42), 0 0 0 1px rgba(34, 211, 238, 0.16), inset 0 1px 0 rgba(255,255,255,0.06)'
+                        : '0 18px 42px rgba(2, 6, 23, 0.36), inset 0 1px 0 rgba(255,255,255,0.04)',
+                      backdropFilter: 'blur(12px)',
+                      position: 'relative',
                     }}
                   >
+                    <div
+                      aria-hidden
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: firstItem.isPinned
+                          ? 'radial-gradient(circle at top right, rgba(34, 211, 238, 0.14), transparent 34%), radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.12), transparent 32%)'
+                          : 'radial-gradient(circle at top right, rgba(34, 211, 238, 0.08), transparent 28%), radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.08), transparent 30%)',
+                        pointerEvents: 'none',
+                      }}
+                    />
                     <div
                       style={{
                         width: '100%',
@@ -401,6 +450,7 @@ export default function NewsPreview() {
                         position: 'relative',
                         overflow: 'hidden',
                         backgroundColor: 'rgba(17, 24, 39, 0.8)',
+                        borderBottom: '1px solid rgba(255,255,255,0.08)',
                       }}
                     >
                       {itemHeroImage ? (
@@ -438,18 +488,26 @@ export default function NewsPreview() {
                       )}
                     </div>
 
-                    <div style={{ padding: 'clamp(14px, 2.5vw, 20px)' }}>
+                    <div
+                      style={{
+                        padding: 'clamp(16px, 2.6vw, 20px)',
+                        position: 'relative',
+                        zIndex: 1,
+                      }}
+                    >
                       {firstItem.isPinned && (
                         <div
                           style={{
                             fontSize: '11px',
                             color: '#22d3ee',
                             fontWeight: 700,
-                            marginBottom: '6px',
-                            letterSpacing: '0.3px',
+                            marginBottom: '10px',
+                            letterSpacing: '0.8px',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '5px',
+                            textTransform: 'uppercase',
+                            fontFamily: 'var(--font-space-mono)',
                           }}
                         >
                           <IconPinnedFilled size={13} />
@@ -459,34 +517,42 @@ export default function NewsPreview() {
 
                       <h3
                         style={{
-                          fontSize: 'clamp(16px, 2.2vw, 20px)',
+                          fontSize: 'clamp(15px, 2vw, 18px)',
                           fontWeight: 800,
                           color: 'white',
-                          marginBottom: '6px',
+                          marginBottom: '8px',
                           fontFamily: 'var(--font-space-mono)',
-                          lineHeight: 1.3,
+                          lineHeight: 1.35,
+                          letterSpacing: '0.2px',
                         }}
                       >
                         {firstItem.title}
                       </h3>
 
-                      <p
+                      <div
                         style={{
-                          color: '#9ca3af',
-                          marginBottom: '8px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          padding: '5px 10px',
+                          marginBottom: '12px',
+                          borderRadius: '999px',
+                          background: 'rgba(148, 163, 184, 0.1)',
+                          border: '1px solid rgba(148, 163, 184, 0.16)',
+                          color: '#94a3b8',
                           fontSize: 'clamp(10px, 1.3vw, 12px)',
                           fontFamily: 'var(--font-space-mono)',
                         }}
                       >
                         {firstItem.date}
-                      </p>
+                      </div>
 
                       <p
                         style={{
-                          fontSize: 'clamp(12px, 1.5vw, 13px)',
-                          color: '#d1d5db',
-                          lineHeight: 1.5,
-                          marginBottom: '14px',
+                          fontSize: 'clamp(11.5px, 1.45vw, 13px)',
+                          color: '#cbd5e1',
+                          lineHeight: 1.65,
+                          marginBottom: '16px',
                           maxWidth: '100%',
                         }}
                       >
@@ -499,6 +565,8 @@ export default function NewsPreview() {
                           gap: '8px',
                           flexWrap: 'wrap',
                           alignItems: 'center',
+                          paddingTop: '12px',
+                          borderTop: '1px solid rgba(255,255,255,0.08)',
                         }}
                       >
                         <Link href={`/news/${firstItem.id}`} style={{ textDecoration: 'none' }}>
@@ -510,10 +578,10 @@ export default function NewsPreview() {
                             }}
                             whileTap={{ scale: 0.97 }}
                             style={{
-                              padding: '9px 18px',
-                              fontSize: '13px',
+                              padding: '9px 16px',
+                              fontSize: '12px',
                               fontWeight: 700,
-                              borderRadius: '8px',
+                              borderRadius: '10px',
                               border: '2px solid rgba(34, 211, 238, 0.6)',
                               background:
                                 'linear-gradient(135deg, rgba(6, 182, 212, 0.12), rgba(168, 85, 247, 0.12))',

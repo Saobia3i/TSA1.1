@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { MessageCircle, Quote, Handshake } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
@@ -11,22 +11,18 @@ import HeroSection from "@/features/home/components/HeroSection";
 // Lazy load preview components for better performance
 const CoursesPreview = dynamic(() => import("@/features/home/components/CoursesPreview"), {
   loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
-  ssr: false
 });
 
 const NewsPreview = dynamic(() => import("@/features/home/components/NewsPreview"), {
   loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
-  ssr: false
 });
 
 const ServicesPreview = dynamic(() => import("@/features/home/components/ServicesPreview"), {
   loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
-  ssr: false
 });
 
 const ToolsPreview = dynamic(() => import("@/features/home/components/ToolsPreview"), {
   loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
-  ssr: false
 });
 
 import Consultantpreview from "@/features/home/components/Consultantpreview";
@@ -59,6 +55,7 @@ export default function HomePage() {
   const [showPopup, setShowPopup] = useState(true);
   const [dismissed, setDismissed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   // Detect mobile device
   useEffect(() => {
@@ -80,6 +77,38 @@ export default function HomePage() {
   //   target: founderRef,
   //   offset: ["start end", "end start"],
   // });
+
+  const getPreviewReveal = (direction: "up" | "left" | "right") => {
+    if (prefersReducedMotion) {
+      return {
+        initial: { opacity: 0 },
+        whileInView: { opacity: 1 },
+        transition: { duration: 0.28, ease: "easeOut" as const },
+      };
+    }
+
+    const distance = isMobile ? 18 : 26;
+    const initial =
+      direction === "left"
+        ? { opacity: 0, x: -distance }
+        : direction === "right"
+          ? { opacity: 0, x: distance }
+          : { opacity: 0, y: distance };
+
+    return {
+      initial,
+      whileInView: { opacity: 1, x: 0, y: 0 },
+      transition: {
+        duration: isMobile ? 0.42 : 0.52,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
+    };
+  };
+
+  const previewRevealStyle = {
+    transform: "translateZ(0)",
+    backfaceVisibility: "hidden" as const,
+  };
 
   return (
     <div style={{ backgroundColor: "#000", overflowX: "hidden", position: "relative" }}>
@@ -341,12 +370,42 @@ export default function HomePage() {
           </div>
         </motion.div>
       </motion.section>
-<Consultantpreview />
+      <motion.div
+        {...getPreviewReveal("up")}
+        viewport={{ once: true, amount: 0.16, margin: "0px 0px -8% 0px" }}
+        style={previewRevealStyle}
+      >
+        <Consultantpreview />
+      </motion.div>
       {/* Feature Previews from Features folder */}
-      <NewsPreview />
-      <CoursesPreview />
-      <ServicesPreview />
-      <ToolsPreview />
+      <motion.div
+        {...getPreviewReveal("left")}
+        viewport={{ once: true, amount: 0.16, margin: "0px 0px -8% 0px" }}
+        style={previewRevealStyle}
+      >
+        <NewsPreview />
+      </motion.div>
+      <motion.div
+        {...getPreviewReveal("right")}
+        viewport={{ once: true, amount: 0.16, margin: "0px 0px -8% 0px" }}
+        style={previewRevealStyle}
+      >
+        <CoursesPreview />
+      </motion.div>
+      <motion.div
+        {...getPreviewReveal("up")}
+        viewport={{ once: true, amount: 0.16, margin: "0px 0px -8% 0px" }}
+        style={previewRevealStyle}
+      >
+        <ServicesPreview />
+      </motion.div>
+      <motion.div
+        {...getPreviewReveal("up")}
+        viewport={{ once: true, amount: 0.16, margin: "0px 0px -8% 0px" }}
+        style={previewRevealStyle}
+      >
+        <ToolsPreview />
+      </motion.div>
       {/* Our Concern Section - NO styles import needed */}
       <section
         style={{

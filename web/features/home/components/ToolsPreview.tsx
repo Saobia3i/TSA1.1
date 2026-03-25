@@ -2,8 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Github, ArrowRight } from 'lucide-react';
-import { useState } from 'react';
+import {  Github } from 'lucide-react';
 
 const featuredTools = [
   {
@@ -33,8 +32,7 @@ const featuredTools = [
 ];
 
 export default function ToolsPreview() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [hoveredViewMore, setHoveredViewMore] = useState(false);
+  const duplicatedItems = [...featuredTools, ...featuredTools];
 
   return (
     <motion.section
@@ -69,277 +67,170 @@ export default function ToolsPreview() {
         </p>
       </motion.div>
 
-      {/* Single Row Container */}
+      <div
+        style={{
+          maxWidth: '1400px',
+          margin: '0 auto',
+          overflow: 'hidden',
+          paddingTop: '20px',
+          paddingBottom: '20px',
+        }}
+      >
+        <div
+          className="tools-carousel-track"
+          style={{
+            display: 'flex',
+            gap: 'clamp(12px, 2vw, 20px)',
+            width: 'max-content',
+          }}
+        >
+          {duplicatedItems.map((item, index) => {
+            const card = (
+              <div
+                style={{
+                  minWidth: 'clamp(220px, 22vw, 240px)',
+                  maxWidth: '240px',
+                  flex: '0 0 auto',
+                  padding: 'clamp(16px, 3vw, 20px)',
+                  background: 'rgba(17, 24, 39, 0.5)',
+                  backdropFilter: 'blur(30px)',
+                  borderRadius: '14px',
+                  border: `2px solid ${item.color}40`,
+                  boxShadow: `0 8px 25px ${item.color}20`,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  minHeight: 'clamp(220px, 28vw, 240px)',
+                }}
+              >
+                <>
+                  <div>
+                    <h3
+                      style={{
+                        fontSize: 'clamp(16px, 2.5vw, 18px)',
+                        fontWeight: 700,
+                        color: '#ffffff',
+                        marginBottom: '8px',
+                        fontFamily: 'var(--font-nunito)',
+                        letterSpacing: '0.3px',
+                        lineHeight: '1.3',
+                      }}
+                    >
+                      {item.name}
+                    </h3>
+
+                    <p
+                      style={{
+                        fontSize: 'clamp(11px, 1.8vw, 13px)',
+                        color: '#d1d5db',
+                        lineHeight: 1.6,
+                        marginBottom: '16px',
+                        fontFamily: 'var(--font-nunito)',
+                      }}
+                    >
+                      {item.description}
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      width: '100%',
+                      padding: 'clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 16px)',
+                      fontSize: 'clamp(11px, 1.8vw, 13px)',
+                      fontWeight: 600,
+                      borderRadius: '8px',
+                      border: `2px solid ${item.color}60`,
+                      background: `linear-gradient(135deg, ${item.color}20, ${item.color}10)`,
+                      backdropFilter: 'blur(10px)',
+                      color: '#ffffff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      fontFamily: 'var(--font-nunito)',
+                      boxShadow: `0 0 15px ${item.color}30`,
+                    }}
+                  >
+                    <Github style={{ width: '16px', height: '16px' }} />
+                    GitHub
+                  </div>
+                </>
+              </div>
+            );
+
+            return (
+              <a
+                key={`${item.name}-${index}`}
+                href={item.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none', flex: '0 0 auto' }}
+              >
+                {card}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+
       <div
         style={{
           display: 'flex',
-          gap: 'clamp(12px, 2vw, 20px)',
-          maxWidth: '1400px',
-          margin: '0 auto',
-          overflowX: 'auto',
-          paddingBottom: '40px',
-          paddingTop: '20px',
-          scrollbarWidth: 'thin',
-          scrollbarColor: 'rgba(34, 211, 238, 0.3) rgba(17, 24, 39, 0.2)',
+          justifyContent: 'center',
+          marginTop: '28px',
         }}
       >
-        {/* Tool Cards - SMALLER WIDTH */}
-        {featuredTools.map((tool, index) => (
-          <motion.div
-            key={tool.name}
-            initial={{ opacity: 1, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.05, duration: 0.25, ease: 'easeOut' }}
-            onHoverStart={() => setHoveredIndex(index)}
-            onHoverEnd={() => setHoveredIndex(null)}
-            whileHover={{
-              y: -8,
-              scale: 1.02,
-              transformOrigin: 'center bottom',
-            }}
+        <Link href="/tools" style={{ textDecoration: 'none' }}>
+          <motion.button
+            whileHover={{ scale: 1.04, boxShadow: '0 0 25px rgba(34, 211, 238, 0.6), 0 0 50px rgba(168, 85, 247, 0.4)' }}
+            whileTap={{ scale: 0.96 }}
             style={{
-              minWidth: 'clamp(220px, 22vw, 240px)', // ✅ SMALLER WIDTH
-              maxWidth: '240px', // ✅ MAX WIDTH
-              flex: '0 0 auto',
-              padding: 'clamp(16px, 3vw, 20px)', // ✅ SMALLER PADDING
-              background: 'rgba(17, 24, 39, 0.5)',
-              backdropFilter: 'blur(30px)',
-              borderRadius: '14px', // ✅ SMALLER RADIUS
-              border: `2px solid ${hoveredIndex === index ? tool.color : `${tool.color}40`}`,
-              boxShadow: hoveredIndex === index 
-                ? `0 0 40px ${tool.color}60` 
-                : `0 8px 25px ${tool.color}20`,
-              transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              minHeight: 'clamp(220px, 28vw, 240px)', // ✅ SMALLER HEIGHT
-            }}
-          >
-            <div>
-              <h3
-                style={{
-                  fontSize: 'clamp(16px, 2.5vw, 18px)', // ✅ SMALLER TITLE
-                  fontWeight: 700,
-                  color: '#ffffff',
-                  marginBottom: '8px',
-                  fontFamily: 'var(--font-nunito)',
-                  letterSpacing: '0.3px',
-                  lineHeight: '1.3',
-                }}
-              >
-                {tool.name}
-              </h3>
-
-              <p
-                style={{
-                  fontSize: 'clamp(11px, 1.8vw, 13px)', // ✅ SMALLER TEXT
-                  color: '#d1d5db',
-                  lineHeight: 1.6,
-                  marginBottom: '16px',
-                  fontFamily: 'var(--font-nunito)',
-                }}
-              >
-                {tool.description}
-              </p>
-            </div>
-
-            <a
-              href={tool.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: 'none' }}
-            >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                style={{
-                  width: '100%',
-                  padding: 'clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 16px)', // ✅ SMALLER BUTTON
-                  fontSize: 'clamp(11px, 1.8vw, 13px)',
-                  fontWeight: 600,
-                  borderRadius: '8px',
-                  border: `2px solid ${tool.color}60`,
-                  background: `linear-gradient(135deg, ${tool.color}20, ${tool.color}10)`,
-                  backdropFilter: 'blur(10px)',
-                  color: '#ffffff',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  fontFamily: 'var(--font-nunito)',
-                  boxShadow: `0 0 15px ${tool.color}30`,
-                  
-                }}
-              >
-                <Github style={{ width: '16px', height: '16px' }} />
-                GitHub
-              </motion.button>
-            </a>
-          </motion.div>
-        ))}
-
-        {/* View More Tools Card - SMALLER */}
-        <Link href="/tools" style={{ textDecoration: 'none', flex: '0 0 auto' }}>
-          <motion.div
-            initial={{ opacity: 1, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.25, ease: 'easeOut' }}
-            onHoverStart={() => setHoveredViewMore(true)}
-            onHoverEnd={() => setHoveredViewMore(false)}
-            whileHover={{
-              y: -8,
-              scale: 1.02,
-            }}
-            style={{
-              minWidth: 'clamp(220px, 22vw, 240px)', // ✅ SAME AS CARDS
-              maxWidth: '240px',
-              padding: 'clamp(16px, 3vw, 20px)',
+              padding: 'clamp(10px, 1.8vw, 12px) clamp(20px, 3.5vw, 26px)',
+              fontSize: 'clamp(12px, 1.6vw, 13px)',
+              fontWeight: 600,
+              borderRadius: '10px',
+              border: '2px solid rgba(34, 211, 238, 0.6)',
               background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
-              backdropFilter: 'blur(30px)',
-              borderRadius: '14px',
-              border: `2px solid ${hoveredViewMore ? 'rgba(34, 211, 238, 0.8)' : 'rgba(34, 211, 238, 0.4)'}`,
-              boxShadow: hoveredViewMore 
-                ? '0 0 40px rgba(34, 211, 238, 0.6), 0 0 60px rgba(168, 85, 247, 0.4)' 
-                : '0 8px 25px rgba(34, 211, 238, 0.2)',
-              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-              display: 'flex',
-              flexDirection: 'column',
+              color: '#22d3ee',
+              cursor: 'pointer',
+              fontFamily: 'var(--font-nunito)',
+              boxShadow: '0 0 18px rgba(34, 211, 238, 0.4)',
+              transition: 'all 0.3s ease',
+              display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              minHeight: 'clamp(220px, 28vw, 240px)',
-              cursor: 'pointer',
-              position: 'relative',
-              overflow: 'hidden',
+              gap: '10px',
             }}
           >
-            {/* Animated Background Gradient */}
-            <motion.div
-              animate={{
-                background: hoveredViewMore 
-                  ? [
-                      'radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.3), transparent)',
-                      'radial-gradient(circle at 80% 50%, rgba(168, 85, 247, 0.3), transparent)',
-                      'radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.3), transparent)',
-                    ]
-                  : 'radial-gradient(circle at 50% 50%, transparent, transparent)',
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                pointerEvents: 'none',
-              }}
-            />
-
-            <motion.div
-              animate={{
-                scale: hoveredViewMore ? [1, 1.1, 1] : 1,
-              }}
-              transition={{ duration: 0.6, repeat: hoveredViewMore ? Infinity : 0 }}
-              style={{
-                width: 'clamp(60px, 10vw, 70px)', // ✅ SMALLER CIRCLE
-                height: 'clamp(60px, 10vw, 70px)',
-                borderRadius: '50%',
-                border: '3px solid rgba(34, 211, 238, 0.5)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '12px',
-                background: 'rgba(17, 24, 39, 0.6)',
-                position: 'relative',
-                zIndex: 1,
-              }}
-            >
-              <motion.div
-                animate={{
-                  x: hoveredViewMore ? [0, 5, 0] : 0,
-                }}
-                transition={{ duration: 0.6, repeat: hoveredViewMore ? Infinity : 0 }}
-              >
-                <ArrowRight 
-                  style={{ 
-                    width: 'clamp(24px, 5vw, 28px)', // ✅ SMALLER ARROW
-                    height: 'clamp(24px, 5vw, 28px)', 
-                    color: '#22d3ee',
-                    filter: 'drop-shadow(0 0 10px rgba(34, 211, 238, 0.8))',
-                  }} 
-                />
-              </motion.div>
-            </motion.div>
-
-            <h3
-              style={{
-                fontSize: 'clamp(16px, 2.8vw, 18px)', // ✅ SMALLER TITLE
-                fontWeight: 700,
-                color: '#ffffff',
-                marginBottom: '6px',
-                fontFamily: 'var(--font-nunito)',
-                textAlign: 'center',
-                position: 'relative',
-                zIndex: 1,
-                lineHeight: '1.3',
-              }}
-            >
-              View More
-            </h3>
-
-            <p
-              style={{
-                fontSize: 'clamp(11px, 1.8vw, 13px)', // ✅ SMALLER SUBTITLE
-                color: '#9ca3af',
-                fontFamily: 'var(--font-nunito)',
-                textAlign: 'center',
-                position: 'relative',
-                zIndex: 1,
-              }}
-            >
-              Explore toolkit
-            </p>
-
-            {/* Animated Border Pulse */}
-            <motion.div
-              animate={{
-                opacity: hoveredViewMore ? [0.3, 0.6, 0.3] : 0,
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-              style={{
-                position: 'absolute',
-                top: -2,
-                left: -2,
-                right: -2,
-                bottom: -2,
-                borderRadius: '14px',
-                border: '2px solid #22d3ee',
-                pointerEvents: 'none',
-                filter: 'blur(8px)',
-              }}
-            />
-          </motion.div>
+            View More Tools
+          </motion.button>
         </Link>
       </div>
 
       <style>{`
-        /* Custom Scrollbar for horizontal scroll */
-        div::-webkit-scrollbar {
-          height: 8px;
+        .tools-carousel-track {
+          animation: tools-preview-scroll 24s linear infinite;
         }
-        div::-webkit-scrollbar-track {
-          background: rgba(17, 24, 39, 0.2);
-          border-radius: 10px;
+
+        @media (hover: hover) and (pointer: fine) {
+          .tools-carousel-track:hover {
+            animation-play-state: paused;
+          }
         }
-        div::-webkit-scrollbar-thumb {
-          background: rgba(34, 211, 238, 0.3);
-          border-radius: 10px;
+
+        @keyframes tools-preview-scroll {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(calc(-50% - clamp(6px, 1vw, 10px)));
+          }
         }
-        div::-webkit-scrollbar-thumb:hover {
-          background: rgba(34, 211, 238, 0.5);
+
+        @media (max-width: 768px) {
+          .tools-carousel-track {
+            animation-duration: 18s;
+          }
         }
       `}</style>
     </motion.section>
