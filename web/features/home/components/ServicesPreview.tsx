@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useMemo, useRef, useState, useEffect } from 'react';
 import { getAllServices } from '@/features/services/data/services';
 import { GlowingCard } from '@/components/ui/animated-cards';
-import { primarySectionButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
+import { homePreviewButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
 
 export default function ServicesPreview() {
   const featuredServices = useMemo(() => getAllServices().slice(0, 6), []);
@@ -216,7 +216,7 @@ export default function ServicesPreview() {
                     <motion.button
                       whileHover={{ scale: 1.04, boxShadow: '0 0 25px rgba(34, 211, 238, 0.6), 0 0 50px rgba(168, 85, 247, 0.4)' }}
                       whileTap={{ scale: 0.96 }}
-                      style={primarySectionButtonStyle}
+                      style={homePreviewButtonStyle}
                     >
                       Learn More
                     </motion.button>

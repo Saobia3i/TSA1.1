@@ -7,7 +7,12 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { getAllCourses, getFeaturedCourses, type Course } from '@/features/courses/data/courses';
 import { GlowingCard } from '@/components/ui/animated-cards';
 import CourseDetailsModal from '@/features/courses/components/CourseDetailsModal';
-import { primarySectionButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
+import {
+  homePreviewButtonStyle,
+  homePreviewCardButtonStyle,
+  sectionSubtitleStyle,
+  sectionTitleStyle,
+} from '@/features/home/components/homeSectionStyles';
 
 export default function CoursesPreview() {
   const featuredCourses = getFeaturedCourses();
@@ -295,17 +300,7 @@ export default function CoursesPreview() {
                             }}
                             whileTap={{ scale: 0.95 }}
                             style={{
-                              width: '100%',
-                              padding: '12px',
-                              fontSize: 'clamp(12px, 2vw, 13px)',
-                              fontWeight: 600,
-                              borderRadius: '10px',
-                              border: '2px solid rgba(34, 211, 238, 0.6)',
-                              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
-                              color: '#ffffff',
-                              cursor: 'pointer',
-                              fontFamily: 'var(--font-nunito)',
-                              transition: 'all 0.3s ease',
+                              ...homePreviewCardButtonStyle,
                               boxShadow: '0 0 15px rgba(34, 211, 238, 0.3)',
                               position: 'relative',
                               zIndex: 5,
@@ -369,7 +364,7 @@ export default function CoursesPreview() {
             <motion.button
               whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(34, 211, 238, 0.6), 0 0 60px rgba(168, 85, 247, 0.4)' }}
               whileTap={{ scale: 0.95 }}
-              style={primarySectionButtonStyle}
+              style={homePreviewButtonStyle}
             >
               View All Courses
             </motion.button>

@@ -6,7 +6,7 @@ import { Award, Globe, Shield, Briefcase, Target } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { getFeaturedConsultants } from '@/features/consultant/Consultantdata';
 import Image from 'next/image';
-import { primarySectionButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
+import { homePreviewCardButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
 
 export default function ConsultantPreview() {
   const consultant = getFeaturedConsultants()[0]; // Get the featured consultant
@@ -397,8 +397,9 @@ export default function ConsultantPreview() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={isMobile ? { duration: 0.25, delay: 0.25 } : { delay: 0.7 }}
+                  style={{ display: 'flex', justifyContent: 'center' }}
                 >
-                  <Link href="/Consultant" style={{ textDecoration: 'none' }}>
+                  <Link href="/Consultant" style={{ textDecoration: 'none', display: 'inline-flex', justifyContent: 'center' }}>
                     <motion.button
                       whileHover={{
                         scale: 1.03,
@@ -406,9 +407,9 @@ export default function ConsultantPreview() {
                       }}
                       whileTap={{ scale: 0.98 }}
                       transition={{ duration: 0.2, ease: 'easeOut' }}
-                      style={{ ...primarySectionButtonStyle, width: '100%', lineHeight: 1.35 }}
+                      style={homePreviewCardButtonStyle}
                     >
-                      View Full Profile & Expertise
+                      See Details
                     </motion.button>
                   </Link>
                 </motion.div>

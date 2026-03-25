@@ -7,7 +7,11 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import HeroSection from "@/features/home/components/HeroSection";
-import { primarySectionButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from "@/features/home/components/homeSectionStyles";
+import {
+  homePreviewButtonStyle,
+  sectionSubtitleStyle,
+  sectionTitleStyle,
+} from "@/features/home/components/homeSectionStyles";
 
 // Lazy load preview components for better performance
 const CoursesPreview = dynamic(() => import("@/features/home/components/CoursesPreview"), {
@@ -529,23 +533,9 @@ export default function HomePage() {
             <motion.button
               whileHover={isMobile ? {} : { scale: 1.05, y: -3 }}
               whileTap={isMobile ? {} : { scale: 0.95 }}
-              style={primarySectionButtonStyle}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 15px 40px rgba(34, 211, 238, 0.5)";
-                e.currentTarget.style.background =
-                  "linear-gradient(135deg, rgba(34, 211, 238, 0.25), rgba(168, 85, 247, 0.25))";
-                e.currentTarget.style.borderColor = "rgba(34, 211, 238, 0.6)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow =
-                  "0 8px 25px rgba(34, 211, 238, 0.3)";
-                e.currentTarget.style.background =
-                  "linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))";
-                e.currentTarget.style.borderColor = "rgba(34, 211, 238, 0.6)";
-              }}
+              style={homePreviewButtonStyle}
             >
-              <Handshake style={{ width: "20px", height: "20px" }} />
+              <Handshake style={{ width: "18px", height: "18px" }} />
               Become a partner
             </motion.button>
           </Link>

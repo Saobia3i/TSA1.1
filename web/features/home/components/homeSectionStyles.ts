@@ -22,11 +22,23 @@ export const sectionSubtitleStyle: CSSProperties = {
   margin: '0 auto',
 };
 
-export const primarySectionButtonStyle: CSSProperties = {
+export const homePreviewButtonBaseStyle: CSSProperties = {
+  width: 'clamp(170px, 18vw, 190px)',
+  minHeight: '46px',
   padding: 'clamp(10px, 1.8vw, 12px) clamp(20px, 3.5vw, 26px)',
   fontSize: 'clamp(12px, 1.6vw, 13px)',
   fontWeight: 600,
   borderRadius: '10px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '10px',
+  whiteSpace: 'nowrap',
+  textAlign: 'center',
+};
+
+export const homePreviewButtonStyle: CSSProperties = {
+  ...homePreviewButtonBaseStyle,
   border: '2px solid rgba(34, 211, 238, 0.6)',
   background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
   color: '#ffffff',
@@ -34,10 +46,16 @@ export const primarySectionButtonStyle: CSSProperties = {
   fontFamily: 'var(--font-nunito)',
   boxShadow: '0 0 14px rgba(34, 211, 238, 0.32)',
   transition: 'all 0.3s ease',
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '10px',
+};
+
+export const homePreviewCardButtonStyle: CSSProperties = {
+  ...homePreviewButtonStyle,
+  alignSelf: 'center',
+};
+
+export const primarySectionButtonStyle: CSSProperties = {
+  ...homePreviewButtonStyle,
+  padding: 'clamp(10px, 1.8vw, 12px) clamp(20px, 3.5vw, 26px)',
 };
 
 export const pageTitleStyle: CSSProperties = {
