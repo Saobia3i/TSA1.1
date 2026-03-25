@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import HeroSection from "@/features/home/components/HeroSection";
+import { primarySectionButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from "@/features/home/components/homeSectionStyles";
 
 // Lazy load preview components for better performance
 const CoursesPreview = dynamic(() => import("@/features/home/components/CoursesPreview"), {
@@ -133,26 +134,10 @@ export default function HomePage() {
           transition={{ duration: isMobile ? 0.5 : 0.8, ease: [0.16, 1, 0.3, 1] }}
           style={{ textAlign: "center" as const, marginBottom: "50px" }}
         >
-          <h2
-            style={{
-              fontSize: "clamp(32px, 5vw, 48px)",
-              fontWeight: 700,
-              background: "linear-gradient(135deg, #22d3ee, #a855f7)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              fontFamily: "var(--font-nunito)",
-              marginBottom: "12px",
-            }}
-          >
+          <h2 style={sectionTitleStyle}>
             Message from the Founder
           </h2>
-          <p
-            style={{
-              fontSize: "clamp(14px, 2vw, 16px)",
-              color: "#9ca3af",
-              fontFamily: "var(--font-nunito)",
-            }}
-          >
+          <p style={sectionSubtitleStyle}>
             Our commitment to your success
           </p>
         </motion.div>
@@ -416,16 +401,7 @@ export default function HomePage() {
       >
         {/* Heading */}
         <div style={{ textAlign: "center" as const, marginBottom: "60px" }}>
-          <h2
-            style={{
-              fontSize: "clamp(36px, 6vw, 56px)",
-              fontWeight: 700,
-              background: "linear-gradient(135deg, #22d3ee, #a855f7)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              fontFamily: "var(--font-nunito)",
-            }}
-          >
+          <h2 style={sectionTitleStyle}>
             Trusted by
           </h2>
         </div>
@@ -553,24 +529,7 @@ export default function HomePage() {
             <motion.button
               whileHover={isMobile ? {} : { scale: 1.05, y: -3 }}
               whileTap={isMobile ? {} : { scale: 0.95 }}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "12px",
-                padding: "16px 28px",
-                fontSize: "16px",
-                fontWeight: 700,
-                borderRadius: "12px",
-                background:
-                  "linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))",
-                border: "2px solid rgba(34, 211, 238, 0.4)",
-                color: "white",
-                cursor: "pointer",
-                fontFamily: "var(--font-nunito)",
-                backdropFilter: isMobile ? "blur(10px)" : "blur(10px)",
-                boxShadow: "0 8px 25px rgba(34, 211, 238, 0.3)",
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              }}
+              style={primarySectionButtonStyle}
               onMouseEnter={(e) => {
                 e.currentTarget.style.boxShadow =
                   "0 15px 40px rgba(34, 211, 238, 0.5)";
@@ -583,7 +542,7 @@ export default function HomePage() {
                   "0 8px 25px rgba(34, 211, 238, 0.3)";
                 e.currentTarget.style.background =
                   "linear-gradient(135deg, rgba(34, 211, 238, 0.15), rgba(168, 85, 247, 0.15))";
-                e.currentTarget.style.borderColor = "rgba(34, 211, 238, 0.4)";
+                e.currentTarget.style.borderColor = "rgba(34, 211, 238, 0.6)";
               }}
             >
               <Handshake style={{ width: "20px", height: "20px" }} />

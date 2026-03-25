@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { IconPinnedFilled } from '@tabler/icons-react';
 import { getAllNews, NewsItem } from '@/features/news/data/NewsData';
+import { primarySectionButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
 
 const isValidNewsItem = (item: NewsItem | null | undefined): item is NewsItem => {
   return Boolean(item && typeof item.id === 'number' && item.title && item.date);
@@ -29,14 +30,6 @@ export default function NewsPreview() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(true);
-
-  useEffect(() => {
-    try {
-      console.debug('NewsPreview mounted', { allNewsLength: allNews.length, featuredLength: featured.length });
-    } catch (e) {
-      // ignore
-    }
-  }, [allNews.length, featured.length]);
 
   useEffect(() => {
     if (featured.length === 0) {
@@ -75,10 +68,7 @@ export default function NewsPreview() {
     );
   }
 
-  const safeIndex = featured.length === 0 ? 0 : Math.min(index, featured.length - 1);
-  const current = featured[safeIndex];
-
-  if (!current) {
+  if (!featured[Math.min(index, featured.length - 1)]) {
     return (
       <section style={{ padding: '40px 24px', textAlign: 'center' }}>
         <p style={{ color: '#9ca3af' }}>No news available</p>
@@ -146,19 +136,7 @@ export default function NewsPreview() {
         >
           TSA Newsroom
         </div>
-        <h2
-          style={{
-            fontSize: 'clamp(28px, 4vw, 42px)',
-            fontWeight: 800,
-            background: 'linear-gradient(135deg, #22d3ee, #a855f7)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            marginBottom: '10px',
-            fontFamily: 'var(--font-space-mono)',
-            letterSpacing: '0.5px',
-            textTransform: 'uppercase',
-          }}
-        >
+        <h2 style={sectionTitleStyle}>
           Latest News
         </h2>
         <div
@@ -172,7 +150,7 @@ export default function NewsPreview() {
             boxShadow: '0 4px 12px rgba(168, 85, 247, 0.3)',
           }}
         />
-        <p style={{ fontSize: 'clamp(13px, 1.6vw, 15px)', color: '#9ca3af' }}>
+        <p style={sectionSubtitleStyle}>
           Updates, announcements, and community highlights
         </p>
       </motion.div>
@@ -228,7 +206,6 @@ export default function NewsPreview() {
                       boxShadow: item.isPinned
                         ? '0 18px 42px rgba(2, 6, 23, 0.42), 0 0 0 1px rgba(34, 211, 238, 0.16), inset 0 1px 0 rgba(255,255,255,0.06)'
                         : '0 18px 42px rgba(2, 6, 23, 0.36), inset 0 1px 0 rgba(255,255,255,0.04)',
-                      backdropFilter: 'blur(12px)',
                       position: 'relative',
                     }}
                   >
@@ -428,7 +405,6 @@ export default function NewsPreview() {
                       boxShadow: firstItem.isPinned
                         ? '0 18px 42px rgba(2, 6, 23, 0.42), 0 0 0 1px rgba(34, 211, 238, 0.16), inset 0 1px 0 rgba(255,255,255,0.06)'
                         : '0 18px 42px rgba(2, 6, 23, 0.36), inset 0 1px 0 rgba(255,255,255,0.04)',
-                      backdropFilter: 'blur(12px)',
                       position: 'relative',
                     }}
                   >
@@ -654,21 +630,7 @@ export default function NewsPreview() {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            style={{
-              padding: '11px 20px',
-              fontSize: '14px',
-              fontWeight: 700,
-              borderRadius: '10px',
-              border: '2px solid rgba(255, 255, 255, 0.9)',
-              background: 'rgba(17, 24, 39, 0.4)',
-              color: '#e5e7eb',
-              cursor: 'pointer',
-              alignItems: 'center',
-              display: 'inline-flex',
-              gap: '8px',
-              transition: 'all 0.3s ease',
-              fontFamily: 'var(--font-space-mono)',
-            }}
+            style={primarySectionButtonStyle}
           >
             View All News
           </motion.button>
