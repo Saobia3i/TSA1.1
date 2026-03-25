@@ -6,6 +6,7 @@ import { ArrowRight, Award, Globe, Shield, Briefcase, Target } from 'lucide-reac
 import { useRef, useState, useEffect } from 'react';
 import { getFeaturedConsultants } from '@/features/consultant/Consultantdata';
 import Image from 'next/image';
+import { primarySectionButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
 
 export default function ConsultantPreview() {
   const consultant = getFeaturedConsultants()[0]; // Get the featured consultant
@@ -92,28 +93,10 @@ export default function ConsultantPreview() {
             </span>
           </motion.div>
 
-          <h2
-            style={{
-              fontSize: 'clamp(36px, 6vw, 56px)',
-              fontWeight: 800,
-              background: 'linear-gradient(135deg, #22d3ee, #a855f7)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              marginBottom: '16px',
-              fontFamily: 'var(--font-nunito)',
-              lineHeight: 1.2,
-            }}
-          >
+          <h2 style={{ ...sectionTitleStyle, marginBottom: '16px' }}>
             Meet Our Senior Consultant
           </h2>
-          <p style={{ 
-            fontSize: 'clamp(16px, 2.5vw, 18px)', 
-            color: '#9ca3af',
-            maxWidth: '700px',
-            margin: '0 auto',
-            lineHeight: 1.6,
-            fontFamily: 'var(--font-nunito)'
-          }}>
+          <p style={sectionSubtitleStyle}>
             Learn from legendary cybersecurity experts who have defended nations and secured critical infrastructure
           </p>
         </motion.div>
@@ -139,7 +122,7 @@ export default function ConsultantPreview() {
               borderRadius: 'clamp(18px, 4vw, 30px)',
               overflow: 'hidden',
               border: '2px solid rgba(34, 211, 238, 0.2)',
-              boxShadow: '0 30px 80px rgba(0, 0, 0, 0.4), 0 0 60px rgba(34, 211, 238, 0.1)',
+              boxShadow: '0 18px 44px rgba(0, 0, 0, 0.34), 0 0 28px rgba(34, 211, 238, 0.08)',
               position: 'relative',
             }}
           >
@@ -189,7 +172,7 @@ export default function ConsultantPreview() {
                     background: 'linear-gradient(135deg, #22d3ee, #a855f7)',
                     borderRadius: '24px',
                     opacity: 0.5,
-                    filter: 'blur(20px)',
+                    filter: 'blur(12px)',
                   }} />
                   <div style={{
                     position: 'relative',
@@ -250,12 +233,13 @@ export default function ConsultantPreview() {
                       whileHover={{ scale: 1.03 }}
                       style={{
                         padding: 'clamp(10px, 2.8vw, 16px)',
-                        background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(168, 85, 247, 0.08))',
-                        border: '1px solid rgba(34, 211, 238, 0.2)',
-                        borderRadius: '16px',
-                        textAlign: 'center',
-                      }}
-                    >
+                          background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.08), rgba(168, 85, 247, 0.08))',
+                          border: '1px solid rgba(34, 211, 238, 0.2)',
+                          borderRadius: '16px',
+                          textAlign: 'center',
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)',
+                        }}
+                      >
                       <stat.icon style={{ 
                         width: '24px', 
                         height: '24px', 
@@ -422,26 +406,7 @@ export default function ConsultantPreview() {
                       }}
                       whileTap={{ scale: 0.98 }}
                       transition={{ duration: 0.2, ease: 'easeOut' }}
-                      style={{
-                        width: '100%',
-                        padding: 'clamp(12px, 3vw, 16px) clamp(16px, 4vw, 32px)',
-                        fontSize: 'clamp(14px, 2.5vw, 16px)',
-                        fontWeight: 700,
-                        borderRadius: '14px',
-                        border: '2px solid rgba(34, 211, 238, 0.6)',
-                        background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(168, 85, 247, 0.2))',
-                        color: '#22d3ee',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '12px',
-                        fontFamily: 'var(--font-nunito)',
-                        transition: 'all 0.3s ease',
-                        boxShadow: '0 0 20px rgba(34, 211, 238, 0.3)',
-                        textAlign: 'center',
-                        lineHeight: 1.35,
-                      }}
+                      style={{ ...primarySectionButtonStyle, width: '100%', lineHeight: 1.35 }}
                     >
                       View Full Profile & Expertise
                       <ArrowRight style={{ width: '20px', height: '20px' }} />

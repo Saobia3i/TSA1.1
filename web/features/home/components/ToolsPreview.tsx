@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {  Github } from 'lucide-react';
+import { primarySectionButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
 
 const featuredTools = [
   {
@@ -49,20 +50,11 @@ export default function ToolsPreview() {
         style={{ textAlign: 'center', marginBottom: 'clamp(40px, 6vw, 60px)' }}
       >
         <h2
-          style={{
-            fontSize: 'clamp(32px, 5vw, 48px)',
-            fontWeight: 700,
-            background: 'linear-gradient(135deg, #22d3ee, #a855f7)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            marginBottom: '12px',
-            fontFamily: 'var(--font-nunito)',
-            letterSpacing: '-0.5px',
-          }}
+          style={sectionTitleStyle}
         >
           Our Security Tools
         </h2>
-        <p style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: '#9ca3af', fontFamily: 'var(--font-nunito)' }}>
+        <p style={sectionSubtitleStyle}>
           Open-source offensive security tools built by TSA
         </p>
       </motion.div>
@@ -93,10 +85,10 @@ export default function ToolsPreview() {
                   flex: '0 0 auto',
                   padding: 'clamp(16px, 3vw, 20px)',
                   background: 'rgba(17, 24, 39, 0.5)',
-                  backdropFilter: 'blur(30px)',
+                  backdropFilter: 'blur(14px)',
                   borderRadius: '14px',
                   border: `2px solid ${item.color}40`,
-                  boxShadow: `0 8px 25px ${item.color}20`,
+                  boxShadow: `0 8px 20px ${item.color}18`,
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
@@ -141,14 +133,13 @@ export default function ToolsPreview() {
                       borderRadius: '8px',
                       border: `2px solid ${item.color}60`,
                       background: `linear-gradient(135deg, ${item.color}20, ${item.color}10)`,
-                      backdropFilter: 'blur(10px)',
                       color: '#ffffff',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '6px',
                       fontFamily: 'var(--font-nunito)',
-                      boxShadow: `0 0 15px ${item.color}30`,
+                      boxShadow: `0 0 12px ${item.color}24`,
                     }}
                   >
                     <Github style={{ width: '16px', height: '16px' }} />
@@ -184,23 +175,7 @@ export default function ToolsPreview() {
           <motion.button
             whileHover={{ scale: 1.04, boxShadow: '0 0 25px rgba(34, 211, 238, 0.6), 0 0 50px rgba(168, 85, 247, 0.4)' }}
             whileTap={{ scale: 0.96 }}
-            style={{
-              padding: 'clamp(10px, 1.8vw, 12px) clamp(20px, 3.5vw, 26px)',
-              fontSize: 'clamp(12px, 1.6vw, 13px)',
-              fontWeight: 600,
-              borderRadius: '10px',
-              border: '2px solid rgba(34, 211, 238, 0.6)',
-              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
-              color: '#22d3ee',
-              cursor: 'pointer',
-              fontFamily: 'var(--font-nunito)',
-              boxShadow: '0 0 18px rgba(34, 211, 238, 0.4)',
-              transition: 'all 0.3s ease',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-            }}
+            style={primarySectionButtonStyle}
           >
             View More Tools
           </motion.button>
@@ -220,10 +195,10 @@ export default function ToolsPreview() {
 
         @keyframes tools-preview-scroll {
           from {
-            transform: translateX(0);
+            transform: translate3d(0, 0, 0);
           }
           to {
-            transform: translateX(calc(-50% - clamp(6px, 1vw, 10px)));
+            transform: translate3d(calc(-50% - clamp(6px, 1vw, 10px)), 0, 0);
           }
         }
 

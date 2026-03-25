@@ -2,12 +2,13 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { useRef, useState, useEffect } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { getAllServices } from '@/features/services/data/services';
 import { GlowingCard } from '@/components/ui/animated-cards';
+import { primarySectionButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
 
 export default function ServicesPreview() {
-  const featuredServices = getAllServices().slice(0, 6);
+  const featuredServices = useMemo(() => getAllServices().slice(0, 6), []);
   const serviceSectionRef = useRef<HTMLElement>(null);
   const [serviceIndex, setServiceIndex] = useState(0);
   const [isServicePaused, setIsServicePaused] = useState(false);
@@ -85,19 +86,11 @@ export default function ServicesPreview() {
         style={{ textAlign: 'center' as const, marginBottom: '60px' }}
       >
         <h2
-          style={{
-            fontSize: 'clamp(32px, 5vw, 48px)',
-            fontWeight: 700,
-            background: 'linear-gradient(135deg, #22d3ee, #a855f7)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            marginBottom: '12px',
-            fontFamily: 'var(--font-nunito)',
-          }}
+          style={sectionTitleStyle}
         >
           Our Services
         </h2>
-        <p style={{ fontSize: 'clamp(14px, 2vw, 16px)', color: '#9ca3af', fontFamily: 'var(--font-nunito)' }}>
+        <p style={sectionSubtitleStyle}>
           Professional cybersecurity and tech solutions
         </p>
       </motion.div>
@@ -117,7 +110,7 @@ export default function ServicesPreview() {
               background:
                 'radial-gradient(circle at 10% 0%, rgba(34, 211, 238, 0.12), transparent 45%), radial-gradient(circle at 90% 100%, rgba(168, 85, 247, 0.12), transparent 40%), rgba(2, 6, 23, 0.82)',
               boxShadow:
-                '0 16px 48px rgba(2, 6, 23, 0.55), inset 0 1px 0 rgba(255,255,255,0.06)',
+                '0 14px 34px rgba(2, 6, 23, 0.46), inset 0 1px 0 rgba(255,255,255,0.06)',
               overflow: 'hidden',
             }}
           >
@@ -155,8 +148,8 @@ export default function ServicesPreview() {
                   />
 
                   <motion.div
-                    animate={{ y: [0, -12, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
                     style={{
                       width: 'clamp(60px, 10vw, 78px)',
                       height: 'clamp(60px, 10vw, 78px)',
@@ -167,7 +160,7 @@ export default function ServicesPreview() {
                       justifyContent: 'center',
                       border: '2px solid rgba(34, 211, 238, 0.4)',
                       flexShrink: 0,
-                      boxShadow: '0 10px 28px rgba(34, 211, 238, 0.22)',
+                      boxShadow: '0 8px 18px rgba(34, 211, 238, 0.18)',
                     }}
                   >
                     <ServiceIcon style={{ 
@@ -223,19 +216,7 @@ export default function ServicesPreview() {
                     <motion.button
                       whileHover={{ scale: 1.04, boxShadow: '0 0 25px rgba(34, 211, 238, 0.6), 0 0 50px rgba(168, 85, 247, 0.4)' }}
                       whileTap={{ scale: 0.96 }}
-                      style={{
-                        padding: 'clamp(10px, 1.8vw, 12px) clamp(20px, 3.5vw, 26px)',
-                        fontSize: 'clamp(12px, 1.6vw, 13px)',
-                        fontWeight: 600,
-                        borderRadius: '10px',
-                        border: '2px solid rgba(34, 211, 238, 0.6)',
-                        background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(168, 85, 247, 0.15))',
-                        color: '#22d3ee',
-                        cursor: 'pointer',
-                        fontFamily: 'var(--font-nunito)',
-                        boxShadow: '0 0 18px rgba(34, 211, 238, 0.4)',
-                        transition: 'all 0.3s ease',
-                      }}
+                      style={primarySectionButtonStyle}
                     >
                       Learn More
                     </motion.button>
