@@ -104,6 +104,7 @@ export default function NewsPage() {
             style={{
               ...pageTitleStyle,
               marginBottom: 'clamp(10px, 2vw, 14px)',
+              textAlign: 'left',
               wordBreak: 'break-word',
             }}
           >
@@ -120,7 +121,15 @@ export default function NewsPage() {
               maxWidth: '680px',
             }}
           />
-          <p style={{ ...pageSubtitleStyle, maxWidth: '700px', margin: '0', lineHeight: 1.5 }}>
+          <p
+            style={{
+              ...pageSubtitleStyle,
+              maxWidth: '700px',
+              margin: '0',
+              lineHeight: 1.5,
+              textAlign: 'left',
+            }}
+          >
             Latest announcements, blogs, webinars and community highlights
           </p>
         </div>
