@@ -304,40 +304,27 @@ export default memo(function CourseDetailsModal({
                 width: "100%",
               }}
             >
-              <BookOpen size={18} />{" "}
-              {showCurriculum ? "What You'll Learn" : "View Curriculum"}
+              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7 }}>
+                <BookOpen size={18} />
+                {showCurriculum ? "What You'll Learn" : "View Curriculum"}
+              </span>
             </motion.button>
             <motion.button
               type="button"
-              className="footer-button footer-button-primary modal-enroll-btn"
-              whileHover={{ scale: 1.03, y: -2 }}
-              whileTap={{ scale: 0.98 }}
+              className="footer-button footer-button-primary"
+              whileHover={{ scale: 1.05 }}
               onClick={() => {
                 setShowEnrollment(true);
                 setEnrollmentSuccess(false);
                 setShowCurriculum(false);
               }}
               style={{
-                border: "none",
-                background: "linear-gradient(135deg, #38bdf8 0%, #6366f1 50%, #a855f7 100%)",
+                borderColor: `${course.color}80`,
+                background: `linear-gradient(${course.color}, ${course.color}50)`,
                 width: "100%",
-                boxShadow: "0 0 0 1px rgba(99,102,241,0.35), 0 8px 28px rgba(99,102,241,0.4), 0 2px 8px rgba(168,85,247,0.25)",
-                color: "#fff",
-                fontWeight: 800,
-                fontSize: 15,
-                letterSpacing: "-0.01em",
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                position: "relative",
-                overflow: "hidden",
               }}
             >
-              <span style={{ position: "relative", zIndex: 1, display: "inline-flex", alignItems: "center", gap: 8 }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                Enroll Now
-              </span>
+              Enroll Now
             </motion.button>
           </div>
         ) : (
@@ -427,28 +414,6 @@ export default memo(function CourseDetailsModal({
           .footer-button-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
-          }
-
-          .modal-enroll-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, #60c8ff 0%, #818cf8 50%, #c084fc 100%);
-            opacity: 0;
-            transition: opacity 0.25s ease;
-            border-radius: inherit;
-          }
-
-          .modal-enroll-btn:hover::before {
-            opacity: 1;
-          }
-
-          .modal-enroll-btn {
-            transition: box-shadow 0.25s ease;
-          }
-
-          .modal-enroll-btn:hover {
-            box-shadow: 0 0 0 1px rgba(99,102,241,0.5), 0 14px 36px rgba(99,102,241,0.5), 0 4px 12px rgba(168,85,247,0.35) !important;
           }
 
           .footer-button-whatsapp {
