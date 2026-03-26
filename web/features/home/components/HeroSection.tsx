@@ -2,7 +2,7 @@
 
 import { memo, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CheckCircle2, Sparkles } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -144,22 +144,16 @@ const BOTTOM_FEATURES = [
 
 /* ── Feature Card (for right wave) ───────────────────────── */
 const FloatingFeatureCard = memo(function FloatingFeatureCard({ icon, text, color, top, right, delay, horizontal = false, width, className }: { icon: React.ReactNode; text: React.ReactNode; color: string; top: string; right: string; delay: number; horizontal?: boolean; width?: string; className?: string }) {
-  const positionVars = {
-    ['--card-top' as any]: top,
-    ['--card-right' as any]: right,
-  } as React.CSSProperties;
-
   return (
-    <motion.div 
-      initial={{ opacity: 0, x: 40, scale: 0.94 }} 
+    <motion.div
+      initial={{ opacity: 0, x: 40, scale: 0.94 }}
       animate={{ opacity: 1, x: 0, scale: 1 }}
       transition={{ delay, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={className}
       style={{
-        ...positionVars,
         position: 'absolute',
-        top: 'var(--card-top)',
-        right: 'var(--card-right)',
+        top,
+        right,
         padding: horizontal ? '12px 16px' : '14px 18px',
         borderRadius: '12px',
         minWidth: width || (horizontal ? '170px' : '160px'),
@@ -266,8 +260,8 @@ const RightWave = memo(function RightWave() {
       </div>
 
       {/* Feature Cards in Zigzag Pattern */}
-      <FloatingFeatureCard className="ff-card usa-card" icon={BOTTOM_FEATURES[1].icon} text={BOTTOM_FEATURES[1].text} color={BOTTOM_FEATURES[1].color} top="36%" right="8%" delay={0.8} />
-      <FloatingFeatureCard className="ff-card expansion-card" icon={BOTTOM_FEATURES[0].icon} text={BOTTOM_FEATURES[0].text} color={BOTTOM_FEATURES[0].color} top="72%" right="2%" delay={1.2} horizontal width="220px" />
+      <FloatingFeatureCard className="ff-card usa-card" icon={BOTTOM_FEATURES[1].icon} text={BOTTOM_FEATURES[1].text} color={BOTTOM_FEATURES[1].color} top="18%" right="4%" delay={0.8} />
+      <FloatingFeatureCard className="ff-card expansion-card" icon={BOTTOM_FEATURES[0].icon} text={BOTTOM_FEATURES[0].text} color={BOTTOM_FEATURES[0].color} top="48%" right="14%" delay={1.2} horizontal width="220px" />
     </div>
   );
 });
@@ -458,16 +452,30 @@ export default function HeroSection() {
           <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5, delay:0.3 }}
             style={{ display:'flex', flexWrap:'wrap', gap:10 }}
           >
-            <Link href="/courses" className="h-btn-p"
-              style={{ textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8, padding:'13px 24px', borderRadius:10, background:'#fff', color:'#0a0f1e', fontWeight:800, fontSize:14, letterSpacing:'-0.02em', boxShadow:'0 8px 28px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3)' }}
+            <Link href="/courses" className="h-btn-p hero-enroll-btn"
+              style={{ textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8, padding:'14px 28px', borderRadius:8, background:'linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%)', color:'#fff', fontWeight:900, fontSize:16, letterSpacing:'0.04em', textTransform:'uppercase', boxShadow:'0 0 0 1px rgba(167,139,250,0.4), 0 8px 32px rgba(56,189,248,0.35), 0 2px 8px rgba(192,132,252,0.3)', position:'relative', overflow:'hidden', transition:'all 0.25s ease', textShadow:'0 1px 8px rgba(0,0,0,0.25)' }}
             >
-              Enroll Now
+              <span style={{ position:'relative', zIndex:1, display:'inline-flex', alignItems:'center', gap:8 }}>
+                Enroll Now
+              </span>
             </Link>
-            <Link href="/services" className="h-btn-s"
-              style={{ textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8, padding:'13px 24px', borderRadius:10, border:'1px solid rgba(255,255,255,0.13)', background:'rgba(255,255,255,0.04)', backdropFilter:'blur(8px)', color:'rgba(255,255,255,0.78)', fontWeight:600, fontSize:14, letterSpacing:'-0.02em', transition:'all .18s ease' }}
-            >
-              Our Services <Sparkles size={14} color="#7dd3fc" />
-            </Link>
+            <style>{`
+              .hero-enroll-btn::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, #7dd3fc 0%, #a78bfa 50%, #c084fc 100%);
+                opacity: 0;
+                transition: opacity 0.25s ease;
+                border-radius: inherit;
+              }
+              .hero-enroll-btn:hover::before { opacity: 1; }
+              .hero-enroll-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 0 0 1px rgba(167,139,250,0.55), 0 12px 40px rgba(56,189,248,0.45), 0 4px 14px rgba(192,132,252,0.4) !important;
+              }
+              .hero-enroll-btn:active { transform: translateY(0px); }
+            `}</style>
           </motion.div>
 
           {/* urgency */}
