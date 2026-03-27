@@ -74,13 +74,11 @@ export default function Navbar({ user = null }: NavbarProps) {
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
   const aboutRef = useRef<HTMLDivElement>(null);
   const socialsRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
-  const scrollLockYRef = useRef(0);
-
+  const lastScrollYRef = useRef(0);
   useEffect(() => {
     const handleScroll = () => {
       if (mobileMenuOpen) {
@@ -93,20 +91,20 @@ export default function Navbar({ user = null }: NavbarProps) {
       setScrolled(currentScrollY > 20);
       
       // Hide navbar when scrolling down, show when scrolling up
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+      if (currentScrollY > lastScrollYRef.current && currentScrollY > 50) {
         // Scrolling down & past threshold
         setIsVisible(false);
-      } else if (currentScrollY < lastScrollY) {
+      } else if (currentScrollY < lastScrollYRef.current) {
         // Scrolling up
         setIsVisible(true);
       }
       
-      setLastScrollY(currentScrollY);
+      lastScrollYRef.current = currentScrollY;
     };
     
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY, mobileMenuOpen]);
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -132,35 +130,44 @@ export default function Navbar({ user = null }: NavbarProps) {
 
   useEffect(() => {
     if (mobileMenuOpen) {
-      scrollLockYRef.current = window.scrollY;
       document.body.style.overflow = "hidden";
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${scrollLockYRef.current}px`;
-      document.body.style.width = "100%";
-      document.body.style.left = "0";
-      document.body.style.right = "0";
+      document.documentElement.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "unset";
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      document.body.style.left = "";
-      document.body.style.right = "";
-      if (scrollLockYRef.current) {
-        window.scrollTo(0, scrollLockYRef.current);
-      }
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     }
+
     return () => {
-      document.body.style.overflow = "unset";
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      document.body.style.left = "";
-      document.body.style.right = "";
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
   }, [mobileMenuOpen]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1180) {
+        setMobileMenuOpen(false);
+        setAboutDropdownOpenMobile(false);
+        setSocialsOpenMobile(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const isAboutActive = pathname.startsWith("/about");
+  const closeMobileNavigation = () => {
+    setMobileMenuOpen(false);
+    setAboutDropdownOpenMobile(false);
+    setSocialsOpenMobile(false);
+  };
+  const closeAllMenus = () => {
+    closeMobileNavigation();
+    setAboutDropdownOpen(false);
+    setSocialsOpen(false);
+    setUserDropdownOpen(false);
+  };
 
   return (
     <>
@@ -318,6 +325,7 @@ export default function Navbar({ user = null }: NavbarProps) {
             aria-label="Tensor Security Academy - Home"
             prefetch={true}
             className="nav-brand"
+            onClick={closeAllMenus}
           >
             <Image
               src="https://ik.imagekit.io/ekb0d0it0/logofinal1.webp"
@@ -343,6 +351,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                 <Link
                   href={link.href}
                   prefetch={true}
+                  onClick={closeAllMenus}
                   style={{
                     color: pathname === link.href ? "#00d4ff" : "white",
                     fontSize: "15px",
@@ -454,7 +463,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                         key={link.href}
                         href={link.href}
                         prefetch={true}
-                        onClick={() => setAboutDropdownOpen(false)}
+                        onClick={closeAllMenus}
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -1052,6 +1061,7 @@ export default function Navbar({ user = null }: NavbarProps) {
               height: "calc(100dvh - 70px)",
               maxHeight: "calc(100dvh - 70px)",
               overflowY: "auto",
+              overflowX: "hidden",
               overscrollBehavior: "contain",
               WebkitOverflowScrolling: "touch",
               touchAction: "pan-y",
@@ -1065,7 +1075,8 @@ export default function Navbar({ user = null }: NavbarProps) {
                 flexDirection: "column",
                 gap: "8px",
                 minHeight: "max-content",
-                paddingBottom: "32px",
+                paddingBottom: "max(32px, env(safe-area-inset-bottom))",
+                boxSizing: "border-box",
               }}
             >
               {user && (
@@ -1107,7 +1118,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                     key={link.href}
                     href={link.href}
                     prefetch={true}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={closeMobileNavigation}
                     style={{
                       padding: "14px 18px",
                       borderRadius: "12px",
@@ -1184,10 +1195,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                             key={link.href}
                             href={link.href}
                             prefetch={true}
-                            onClick={() => {
-                              setAboutDropdownOpenMobile(false);
-                              setMobileMenuOpen(false);
-                            }}
+                            onClick={closeMobileNavigation}
                             style={{
                               padding: "12px 18px 12px 32px",
                               borderRadius: "12px",
@@ -1343,60 +1351,54 @@ export default function Navbar({ user = null }: NavbarProps) {
                     <Link
                       href="/login"
                       prefetch={true}
-                      onClick={() => setMobileMenuOpen(false)}
-                      style={{ textDecoration: "none" }}
+                      onClick={closeMobileNavigation}
+                      style={{
+                        width: "100%",
+                        padding: "14px",
+                        fontSize: "16px",
+                        fontWeight: 700,
+                        borderRadius: "12px",
+                        border: "2px solid rgba(0, 212, 255, 0.5)",
+                        background: "transparent",
+                        color: "#00d4ff",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "10px",
+                        fontFamily: '"Nunito Sans", sans-serif',
+                        textDecoration: "none",
+                      }}
                     >
-                      <button
-                        style={{
-                          width: "100%",
-                          padding: "14px",
-                          fontSize: "16px",
-                          fontWeight: 700,
-                          borderRadius: "12px",
-                          border: "2px solid rgba(0, 212, 255, 0.5)",
-                          background: "transparent",
-                          color: "#00d4ff",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "10px",
-                          fontFamily: '"Nunito Sans", sans-serif',
-                        }}
-                      >
-                        <LogIn style={{ width: "20px", height: "20px" }} />
-                        Login
-                      </button>
+                      <LogIn style={{ width: "20px", height: "20px" }} />
+                      Login
                     </Link>
 
                     <Link
                       href="/signup"
                       prefetch={true}
-                      onClick={() => setMobileMenuOpen(false)}
-                      style={{ textDecoration: "none" }}
+                      onClick={closeMobileNavigation}
+                      style={{
+                        width: "100%",
+                        padding: "14px",
+                        fontSize: "16px",
+                        fontWeight: 700,
+                        borderRadius: "12px",
+                        border: "2px solid rgba(236, 72, 153, 0.6)",
+                        background:
+                          "linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1))",
+                        color: "#ec4899",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "10px",
+                        fontFamily: '"Nunito Sans", sans-serif',
+                        textDecoration: "none",
+                      }}
                     >
-                      <button
-                        style={{
-                          width: "100%",
-                          padding: "14px",
-                          fontSize: "16px",
-                          fontWeight: 700,
-                          borderRadius: "12px",
-                          border: "2px solid rgba(236, 72, 153, 0.6)",
-                          background:
-                            "linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1))",
-                          color: "#ec4899",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "10px",
-                          fontFamily: '"Nunito Sans", sans-serif',
-                        }}
-                      >
-                        <UserPlus style={{ width: "20px", height: "20px" }} />
-                        Sign Up
-                      </button>
+                      <UserPlus style={{ width: "20px", height: "20px" }} />
+                      Sign Up
                     </Link>
                   </div>
                 ) : (
@@ -1404,7 +1406,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                     <Link
                       href="/dashboard"
                       prefetch={true}
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={closeMobileNavigation}
                       style={{
                         padding: "14px 18px",
                         borderRadius: "12px",
@@ -1434,7 +1436,7 @@ export default function Navbar({ user = null }: NavbarProps) {
                     <Link
                       href="/dashboard/settings"
                       prefetch={true}
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={closeMobileNavigation}
                       style={{
                         padding: "14px 18px",
                         borderRadius: "12px",
