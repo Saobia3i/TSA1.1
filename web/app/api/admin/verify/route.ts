@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import type { Session } from "next-auth";
 import { z } from "zod";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 const verifySchema = z.object({
   pin: z
@@ -40,6 +41,17 @@ export async function POST(request: Request) {
     if (pin !== adminPin) {
       return NextResponse.json({ error: "Invalid admin PIN" }, { status: 401 });
     }
+
+    await prisma.adminProfile.upsert({
+      where: { userId: session.user.id },
+      update: {
+        lastVerifiedAt: new Date(),
+      },
+      create: {
+        userId: session.user.id,
+        lastVerifiedAt: new Date(),
+      },
+    });
 
     const res = NextResponse.json({ success: true, message: "Admin verified" });
     res.cookies.set("admin_panel_auth", "verified", {

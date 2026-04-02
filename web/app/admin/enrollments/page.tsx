@@ -45,6 +45,7 @@ export default async function AdminEnrollmentsPage({
       status: true,
       enrolledAt: true,
       approvedAt: true,
+      mailSentAt: true,
       user: {
         select: {
           name: true,

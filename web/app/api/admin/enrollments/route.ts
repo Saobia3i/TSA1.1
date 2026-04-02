@@ -87,6 +87,7 @@ export async function GET() {
       status: true,
       enrolledAt: true,
       approvedAt: true,
+      mailSentAt: true,
       user: {
         select: {
           id: true,
@@ -121,6 +122,7 @@ export async function PATCH(request: Request) {
         status: true,
         enrolledAt: true,
         approvedAt: true,
+        mailSentAt: true,
         user: {
           select: {
             name: true,
@@ -145,9 +147,24 @@ export async function PATCH(request: Request) {
         approvedAt: enrollment.approvedAt,
       });
 
+      const updated = await prisma.enrollment.update({
+        where: { id: enrollmentId },
+        data: {
+          mailSentAt: new Date(),
+          mailSentByAdminId: session.user.id,
+        },
+        select: {
+          id: true,
+          mailSentAt: true,
+        },
+      });
+
+      revalidatePath("/admin/enrollments");
+
       return NextResponse.json({
         success: true,
         message: `Course details mail sent to ${enrollment.user.email}`,
+        enrollment: updated,
       });
     }
 
@@ -156,12 +173,15 @@ export async function PATCH(request: Request) {
       data: {
         status: "APPROVED",
         approvedAt: new Date(),
+        approvedByAdminId: session.user.id,
       },
       select: {
         id: true,
         courseName: true,
         status: true,
         approvedAt: true,
+        approvedByAdminId: true,
+        mailSentAt: true,
         user: {
           select: {
             name: true,

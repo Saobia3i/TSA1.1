@@ -23,9 +23,24 @@ model User {
   sessions        Session[]
   enrollments     Enrollment[]
   serviceBookings ServiceBooking[]
+  adminProfile    AdminProfile?
+  approvedEnrollments Enrollment[] @relation("EnrollmentApprovedByAdmin")
+  mailedEnrollments   Enrollment[] @relation("EnrollmentMailSentByAdmin")
 
   @@index([email])
   @@index([contact])
+}
+
+model AdminProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  pinHash        String?
+  lastVerifiedAt DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 enum EnrollmentStatus {
@@ -70,17 +85,25 @@ model VerificationToken {
 }
 
 model Enrollment {
-  id         String   @id @default(cuid())
-  userId     String
-  courseId   String
-  courseName String
-  status     EnrollmentStatus @default(PENDING)
-  enrolledAt DateTime @default(now())
-  approvedAt DateTime?
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String   @id @default(cuid())
+  userId            String
+  courseId          String
+  courseName        String
+  status            EnrollmentStatus @default(PENDING)
+  enrolledAt        DateTime @default(now())
+  approvedAt        DateTime?
+  approvedByAdminId String?
+  mailSentAt        DateTime?
+  mailSentByAdminId String?
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  approvedByAdmin   User?    @relation("EnrollmentApprovedByAdmin", fields: [approvedByAdminId], references: [id], onDelete: SetNull)
+  mailSentByAdmin   User?    @relation("EnrollmentMailSentByAdmin", fields: [mailSentByAdminId], references: [id], onDelete: SetNull)
   
   @@index([userId, courseId])
   @@index([status])
+  @@index([approvedByAdminId])
+  @@index([mailSentByAdminId])
+  @@index([mailSentAt])
 }
 
 model ServiceBooking {

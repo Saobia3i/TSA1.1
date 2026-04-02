@@ -11,6 +11,7 @@ type PendingEnrollment = {
   status: "PENDING" | "APPROVED" | "REJECTED";
   enrolledAt: Date | string;
   approvedAt: Date | string | null;
+  mailSentAt: Date | string | null;
   user: {
     name: string | null;
     email: string;
@@ -118,6 +119,17 @@ export default function AdminEnrollmentsClient({
       }
 
       setMessage(payload?.message || "Course details mail sent.");
+      setItems((prev) =>
+        prev.map((item) =>
+          item.id === enrollmentId
+            ? {
+                ...item,
+                mailSentAt:
+                  payload?.enrollment?.mailSentAt || new Date().toISOString(),
+              }
+            : item
+        )
+      );
     } catch (err) {
       setMessage(err instanceof Error ? err.message : "Send mail failed");
     } finally {
@@ -172,7 +184,7 @@ export default function AdminEnrollmentsClient({
             <table className="enrollments-table" style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr>
-                  {["Student", "Email", "WhatsApp", "Course", "Status", "Requested At", "Approved At", "Action"].map((h) => (
+                  {["Student", "Email", "WhatsApp", "Course", "Status", "Requested At", "Approved At", "Mail Sent At", "Action"].map((h) => (
                     <th
                       key={h}
                       style={{
@@ -200,6 +212,7 @@ export default function AdminEnrollmentsClient({
                     </td>
                     <td style={tdStyle}>{fmt(item.enrolledAt)}</td>
                     <td style={tdStyle}>{fmtNullable(item.approvedAt)}</td>
+                    <td style={tdStyle}>{fmtNullable(item.mailSentAt)}</td>
                     <td style={tdStyle}>
                       <div className="action-buttons" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                         {item.status === "PENDING" && (

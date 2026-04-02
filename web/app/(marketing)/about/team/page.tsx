@@ -21,7 +21,7 @@ const teamMembers = [
     quote:
       "TSA was born from a simple belief: exceptional talent shouldn't be limited by geography or financial barriers. Every student who breaks through represents our collective victory against an outdated system.",
     socials: {
-      linkedin: "https://linkedin.com/in/abrar-jahin",
+      linkedin: "https://www.linkedin.com/in/abrarjahinsachcha",
       twitter: "https://twitter.com/abrajahin",
       instagram: "https://instagram.com/abrajahin",
     },

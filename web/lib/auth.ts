@@ -77,12 +77,21 @@ export const authOptions: NextAuthOptions = {
             update: {
               role: "ADMIN",
               password: hashedAdminPassword,
+              adminProfile: {
+                upsert: {
+                  update: {},
+                  create: {},
+                },
+              },
             },
             create: {
               email: submittedEmail,
               name: "Admin",
               password: hashedAdminPassword,
               role: "ADMIN",
+              adminProfile: {
+                create: {},
+              },
             },
             select: {
               id: true,
