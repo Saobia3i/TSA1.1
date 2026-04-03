@@ -146,6 +146,7 @@ export const courses: Course[] = [
     description: 'Comprehensive training from beginner to job-ready Security Analyst. Learn SOC operations, SIEM management, incident detection, and response.',
     icon: BarChart,
     duration: '15 Weeks',
+    badge: 'New',
     level: 'Beginner to Advanced',
     color: '#a855f7',
     
@@ -234,6 +235,7 @@ export const courses: Course[] = [
     description: 'Secure AI/LLM systems with latest threats, attack techniques, and hands-on penetration testing. 36 Live Classes + CTF Challenges.',
     icon: Zap,
     duration: '18 Weeks',
+    badge: 'New',
     level: 'Intermediate to Advanced',
     color: '#f59e0b',
     
@@ -278,6 +280,7 @@ export const courses: Course[] = [
     description: 'Complete DevOps bootcamp from beginner to job-ready engineer. 34 Live Classes + Hands-On Cloud Labs.',
     icon: Code,
     duration: '17 Weeks',
+    badge: 'New',
     level: 'Beginner to Advanced',
     color: '#8b5cf6',
     
