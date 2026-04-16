@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import HeroSection from "@/features/home/components/HeroSection";
+import NewsPreview from "@/features/home/components/NewsPreview";
 import {
   homePreviewButtonStyle,
   sectionSubtitleStyle,
@@ -15,10 +16,6 @@ import {
 
 // Lazy load preview components for better performance
 const CoursesPreview = dynamic(() => import("@/features/home/components/CoursesPreview"), {
-  loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
-});
-
-const NewsPreview = dynamic(() => import("@/features/home/components/NewsPreview"), {
   loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
 });
 

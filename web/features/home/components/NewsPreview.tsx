@@ -20,21 +20,19 @@ const isValidNewsItem = (item: NewsItem | null | undefined): item is NewsItem =>
 export default function NewsPreview() {
   const previewFrameHeight = 'clamp(620px, 88vw, 760px)';
   const previewImageHeight = 'clamp(160px, 24vw, 280px)';
-  const allNews = useMemo(() => {
+  const featured = useMemo(() => {
     try {
       const news = getAllNews().filter(isValidNewsItem);
       if (!news || news.length === 0) {
         console.warn('NewsPreview - No news data available');
         return [];
       }
-      return news;
+      return news.slice(0, 4);
     } catch (e) {
       console.error('NewsPreview - Error loading news:', e);
       return [];
     }
   }, []);
-
-  const featured = useMemo(() => allNews.slice(0, 4), [allNews]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const currentIndex = featured.length > 0 ? activeIndex % featured.length : 0;
@@ -117,13 +115,15 @@ export default function NewsPreview() {
                 src={itemHeroImage}
                 alt={item.title}
                 fill
-                sizes="(max-width: 768px) 100vw, 1100px"
+                sizes="(max-width: 640px) 92vw, (max-width: 1024px) 86vw, 920px"
+                quality={72}
+                priority={currentIndex === 0}
+                fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
                 style={{
                   objectFit: 'cover',
                   objectPosition: 'center',
                 }}
-                loading="lazy"
-                decoding="async"
+                loading={currentIndex === 0 ? 'eager' : 'lazy'}
               />
             ) : (
               <div
