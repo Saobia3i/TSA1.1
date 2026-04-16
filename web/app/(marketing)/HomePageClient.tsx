@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { MessageCircle, Quote, Handshake } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Quote, Handshake } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,8 +57,6 @@ import Consultantpreview from "@/features/home/components/Consultantpreview";
 
 export default function HomePage() {
   const founderRef = useRef<HTMLElement>(null);
-  const [showPopup, setShowPopup] = useState(true);
-  const [dismissed, setDismissed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
@@ -71,12 +69,6 @@ export default function HomePage() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  useEffect(() => {
-    if (dismissed) return;
-    const timer = setTimeout(() => setShowPopup(false), 3500);
-    return () => clearTimeout(timer);
-  }, [dismissed]);
 
   // const { scrollYProgress } = useScroll({
   //   target: founderRef,
@@ -122,6 +114,17 @@ export default function HomePage() {
 
       
       {/* <Feature /> */}
+
+      <NewsPreview />
+      
+      <motion.div
+        {...getPreviewReveal("up")}
+        viewport={{ once: true, amount: 0.16, margin: "0px 0px -8% 0px" }}
+        style={previewRevealStyle}
+      >
+        <Consultantpreview />
+      </motion.div>
+      {/* Feature Previews from Features folder */}
       {/* Founder Message Section */}
       <motion.section
         ref={founderRef}
@@ -243,7 +246,7 @@ export default function HomePage() {
               >
                 <Image
                   src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-25%20at%207.49.50%20PM.jpeg?tr=w-280,h-280,q-85,f-webp"
-                  alt="Founder – Abrar Jahin"
+                  alt="Founder - Abrar Jahin"
                   width={280}
                   height={280}
                   priority
@@ -270,17 +273,17 @@ export default function HomePage() {
                   fontStyle: "italic" as const,
                 }}
               >
-                Let’s be brutally honest for a moment. AI is changing
-                everything. It’s erasing career paths overnight and leaving
+                Let&apos;s be brutally honest for a moment. AI is changing
+                everything. It&apos;s erasing career paths overnight and leaving
                 professionals with two choices: Adapt or Expire. At the same
-                time you’re stuck in the endless{" "}
+                time you&apos;re stuck in the endless{" "}
                 {/* <span style={{ color: "#22d3ee", fontWeight: 600, gap: "4px" }}>
                  
                 </span> */}
                 Tutorial Loop jumping from one outdated video to the next,
                 piecing together fragments of information with no map, no
                 mentor, and no measurable progress. Endless content, but no true
-                guide. That’s the Trial and Error loop that keeps you stagnant.
+                guide. That&apos;s the Trial and Error loop that keeps you stagnant.
                 <span style={{ color: "#22d3ee", fontWeight: 600, gap: "4px" }}>
                   <br />
                   <br />
@@ -303,12 +306,12 @@ export default function HomePage() {
                   fontStyle: "italic" as const,
                 }}
               >
-                This isn’t just learning, it’s a career transformation, built
+                This isn&apos;t just learning, it&apos;s a career transformation, built
                 for the AI era.
               </motion.p>
               <span style={{ color: "#22d3ee", fontWeight: 600, gap: "4px" }}>
                 <br />
-                Your future won’t wait. Secure your spot, before the world moves
+                Your future won&apos;t wait. Secure your spot, before the world moves
                 on without you.
               </span>
               <motion.div
@@ -359,21 +362,6 @@ export default function HomePage() {
           </div>
         </motion.div>
       </motion.section>
-      <motion.div
-        {...getPreviewReveal("up")}
-        viewport={{ once: true, amount: 0.16, margin: "0px 0px -8% 0px" }}
-        style={previewRevealStyle}
-      >
-        <Consultantpreview />
-      </motion.div>
-      {/* Feature Previews from Features folder */}
-      <motion.div
-        {...getPreviewReveal("left")}
-        viewport={{ once: true, amount: 0.16, margin: "0px 0px -8% 0px" }}
-        style={previewRevealStyle}
-      >
-        <NewsPreview />
-      </motion.div>
       <motion.div
         {...getPreviewReveal("right")}
         viewport={{ once: true, amount: 0.16, margin: "0px 0px -8% 0px" }}
