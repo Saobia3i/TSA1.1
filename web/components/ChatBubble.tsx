@@ -150,7 +150,7 @@ export default function ChatBubble() {
           position: "fixed",
           left: position ? `${position.x}px` : "24px",
           top: position ? `${position.y}px` : undefined,
-          bottom: position ? undefined : "118px",
+          bottom: position ? undefined : "25px",
         }}
         className="flex flex-col items-center gap-2"
       >
