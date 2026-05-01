@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, lazy, Suspense } from "react";
+import { motion } from "framer-motion";
 import type { ChatWindowState } from "@/types/chat";
 
 const ChatWindow = lazy(() => import("./ChatWindow"));
@@ -167,13 +168,24 @@ export default function ChatBubble() {
         </span>
 
         {/* Bubble button */}
-        <button
+        <motion.button
           onClick={handleBubbleClick}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerCancel}
           aria-label={isActive ? "Close Tensora AI" : "Open Tensora AI"}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{
+            delay: 0.8,
+            duration: 0.4,
+            type: "spring",
+            stiffness: 200,
+          }}
+          whileHover={{ scale: 1.15, rotate: 10 }}
+          whileTap={{ scale: 0.9 }}
+          className="tensora-launcher-button"
           style={{
             width: 58,
             height: 58,
@@ -190,11 +202,13 @@ export default function ChatBubble() {
             alignItems: "center",
             justifyContent: "center",
             cursor: "grab",
-            transition: "all 0.25s ease",
+            transition:
+              "background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease",
             position: "relative",
             touchAction: "none",
           }}
         >
+          <span className="tensora-launcher-shimmer" aria-hidden="true" />
           {/* Ping ring when idle */}
           {!isActive && (
             <span
@@ -211,12 +225,43 @@ export default function ChatBubble() {
             size={34}
             className={isActive ? "text-cyan-300" : "text-cyan-400"}
           />
-        </button>
+        </motion.button>
       </div>
 
       <style>{`
+        .tensora-launcher-button > svg {
+          position: relative;
+          z-index: 2;
+        }
+
+        .tensora-launcher-shimmer {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          border-radius: 50%;
+          background: linear-gradient(
+            115deg,
+            transparent 28%,
+            rgba(255, 255, 255, 0.1) 40%,
+            rgba(103, 232, 249, 0.46) 49%,
+            rgba(255, 255, 255, 0.12) 58%,
+            transparent 72%
+          );
+          background-size: 240% 100%;
+          background-position: 180% 0;
+          animation: tensoraLauncherShimmer 2.2s ease-in-out infinite;
+          pointer-events: none;
+        }
+
         @keyframes ping {
           75%, 100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        @keyframes tensoraLauncherShimmer {
+          0% { background-position: 180% 0; opacity: 0; }
+          16% { opacity: 1; }
+          52% { background-position: -80% 0; opacity: 1; }
+          72%, 100% { background-position: -80% 0; opacity: 0; }
         }
       `}</style>
     </>
