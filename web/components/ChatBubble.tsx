@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef, useState, lazy, Suspense } from "react";
+import { motion } from "framer-motion";
 import type { ChatWindowState } from "@/types/chat";
 
 const ChatWindow = lazy(() => import("./ChatWindow"));
 
-// Female bot SVG icon with headphones (inline so no extra dep)
+// Minimal female assistant bot icon with headphones (inline so no extra dep)
 function BotFemaleIcon({ size = 28, className = "" }: { size?: number; className?: string }) {
   return (
     <svg
@@ -19,25 +20,18 @@ function BotFemaleIcon({ size = 28, className = "" }: { size?: number; className
       strokeLinejoin="round"
       className={className}
     >
-      {/* Headphones */}
-      <path d="M6 12v-1.2C6 7.6 8.6 5 12 5s6 2.6 6 5.8V12" strokeWidth="1.6" />
-      <rect x="4.4" y="10.4" width="2.5" height="4.2" rx="1.1" />
-      <rect x="17.1" y="10.4" width="2.5" height="4.2" rx="1.1" />
-      <path d="M18.2 14.4c-.5 2.2-2.4 3.8-4.7 4.1" strokeWidth="1.25" />
-      <circle cx="13.3" cy="18.5" r="0.7" fill="currentColor" stroke="none" />
-      {/* Head */}
-      <rect x="7.2" y="7.1" width="9.6" height="8.2" rx="3" />
-      {/* Eyes */}
-      <circle cx="9.8" cy="10.5" r="0.8" fill="currentColor" stroke="none" />
-      <circle cx="14.2" cy="10.5" r="0.8" fill="currentColor" stroke="none" />
-      {/* Smile */}
-      <path d="M10 13.2 Q12 14.4 14 13.2" strokeWidth="1.2" />
-      {/* Eyelashes (feminine) */}
-      <line x1="9.8" y1="9" x2="9.2" y2="8.2" strokeWidth="1" />
-      <line x1="14.2" y1="9" x2="14.8" y2="8.2" strokeWidth="1" />
-      {/* Neck + body */}
-      <line x1="12" y1="15.3" x2="12" y2="17" />
-      <path d="M8.5 17.2 Q12 19.5 15.5 17.2" />
+      <path d="M5.8 11.8v-1.2C5.8 7.2 8.5 4.7 12 4.7s6.2 2.5 6.2 5.9v1.2" />
+      <rect x="4.3" y="10.7" width="2.5" height="4.5" rx="1.2" />
+      <rect x="17.2" y="10.7" width="2.5" height="4.5" rx="1.2" />
+      <path d="M18.2 15.2c-.6 2.1-2.3 3.4-4.4 3.8" />
+      <circle cx="13.7" cy="18.9" r="0.55" fill="currentColor" stroke="none" />
+      <path d="M8.1 8.6c.7-1.2 2-1.9 3.9-1.9s3.2.7 3.9 1.9" />
+      <rect x="7.6" y="8" width="8.8" height="7.6" rx="2.8" />
+      <path d="M8.1 9.1c1.7-.2 3-.7 3.9-1.6 1 .9 2.3 1.4 3.9 1.6" />
+      <circle cx="10.1" cy="11.2" r="0.62" fill="currentColor" stroke="none" />
+      <circle cx="13.9" cy="11.2" r="0.62" fill="currentColor" stroke="none" />
+      <path d="M10.4 13.5c.9.7 2.3.7 3.2 0" strokeWidth="1.2" />
+      <path d="M9.5 16.7c1.4.9 3.6.9 5 0" />
     </svg>
   );
 }
@@ -167,13 +161,24 @@ export default function ChatBubble() {
         </span>
 
         {/* Bubble button */}
-        <button
+        <motion.button
           onClick={handleBubbleClick}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerCancel}
           aria-label={isActive ? "Close Tensora AI" : "Open Tensora AI"}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{
+            delay: 0.8,
+            duration: 0.4,
+            type: "spring",
+            stiffness: 200,
+          }}
+          whileHover={{ scale: 1.15, rotate: 10 }}
+          whileTap={{ scale: 0.9 }}
+          className="tensora-launcher-button"
           style={{
             width: 58,
             height: 58,
@@ -190,11 +195,17 @@ export default function ChatBubble() {
             alignItems: "center",
             justifyContent: "center",
             cursor: "grab",
-            transition: "all 0.25s ease",
+            transition:
+              "background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease",
             position: "relative",
             touchAction: "none",
           }}
         >
+          <span className="tensora-ai-sparkles" aria-hidden="true">
+            <span className="tensora-ai-star tensora-ai-star-one" />
+            <span className="tensora-ai-star tensora-ai-star-two" />
+            <span className="tensora-ai-star tensora-ai-star-three" />
+          </span>
           {/* Ping ring when idle */}
           {!isActive && (
             <span
@@ -211,12 +222,117 @@ export default function ChatBubble() {
             size={34}
             className={isActive ? "text-cyan-300" : "text-cyan-400"}
           />
-        </button>
+        </motion.button>
       </div>
 
       <style>{`
+        .tensora-launcher-button > svg {
+          position: relative;
+          z-index: 2;
+        }
+
+        .tensora-ai-sparkles {
+          position: absolute;
+          inset: 3px;
+          z-index: 3;
+          pointer-events: none;
+        }
+
+        .tensora-ai-star {
+          position: absolute;
+          width: 5px;
+          height: 5px;
+          color: #ffffff;
+          background: currentColor;
+          clip-path: polygon(
+            50% 0%,
+            61% 35%,
+            100% 50%,
+            61% 65%,
+            50% 100%,
+            39% 65%,
+            0% 50%,
+            39% 35%
+          );
+          filter:
+            drop-shadow(0 0 3px rgba(255, 255, 255, 1))
+            drop-shadow(0 0 8px rgba(255, 255, 255, 0.96))
+            drop-shadow(0 0 14px rgba(226, 232, 240, 0.9))
+            drop-shadow(0 0 22px rgba(148, 163, 184, 0.72));
+          opacity: 0;
+          animation: tensoraStarTwinkle 2.45s ease-in-out infinite;
+        }
+
+        .tensora-ai-star::before,
+        .tensora-ai-star::after {
+          content: "";
+          position: absolute;
+          inset: 22%;
+          margin: auto;
+          background: #ffffff;
+          clip-path: polygon(
+            50% 0%,
+            58% 37%,
+            100% 50%,
+            58% 63%,
+            50% 100%,
+            42% 63%,
+            0% 50%,
+            42% 37%
+          );
+        }
+
+        .tensora-ai-star::after {
+          transform: rotate(45deg) scale(0.72);
+          opacity: 0.82;
+        }
+
+        .tensora-ai-star-one {
+          top: 5px;
+          left: 10px;
+          width: 7px;
+          height: 7px;
+          animation-delay: 0s;
+        }
+
+        .tensora-ai-star-two {
+          top: 16px;
+          right: 5px;
+          width: 10px;
+          height: 10px;
+          animation-delay: 0.42s;
+        }
+
+        .tensora-ai-star-three {
+          left: 10px;
+          bottom: 8px;
+          width: 8px;
+          height: 8px;
+          color: #ffffff;
+          animation-delay: 0.84s;
+        }
+
         @keyframes ping {
           75%, 100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        @keyframes tensoraStarTwinkle {
+          0%, 100% {
+            opacity: 0;
+            transform: scale(0.45) rotate(0deg);
+          }
+          18% {
+            opacity: 1;
+            transform: scale(1.18) rotate(45deg);
+          }
+          36% {
+            opacity: 0.62;
+            transform: scale(0.88) rotate(90deg);
+          }
+          54% {
+            opacity: 0;
+            transform: scale(0.45) rotate(135deg);
+          }
         }
       `}</style>
     </>
