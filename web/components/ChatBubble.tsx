@@ -157,7 +157,7 @@ export default function ChatBubble() {
             pointerEvents: "none",
           }}
         >
-          Tensora
+          Ai Assistant
         </span>
 
         {/* Bubble button */}
