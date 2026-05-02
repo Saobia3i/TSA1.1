@@ -7,6 +7,7 @@ import RegisterSW from "./RegisterSW";
 import PWAUpdateManager from "@/components/PWAUpdateManager";
 import { Providers } from "./providers";
 import WhatsAppChatBubble from "@/features/home/components/WhatsAppChatBubble";
+import ChatBubble from "@/components/ChatBubble";
 import { siteConfig } from "@/config/site";
 
 const BASE_URL = "https://tensorsecurityacademy.com";
@@ -280,6 +281,7 @@ export default function RootLayout({
           <RegisterSW />
           {children}
           <WhatsAppChatBubble />
+          <ChatBubble />
           <PWAUpdateManager />
         </Providers>
       </body>
