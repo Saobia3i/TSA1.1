@@ -58,7 +58,7 @@ const teamMembers = [
   },
   {
     name: "Saobia Islam",
-    role: "Principal Web Developer",
+    role: "Lead Software Engineer",
     image:
       "https://ik.imagekit.io/ekb0d0it0/Untitled%20design.png?tr=w-400,h-400,q-85,f-webp",
     quote:
