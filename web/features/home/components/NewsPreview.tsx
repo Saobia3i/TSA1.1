@@ -18,8 +18,17 @@ const isValidNewsItem = (item: NewsItem | null | undefined): item is NewsItem =>
 };
 
 export default function NewsPreview() {
-  const previewFrameHeight = 'clamp(620px, 88vw, 760px)';
-  const previewImageHeight = 'clamp(160px, 24vw, 280px)';
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  const previewFrameHeight = 'clamp(480px, 75vw, 560px)';
+  const previewImageHeight = 'clamp(150px, 28vw, 180px)';
   const featured = useMemo(() => {
     try {
       const news = getAllNews().filter(isValidNewsItem);
@@ -51,11 +60,9 @@ export default function NewsPreview() {
   useEffect(() => {
     if (!paused) return;
 
-    const timer = setTimeout(() => {
-      setPaused(false);
-    }, 12000);
-
-    return () => clearTimeout(timer);
+    const handleClick = () => setPaused(false);
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
   }, [paused]);
 
   const renderCard = (item: NewsItem) => {
@@ -66,7 +73,7 @@ export default function NewsPreview() {
         style={{
           width: '100%',
           height: '100%',
-          padding: 'clamp(10px, 1.5vw, 16px)',
+          padding: 'clamp(6px, 1vw, 12px)',
         }}
       >
         <div
@@ -183,10 +190,10 @@ export default function NewsPreview() {
 
             <h3
               style={{
-                fontSize: 'clamp(18px, 2.2vw, 24px)',
+                fontSize: 'clamp(15px, 4vw, 20px)',
                 fontWeight: 800,
                 color: 'white',
-                marginBottom: '10px',
+                marginBottom: '6px',
                 fontFamily: 'var(--font-space-mono)',
                 lineHeight: 1.25,
                 letterSpacing: '0.2px',
@@ -194,7 +201,6 @@ export default function NewsPreview() {
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical',
                 overflow: 'hidden',
-                minHeight: 'calc(1em * 1.25 * 2)',
               }}
             >
               {item.title}
@@ -207,12 +213,12 @@ export default function NewsPreview() {
                 alignItems: 'center',
                 gap: '8px',
                 padding: '5px 10px',
-                marginBottom: '14px',
+                marginBottom: '10px',
                 borderRadius: '999px',
                 background: 'rgba(148, 163, 184, 0.12)',
                 border: '1px solid rgba(148, 163, 184, 0.18)',
                 color: '#cbd5e1',
-                fontSize: 'clamp(10px, 1.3vw, 12px)',
+                fontSize: 'clamp(10px, 3vw, 12px)',
                 fontFamily: 'var(--font-space-mono)',
               }}
             >
@@ -221,16 +227,15 @@ export default function NewsPreview() {
 
             <p
               style={{
-                fontSize: 'clamp(13px, 1.55vw, 15px)',
+                fontSize: 'clamp(12px, 3.2vw, 13px)',
                 color: '#cbd5e1',
-                lineHeight: 1.75,
-                marginBottom: '18px',
+                lineHeight: 1.62,
+                marginBottom: '12px',
                 maxWidth: '92%',
                 display: '-webkit-box',
                 WebkitLineClamp: 3,
                 WebkitBoxOrient: 'vertical',
                 overflow: 'hidden',
-                minHeight: 'calc(1em * 1.75 * 3)',
               }}
             >
               {item.shortDescription}
@@ -293,7 +298,7 @@ export default function NewsPreview() {
       viewport={{ once: true, amount: 0.16, margin: '0px 0px -8% 0px' }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       style={{
-        padding: 'clamp(40px, 5vw, 64px) clamp(16px, 3vw, 24px)',
+        padding: isMobile ? '32px 12px' : 'clamp(40px, 5vw, 64px) clamp(16px, 3vw, 24px)',
         background:
           'radial-gradient(circle at top, rgba(34, 211, 238, 0.08), transparent 32%), radial-gradient(circle at bottom, rgba(168, 85, 247, 0.08), transparent 28%), rgba(17, 24, 39, 0.3)',
         borderTop: '1px solid rgba(255, 255, 255, 0.06)',
@@ -373,7 +378,7 @@ export default function NewsPreview() {
       {/* News Cards Container - Fixed Wrapper */}
       <div
         style={{
-          maxWidth: '980px',
+          maxWidth: '680px',
           margin: '0 auto',
           paddingBottom: '88px',
         }}
@@ -393,6 +398,7 @@ export default function NewsPreview() {
           }}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
+          onClick={(e) => e.stopPropagation()}
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
@@ -400,7 +406,7 @@ export default function NewsPreview() {
               initial={{ opacity: 0, x: 24 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -24 }}
-              transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
               style={{ height: '100%' }}
             >
               {renderCard(activeItem)}
