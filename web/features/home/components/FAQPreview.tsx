@@ -11,7 +11,7 @@ import {
 
 export default function FAQPreview() {
   const faqs = getFAQs();
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(-1);
 
   return (
     <section
