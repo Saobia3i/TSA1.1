@@ -52,7 +52,7 @@ export default function NewsPreview() {
 
     const timer = setTimeout(() => {
       setActiveIndex((prev) => (prev + 1) % featured.length);
-    }, 5000);
+    }, 3500);
 
     return () => clearTimeout(timer);
   }, [activeIndex, paused, featured.length]);
@@ -378,7 +378,7 @@ export default function NewsPreview() {
       {/* News Cards Container - Fixed Wrapper */}
       <div
         style={{
-          maxWidth: '680px',
+          maxWidth: '900px',
           margin: '0 auto',
           paddingBottom: '88px',
         }}

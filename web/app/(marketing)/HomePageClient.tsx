@@ -27,6 +27,14 @@ const ToolsPreview = dynamic(() => import("@/features/home/components/ToolsPrevi
   loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
 });
 
+const TestimonialsPreview = dynamic(() => import("@/features/home/components/TestimonialsPreview"), {
+  loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
+});
+
+const FAQPreview = dynamic(() => import("@/features/home/components/FAQPreview"), {
+  loading: () => <div className="h-96 animate-pulse bg-gray-900/20" />,
+});
+
 import Consultantpreview from "@/features/home/components/Consultantpreview";
 //import { Metadata } from 'next'
 
@@ -380,6 +388,20 @@ export default function HomePage() {
       >
         <ToolsPreview />
       </motion.div>
+      <motion.div
+        {...getPreviewReveal("up")}
+        viewport={{ once: true, amount: 0.16, margin: "0px 0px -8% 0px" }}
+        style={previewRevealStyle}
+      >
+        <TestimonialsPreview />
+      </motion.div>
+      <motion.div
+        {...getPreviewReveal("up")}
+        viewport={{ once: true, amount: 0.16, margin: "0px 0px -8% 0px" }}
+        style={previewRevealStyle}
+      >
+        <FAQPreview />
+      </motion.div>
       {/* Our Concern Section - NO styles import needed */}
       <section
         style={{
@@ -526,6 +548,7 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+      
     </div>
   );
 }
