@@ -90,21 +90,23 @@ function TestimonialCard({
       <p className="testimonial-review">{testimonial.review}</p>
 
       <div className="testimonial-card-footer">
-        <span>{testimonial.postLink ? "View post" : "Verified experience"}</span>
         {testimonial.postLink ? (
           <Link
             href={testimonial.postLink}
             target="_blank"
-            rel="noreferrer"
+            rel="noreferrer noopener"
             aria-label={`Open ${testimonial.name}'s testimonial post`}
             onClick={(event) => {
               event.stopPropagation();
               onTouchPauseChange(false);
             }}
           >
+            <span>View post</span>
             <ExternalLink aria-hidden="true" />
           </Link>
-        ) : null}
+        ) : (
+          <span>Verified experience</span>
+        )}
       </div>
     </article>
   );
@@ -360,7 +362,7 @@ export default function TestimonialsPreview() {
           z-index: 1;
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justify-content: flex-start;
           gap: 12px;
           margin-top: 10px;
           padding-top: 0;
@@ -375,11 +377,12 @@ export default function TestimonialsPreview() {
 
         .testimonial-card-footer a {
           display: inline-flex;
-          width: 28px;
-          height: 28px;
+          min-height: 28px;
           align-items: center;
           justify-content: center;
+          gap: 8px;
           flex: 0 0 auto;
+          padding: 0 10px;
           border: 1px solid rgba(34, 211, 238, 0.28);
           border-radius: 999px;
           color: #22d3ee;
