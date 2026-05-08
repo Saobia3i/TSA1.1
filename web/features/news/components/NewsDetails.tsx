@@ -1,10 +1,10 @@
 "use client";
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { IconArrowLeft, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { getNewsById, NewsBlock } from "../data/NewsData";
 import { useState, useEffect } from "react";
+import NewsImageLightbox from "./NewsImageLightbox";
 import {
   backButtonStyle,
   pageSubtitleStyle,
@@ -18,6 +18,7 @@ type NewsDetailsProps = {
 export default function NewsDetails({ id }: NewsDetailsProps) {
   const news = getNewsById(id);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
 
   useEffect(() => {
     if (!news?.heroImages || news.heroImages.length <= 1) return;
@@ -113,39 +114,96 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                       pointerEvents: index === currentSlide ? 'auto' : 'none'
                     }}
                   >
-                    <Image 
-                      src={img}
-                      alt={`Hero image ${index + 1}`}
-                      fill
-                      className="object-cover"
-                      priority={index === 0}
-                    />
+                    <button
+                      type="button"
+                      aria-label={`Open hero image ${index + 1}`}
+                      onClick={() => setLightboxImage({ src: img, alt: `Hero image ${index + 1}` })}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        border: 0,
+                        padding: 0,
+                        margin: 0,
+                        background: 'transparent',
+                        cursor: 'zoom-in',
+                      }}
+                    >
+                      <Image 
+                        src={img}
+                        alt={`Hero image ${index + 1}`}
+                        fill
+                        className="object-cover"
+                        priority={index === 0}
+                      />
+                    </button>
                   </div>
                 ))}
                 
                 {news.heroImages.length > 1 && (
-                  <>
+                  <div
+                    aria-label="News image controls"
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0 16px',
+                      pointerEvents: 'none',
+                      zIndex: 30,
+                    }}
+                  >
                     <button
+                      type="button"
                       onClick={prevSlide}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[rgba(0,0,0,0.6)] hover:bg-[rgba(0,0,0,0.8)] backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-[var(--duration-normal)] border border-[rgba(255,255,255,0.2)] z-10"
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        flex: '0 0 48px',
+                        borderRadius: '999px',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        background: 'rgba(0,0,0,0.62)',
+                        color: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        pointerEvents: 'auto',
+                        padding: 0,
+                      }}
                       aria-label="Previous slide"
                     >
                       <IconChevronLeft className="w-6 h-6" />
                     </button>
                     <button
+                      type="button"
                       onClick={nextSlide}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-[rgba(0,0,0,0.6)] hover:bg-[rgba(0,0,0,0.8)] backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-[var(--duration-normal)] border border-[rgba(255,255,255,0.2)] z-10"
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        flex: '0 0 48px',
+                        borderRadius: '999px',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        background: 'rgba(0,0,0,0.62)',
+                        color: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        pointerEvents: 'auto',
+                        padding: 0,
+                      }}
                       aria-label="Next slide"
                     >
                       <IconChevronRight className="w-6 h-6" />
                     </button>
-                  </>
+                  </div>
                 )}
               </div>
               
               {news.heroImages.length > 1 && (
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                  {news.heroImages.map((_: any, index: number) => (
+                  {news.heroImages.map((_, index: number) => (
                     <button
                       key={index}
                       onClick={() => setCurrentSlide(index)}
@@ -304,13 +362,28 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                 {block.type === "image" && (
                   <figure style={{ marginTop: '48px', marginBottom: '48px' }}>
                     <div className="rounded-[var(--radius-lg)] overflow-hidden shadow-[var(--shadow-lg)] border border-[rgba(255,255,255,0.1)]">
-                      <Image 
-                        src={block.src} 
-                        alt={block.caption || "News image"}
-                        width={900}
-                        height={600}
-                        className="w-full h-auto hover:scale-105 transition-transform duration-500"
-                      />
+                      <button
+                        type="button"
+                        aria-label="Open larger news image"
+                        onClick={() => setLightboxImage({ src: block.src, alt: block.caption || "News image" })}
+                        style={{
+                          width: '100%',
+                          border: 0,
+                          padding: 0,
+                          margin: 0,
+                          background: 'transparent',
+                          cursor: 'zoom-in',
+                          display: 'block',
+                        }}
+                      >
+                        <Image 
+                          src={block.src} 
+                          alt={block.caption || "News image"}
+                          width={900}
+                          height={600}
+                          className="w-full h-auto hover:scale-105 transition-transform duration-500"
+                        />
+                      </button>
                     </div>
                     {block.caption && (
                       <figcaption 
@@ -332,7 +405,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                     <div className="relative w-full rounded-[var(--radius-lg)] overflow-hidden shadow-[var(--shadow-lg)] border border-[rgba(255,255,255,0.1)] bg-[var(--color-surface)]">
                       <div style={{ paddingBottom: '56.25%', position: 'relative' }}>
                         <iframe
-                          src={`https://www.youtube.com/embed/${(block as any).videoId}`}
+                          src={`https://www.youtube.com/embed/${block.videoId}`}
                           title="YouTube video player"
                           frameBorder="0"
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -350,7 +423,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                       }}
                     >
                       <a 
-                        href={`https://youtube.com/watch?v=${(block as any).videoId}`}
+                        href={`https://youtube.com/watch?v=${block.videoId}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="hover:text-[var(--color-primary)] transition-colors"
@@ -363,18 +436,18 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
 
                 {block.type === "link" && (
                   <a
-                    href={(block as any).url}
+                    href={block.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block p-6 rounded-[var(--radius-lg)] border border-[rgba(255,255,255,0.1)] bg-[var(--color-surface)] hover:border-[var(--color-primary)] transition-all duration-300 group"
                     style={{ marginTop: '40px', marginBottom: '40px' }}
                   >
                     <div className="flex flex-col md:flex-row gap-5 items-start">
-                      {(block as any).image && (
+                      {block.image && (
                         <div className="w-full md:w-48 h-32 flex-shrink-0 rounded-[var(--radius-md)] overflow-hidden border border-[rgba(255,255,255,0.1)]">
                           <Image 
-                            src={(block as any).image} 
-                            alt={(block as any).title}
+                            src={block.image} 
+                            alt={block.title}
                             width={192}
                             height={128}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -391,7 +464,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                             fontFamily: 'var(--font-family-base)'
                           }}
                         >
-                          {(block as any).title}
+                          {block.title}
                         </h4>
                         <p 
                           className="mb-3 line-clamp-3"
@@ -402,7 +475,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                             fontFamily: 'var(--font-family-base)'
                           }}
                         >
-                          {(block as any).description}
+                          {block.description}
                         </p>
                         <div 
                           className="inline-flex items-center gap-2 font-medium text-sm group-hover:text-[var(--color-primary-hover)] transition-colors"
@@ -411,7 +484,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                             fontFamily: 'var(--font-family-base)'
                           }}
                         >
-                          <span>{new URL((block as any).url).hostname.replace('www.', '')}</span>
+                          <span>{new URL(block.url).hostname.replace('www.', '')}</span>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
@@ -425,6 +498,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
           </div>
         </article>
       </div>
+      <NewsImageLightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
     </section>
   );
 }

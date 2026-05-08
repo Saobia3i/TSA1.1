@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Search, ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import { getAllNews } from '@/features/news/data/NewsData';
+import NewsImageLightbox from '@/features/news/components/NewsImageLightbox';
 import {
   backButtonStyle,
   pageSubtitleStyle,
@@ -18,6 +19,7 @@ export default function NewsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sort, setSort] = useState<'new' | 'old'>('new');
   const [isMobile, setIsMobile] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -255,6 +257,21 @@ export default function NewsPage() {
                     >
                       {/* Image */}
                       <div
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`Open larger image for ${news.title}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setLightboxImage({ src: news.heroImages[0], alt: news.title });
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setLightboxImage({ src: news.heroImages[0], alt: news.title });
+                          }
+                        }}
                         style={{
                           position: 'relative',
                           width: isMobile ? '100%' : 'clamp(180px, 25vw, 280px)',
@@ -263,6 +280,7 @@ export default function NewsPage() {
                           borderRadius: '12px',
                           overflow: 'hidden',
                           flexShrink: 0,
+                          cursor: 'zoom-in',
                         }}
                       >
                         <Image
@@ -407,6 +425,7 @@ export default function NewsPage() {
           </div>
         )}
       </div>
+      <NewsImageLightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
     </div>
   );
 }

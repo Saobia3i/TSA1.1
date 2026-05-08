@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { IconPinnedFilled } from '@tabler/icons-react';
 import { getAllNews, NewsItem } from '@/features/news/data/NewsData';
+import NewsImageLightbox from '@/features/news/components/NewsImageLightbox';
 import {
   homePreviewButtonStyle,
   homePreviewCardButtonStyle,
@@ -44,6 +45,7 @@ export default function NewsPreview() {
   }, []);
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
   const currentIndex = featured.length > 0 ? activeIndex % featured.length : 0;
   const activeItem = featured[currentIndex];
 
@@ -118,20 +120,38 @@ export default function NewsPreview() {
             }}
           >
             {itemHeroImage ? (
-              <Image
-                src={itemHeroImage}
-                alt={item.title}
-                fill
-                sizes="(max-width: 640px) 92vw, (max-width: 1024px) 86vw, 920px"
-                quality={72}
-                priority={currentIndex === 0}
-                fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
-                style={{
-                  objectFit: 'cover',
-                  objectPosition: 'center',
+              <button
+                type="button"
+                aria-label={`Open larger image for ${item.title}`}
+                onClick={() => {
+                  setPaused(true);
+                  setLightboxImage({ src: itemHeroImage, alt: item.title });
                 }}
-                loading={currentIndex === 0 ? 'eager' : 'lazy'}
-              />
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  border: 0,
+                  padding: 0,
+                  margin: 0,
+                  background: 'transparent',
+                  cursor: 'zoom-in',
+                }}
+              >
+                <Image
+                  src={itemHeroImage}
+                  alt={item.title}
+                  fill
+                  sizes="(max-width: 640px) 92vw, (max-width: 1024px) 86vw, 920px"
+                  quality={72}
+                  priority={currentIndex === 0}
+                  fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
+                  style={{
+                    objectFit: 'cover',
+                    objectPosition: 'center',
+                  }}
+                  loading={currentIndex === 0 ? 'eager' : 'lazy'}
+                />
+              </button>
             ) : (
               <div
                 aria-hidden
@@ -470,6 +490,7 @@ export default function NewsPreview() {
           </motion.button>
         </Link>
       </div>
+      <NewsImageLightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
     </motion.section>
   );
 }
