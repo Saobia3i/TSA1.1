@@ -501,7 +501,7 @@ export default function HeroSection() {
         }
         .hero-testimonial-card {
           min-width:0;
-          flex:0 0 clamp(170px, 10vw, 190px);
+          flex:0 0 clamp(210px, 13vw, 250px);
           height:104px;
           display:flex;
           flex-direction:column;
