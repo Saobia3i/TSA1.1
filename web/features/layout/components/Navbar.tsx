@@ -215,9 +215,9 @@ export default function Navbar({ user = null }: NavbarProps) {
         }
 
         .nav-shell {
-          max-width: 1400px;
+          max-width: 1680px;
           margin: 0 auto;
-          padding: 0 clamp(16px, 4vw, 64px);
+          padding: 0 clamp(16px, 3.5vw, 72px);
           height: 70px;
           display: flex;
           align-items: center;

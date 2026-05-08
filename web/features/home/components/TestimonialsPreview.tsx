@@ -19,24 +19,36 @@ function getInitials(name: string) {
 
 function TestimonialCard({
   testimonial,
+  isExpanded,
   onHoverChange,
-  onTogglePause,
+  onToggleExpand,
   onTouchPauseChange,
 }: {
   testimonial: Testimonial;
+  isExpanded: boolean;
   onHoverChange: (isHovering: boolean) => void;
-  onTogglePause: () => void;
+  onToggleExpand: () => void;
   onTouchPauseChange: (isTouching: boolean) => void;
 }) {
   return (
     <article
-      className="testimonial-card"
-      onClick={(event) => {
-        if ("pointerType" in event.nativeEvent && event.nativeEvent.pointerType !== "mouse") {
+      className={`testimonial-card ${isExpanded ? "is-expanded" : ""}`}
+      aria-expanded={isExpanded}
+      onClick={() => {
+        onToggleExpand();
+      }}
+      onKeyDown={(event) => {
+        if (event.target instanceof Element && event.target.closest("a")) {
           return;
         }
-        onTogglePause();
+
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onToggleExpand();
+        }
       }}
+      role="button"
+      tabIndex={0}
       onPointerEnter={(event) => {
         if (event.pointerType === "mouse") {
           onHoverChange(true);
@@ -114,20 +126,32 @@ function TestimonialCard({
 
 export default function TestimonialsPreview() {
   const reviews = useMemo(() => getTestimonials(), []);
-  const [isClickPaused, setIsClickPaused] = useState(false);
+  const [expandedTestimonialIds, setExpandedTestimonialIds] = useState<Set<string>>(() => new Set());
   const [isHoverPaused, setIsHoverPaused] = useState(false);
   const [isTouchPaused, setIsTouchPaused] = useState(false);
 
   const midpoint = Math.ceil(reviews.length / 2);
   const upperRowReviews = reviews.slice(0, midpoint);
   const lowerRowReviews = reviews.slice(midpoint);
-  const isPaused = isClickPaused || isHoverPaused || isTouchPaused;
+  const isPaused = expandedTestimonialIds.size > 0 || isHoverPaused || isTouchPaused;
 
   if (reviews.length === 0) {
     return null;
   }
 
-  const togglePause = () => setIsClickPaused((current) => !current);
+  const toggleExpanded = (testimonialId: string) => {
+    setExpandedTestimonialIds((current) => {
+      const next = new Set(current);
+
+      if (next.has(testimonialId)) {
+        next.delete(testimonialId);
+      } else {
+        next.add(testimonialId);
+      }
+
+      return next;
+    });
+  };
 
   return (
     <section
@@ -216,6 +240,8 @@ export default function TestimonialsPreview() {
 
         .testimonial-lane {
           overflow: hidden;
+          padding: 2px 0 16px;
+          margin: -2px 0 -16px;
           border-radius: 18px;
           -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
           mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
@@ -245,9 +271,8 @@ export default function TestimonialsPreview() {
           position: relative;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
           width: clamp(340px, 42vw, 500px);
-          height: 146px;
+          min-height: 156px;
           padding: 15px 16px;
           overflow: hidden;
           border: 1px solid rgba(148, 163, 184, 0.16);
@@ -261,6 +286,16 @@ export default function TestimonialsPreview() {
           box-sizing: border-box;
           font-family: var(--font-nunito);
           cursor: pointer;
+          transition: min-height 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .testimonial-card.is-expanded {
+          min-height: 220px;
+          border-color: rgba(34, 211, 238, 0.34);
+          box-shadow:
+            0 22px 54px rgba(0, 0, 0, 0.32),
+            0 0 0 1px rgba(34, 211, 238, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .testimonial-card-shine {
@@ -357,6 +392,12 @@ export default function TestimonialsPreview() {
           -webkit-line-clamp: 2;
         }
 
+        .testimonial-card.is-expanded .testimonial-review {
+          display: block;
+          overflow: visible;
+          -webkit-line-clamp: unset;
+        }
+
         .testimonial-card-footer {
           position: relative;
           z-index: 1;
@@ -364,12 +405,15 @@ export default function TestimonialsPreview() {
           align-items: center;
           justify-content: flex-start;
           gap: 12px;
-          margin-top: 10px;
-          padding-top: 0;
+          margin-top: auto;
+          padding-top: 14px;
           border-top: 0;
         }
 
         .testimonial-card-footer span {
+          display: inline-flex;
+          min-height: 28px;
+          align-items: center;
           color: #22d3ee;
           font-size: 12px;
           font-weight: 700;
@@ -421,8 +465,12 @@ export default function TestimonialsPreview() {
 
           .testimonial-card {
             width: min(360px, calc(100vw - 48px));
-            height: 142px;
+            min-height: 148px;
             padding: 13px 14px;
+          }
+
+          .testimonial-card.is-expanded {
+            min-height: 230px;
           }
 
           .testimonial-avatar {
@@ -445,6 +493,16 @@ export default function TestimonialsPreview() {
             font-size: 12px;
             line-height: 1.45;
             min-height: calc(1.45em * 2);
+          }
+        }
+
+        @media (min-width: 641px) {
+          .testimonial-card-header {
+            justify-content: flex-start;
+          }
+
+          .testimonial-card-footer {
+            justify-content: flex-start;
           }
         }
       `}</style>
@@ -470,8 +528,9 @@ export default function TestimonialsPreview() {
                 <TestimonialCard
                   key={`upper-${testimonial.id}-${index}`}
                   testimonial={testimonial}
+                  isExpanded={expandedTestimonialIds.has(testimonial.id)}
                   onHoverChange={setIsHoverPaused}
-                  onTogglePause={togglePause}
+                  onToggleExpand={() => toggleExpanded(testimonial.id)}
                   onTouchPauseChange={setIsTouchPaused}
                 />
               ))}
@@ -485,8 +544,9 @@ export default function TestimonialsPreview() {
                   <TestimonialCard
                     key={`lower-${testimonial.id}-${index}`}
                     testimonial={testimonial}
+                    isExpanded={expandedTestimonialIds.has(testimonial.id)}
                     onHoverChange={setIsHoverPaused}
-                    onTogglePause={togglePause}
+                    onToggleExpand={() => toggleExpanded(testimonial.id)}
                     onTouchPauseChange={setIsTouchPaused}
                   />
                 ))}

@@ -343,15 +343,15 @@ export default function HeroSection() {
           min-height:calc(100vh - 70px);
           align-items:center;
           width:100%;
-          max-width:1400px;
+          max-width:1680px;
           margin:0 auto;
-          padding:100px clamp(16px, 4vw, 64px) 56px;
+          padding:100px clamp(16px, 3.5vw, 72px) 56px;
         }
         .h-wave-shell {
           position:absolute;
           inset:0;
           width:100%;
-          max-width:1400px;
+          max-width:1680px;
           margin:0 auto;
         }
         .h-right-col  { display:block; }
