@@ -104,10 +104,10 @@ export default function ConsultantPreview() {
           viewport={{ once: true }}
           transition={isMobile ? { duration: 0.35 } : { duration: 0.5, delay: 0.2 }}
           style={{
-            maxWidth: '1080px',
+            maxWidth: '1200px',
             margin: '0 auto',
-            paddingLeft: 'clamp(12px, 4vw, 24px)',
-            paddingRight: 'clamp(12px, 4vw, 24px)',
+            paddingLeft: 'clamp(16px, 4vw, 48px)',
+            paddingRight: 'clamp(16px, 4vw, 48px)',
           }}
         >
           <motion.div

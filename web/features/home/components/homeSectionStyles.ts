@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 
 export const sectionTitleStyle: CSSProperties = {
-  fontSize: 'clamp(32px, 5vw, 48px)',
+  fontSize: 'clamp(28px, 3.5vw, 48px)',
   fontWeight: 700,
   background: 'linear-gradient(135deg, #22d3ee, #a855f7)',
   WebkitBackgroundClip: 'text',

@@ -298,7 +298,7 @@ export default function NewsPreview() {
       viewport={{ once: true, amount: 0.16, margin: '0px 0px -8% 0px' }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       style={{
-        padding: isMobile ? '32px 12px' : 'clamp(40px, 5vw, 64px) clamp(16px, 3vw, 24px)',
+        padding: isMobile ? '32px 12px' : 'clamp(40px, 5vw, 64px) clamp(16px, 4vw, 80px)',
         background:
           'radial-gradient(circle at top, rgba(34, 211, 238, 0.08), transparent 32%), radial-gradient(circle at bottom, rgba(168, 85, 247, 0.08), transparent 28%), rgba(17, 24, 39, 0.3)',
         borderTop: '1px solid rgba(255, 255, 255, 0.06)',

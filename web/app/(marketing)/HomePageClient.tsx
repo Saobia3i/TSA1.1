@@ -134,9 +134,10 @@ export default function HomePage() {
       <motion.section
         ref={founderRef}
         style={{
-          padding: "clamp(40px, 6vw, 60px) 24px",
-          maxWidth: "1100px",
+          padding: "clamp(40px, 6vw, 60px) clamp(16px, 4vw, 64px)",
+          maxWidth: "1280px",
           margin: "0 auto",
+          width: "100%",
         }}
       >
         <motion.div
@@ -405,9 +406,10 @@ export default function HomePage() {
       {/* Our Concern Section - NO styles import needed */}
       <section
         style={{
-          padding: "80px 24px",
-          maxWidth: "1200px",
+          padding: "clamp(48px, 6vw, 80px) clamp(16px, 4vw, 64px)",
+          maxWidth: "1280px",
           margin: "0 auto",
+          width: "100%",
         }}
       >
         {/* Heading */}

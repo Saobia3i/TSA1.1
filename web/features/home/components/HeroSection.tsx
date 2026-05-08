@@ -342,30 +342,35 @@ export default function HeroSection() {
           grid-template-columns:1fr 1fr;
           min-height:calc(100vh - 70px);
           align-items:center;
-          max-width:1200px;
+          width:100%;
+          max-width:1280px;
           margin:0 auto;
-          padding:100px 28px 56px;
+          padding:100px clamp(16px, 4vw, 64px) 56px;
         }
         .h-right-col  { display:block; }
         .h-wave-desk  { display:block; }
         .h-wave-mob   { display:none; }
-        .h-left-col { display:flex; flex-direction:column; gap:32px; }
+        .h-left-col { display:flex; flex-direction:column; gap:32px; max-width:600px; }
         .ff-card { --card-top: 0%; --card-right: 0%; }
 
+        @media(min-width:1400px) {
+          .h-grid { max-width:1400px; }
+        }
         @media(max-width:1100px) {
-          .h-grid { grid-template-columns:1.08fr 0.92fr; padding:92px 22px 44px; column-gap:24px; }
+          .h-grid { grid-template-columns:1.08fr 0.92fr; column-gap:24px; }
         }
         @media(max-width:1024px) and (min-width:769px) {
+          .h-left-col { max-width:100%; }
           .ff-card.usa-card { --card-top: 30%; --card-right: 8%; }
           .ff-card.expansion-card { --card-top: 68%; --card-right: 10%; }
         }
 
         @media(max-width:768px) {
-          .h-grid { grid-template-columns:1fr; padding:88px 20px 36px; }
+          .h-grid { grid-template-columns:1fr; padding:88px clamp(16px, 5vw, 24px) 36px; }
           .h-right-col { display:none !important; }
           .h-wave-desk { display:none !important; }
           .h-wave-mob  { display:block !important; }
-          .h-left-col { gap:16px !important; }
+          .h-left-col { gap:16px !important; max-width:100% !important; }
           .ff-card { display:none !important; }
         }
         @media(max-width:480px) { .h-grid { padding:80px 16px 28px; } }
