@@ -50,6 +50,8 @@ function StatusBadge({
         borderRadius: 999,
         fontSize: 12,
         fontWeight: 700,
+        whiteSpace: "nowrap",
+        display: "inline-flex",
       }}
     >
       {status}
@@ -137,6 +139,34 @@ export default function AdminEnrollmentsClient({
     }
   };
 
+  const deleteEnrollment = async (enrollmentId: string) => {
+    const confirmed = window.confirm("Delete this enrollment request? This cannot be undone.");
+    if (!confirmed) return;
+
+    try {
+      setLoadingId(enrollmentId);
+      setMessage("");
+
+      const res = await fetch("/api/admin/enrollments", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enrollmentId }),
+      });
+      const payload = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        throw new Error(payload?.error || "Delete failed");
+      }
+
+      setItems((prev) => prev.filter((item) => item.id !== enrollmentId));
+      setMessage(payload?.message || "Enrollment deleted.");
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Delete failed");
+    } finally {
+      setLoadingId("");
+    }
+  };
+
   const lockPanel = async () => {
     await fetch("/api/admin/verify", { method: "DELETE" });
     router.refresh();
@@ -152,24 +182,17 @@ export default function AdminEnrollmentsClient({
         padding: "32px 18px",
       }}
     >
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        <div className="header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-          <h1 className="header-title" style={{ margin: 0, fontSize: 28 }}>Admin Enrollment Approval</h1>
-          <div className="header-actions" style={{ display: "flex", gap: 12, alignItems: "center" }}>
-            <button
-              onClick={lockPanel}
-              style={{
-                border: "1px solid rgba(248,113,113,.45)",
-                background: "rgba(248,113,113,.15)",
-                color: "#fca5a5",
-                borderRadius: 8,
-                padding: "6px 12px",
-                cursor: "pointer",
-              }}
-            >
+      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+        <div className="header-row">
+          <div>
+            <h1 className="header-title">Enrollment Requests</h1>
+            <p className="header-subtitle">Review, approve, email, or remove student enrollment requests.</p>
+          </div>
+          <div className="header-actions">
+            <button onClick={lockPanel} className="top-button lock-button">
               Lock Admin
             </button>
-            <Link href="/dashboard" style={{ color: "#7dd3fc", textDecoration: "none" }}>
+            <Link href="/dashboard" className="top-button dashboard-button">
               Back to Dashboard
             </Link>
           </div>
@@ -180,20 +203,14 @@ export default function AdminEnrollmentsClient({
         {items.length === 0 ? (
           <p style={{ color: "#9ca3af" }}>No enrollment requests found.</p>
         ) : (
-          <div className="table-wrap" style={{ overflowX: "auto", border: "1px solid rgba(255,255,255,.12)", borderRadius: 12 }}>
-            <table className="enrollments-table" style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div className="table-wrap">
+            <table className="enrollments-table">
               <thead>
                 <tr>
                   {["Student", "Email", "WhatsApp", "Course", "Status", "Requested At", "Approved At", "Mail Sent At", "Action"].map((h) => (
                     <th
                       key={h}
-                      style={{
-                        textAlign: "left",
-                        fontSize: 12,
-                        color: "#9ca3af",
-                        padding: "10px 8px",
-                        borderBottom: "1px solid rgba(255,255,255,.12)",
-                      }}
+                      className="table-heading"
                     >
                       {h}
                     </th>
@@ -219,14 +236,7 @@ export default function AdminEnrollmentsClient({
                           <button
                             onClick={() => approve(item.id)}
                             disabled={loadingId === item.id}
-                            style={{
-                              border: "1px solid rgba(16,185,129,.5)",
-                              background: "rgba(16,185,129,.15)",
-                              color: "#34d399",
-                              borderRadius: 8,
-                              padding: "6px 12px",
-                              cursor: "pointer",
-                            }}
+                            className="action-button approve-button"
                           >
                             {loadingId === item.id ? "Working..." : "Approve"}
                           </button>
@@ -234,16 +244,16 @@ export default function AdminEnrollmentsClient({
                         <button
                           onClick={() => sendMail(item.id)}
                           disabled={loadingId === item.id}
-                          style={{
-                            border: "1px solid rgba(125,211,252,.5)",
-                            background: "rgba(125,211,252,.15)",
-                            color: "#7dd3fc",
-                            borderRadius: 8,
-                            padding: "6px 12px",
-                            cursor: "pointer",
-                          }}
+                          className="action-button mail-button"
                         >
                           {loadingId === item.id ? "Working..." : "Send Mail"}
+                        </button>
+                        <button
+                          onClick={() => deleteEnrollment(item.id)}
+                          disabled={loadingId === item.id}
+                          className="action-button delete-button"
+                        >
+                          {loadingId === item.id ? "Working..." : "Delete"}
                         </button>
                       </div>
                     </td>
@@ -255,15 +265,195 @@ export default function AdminEnrollmentsClient({
         )}
       </div>
       <style jsx>{`
+        .header-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          gap: 18px;
+          margin-bottom: 18px;
+          padding: 18px;
+          border: 1px solid rgba(34, 211, 238, 0.18);
+          border-radius: 16px;
+          background: linear-gradient(135deg, rgba(15, 23, 42, 0.84), rgba(2, 6, 23, 0.72));
+        }
+
+        .header-title {
+          margin: 0;
+          color: #ffffff;
+          font-size: 28px;
+          line-height: 1.15;
+        }
+
+        .header-subtitle {
+          margin: 8px 0 0;
+          color: #94a3b8;
+          font-size: 14px;
+          line-height: 1.5;
+        }
+
+        .header-actions {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .top-button {
+          display: inline-flex;
+          min-height: 36px;
+          align-items: center;
+          justify-content: center;
+          border-radius: 9px;
+          padding: 0 13px;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 800;
+          cursor: pointer;
+        }
+
+        .lock-button {
+          border: 1px solid rgba(248, 113, 113, 0.34);
+          background: rgba(248, 113, 113, 0.1);
+          color: #fca5a5;
+        }
+
+        .dashboard-button {
+          border: 1px solid rgba(125, 211, 252, 0.34);
+          background: rgba(125, 211, 252, 0.1);
+          color: #7dd3fc;
+        }
+
+        .table-wrap {
+          overflow-x: auto;
+          border: 1px solid rgba(148, 163, 184, 0.16);
+          border-radius: 16px;
+          background: rgba(15, 23, 42, 0.46);
+          box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+        }
+
+        .enrollments-table {
+          width: 100%;
+          min-width: 1080px;
+          border-collapse: collapse;
+          table-layout: fixed;
+        }
+
+        .enrollments-table thead {
+          background: rgba(2, 6, 23, 0.7);
+        }
+
+        .table-heading {
+          padding: 12px 10px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+          color: #94a3b8;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          line-height: 1.35;
+          text-align: left;
+          text-transform: uppercase;
+        }
+
+        .enrollments-table th:nth-child(1),
+        .enrollments-table td:nth-child(1) {
+          width: 116px;
+        }
+
+        .enrollments-table th:nth-child(2),
+        .enrollments-table td:nth-child(2) {
+          width: 158px;
+        }
+
+        .enrollments-table th:nth-child(3),
+        .enrollments-table td:nth-child(3) {
+          width: 108px;
+        }
+
+        .enrollments-table th:nth-child(4),
+        .enrollments-table td:nth-child(4) {
+          width: 310px;
+        }
+
+        .enrollments-table th:nth-child(5),
+        .enrollments-table td:nth-child(5) {
+          width: 74px;
+        }
+
+        .enrollments-table th:nth-child(6),
+        .enrollments-table td:nth-child(6),
+        .enrollments-table th:nth-child(7),
+        .enrollments-table td:nth-child(7),
+        .enrollments-table th:nth-child(8),
+        .enrollments-table td:nth-child(8) {
+          width: 112px;
+        }
+
+        .enrollments-table th:nth-child(9),
+        .enrollments-table td:nth-child(9) {
+          width: 96px;
+        }
+
+        .enrollments-table tbody tr {
+          background: rgba(2, 6, 23, 0.18);
+        }
+
+        .enrollments-table tbody tr:hover {
+          background: rgba(34, 211, 238, 0.06);
+        }
+
+        .action-buttons {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 6px !important;
+        }
+
+        .action-button {
+          width: 86px;
+          min-height: 28px;
+          border-radius: 8px;
+          padding: 0 10px;
+          font-size: 11px;
+          font-weight: 800;
+          cursor: pointer;
+          transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+        }
+
+        .action-button:disabled {
+          cursor: wait;
+          opacity: 0.72;
+        }
+
+        .action-button:not(:disabled):hover {
+          transform: translateY(-1px);
+        }
+
+        .approve-button {
+          border: 1px solid rgba(16, 185, 129, 0.5);
+          background: rgba(16, 185, 129, 0.15);
+          color: #34d399;
+        }
+
+        .mail-button {
+          border: 1px solid rgba(125, 211, 252, 0.5);
+          background: rgba(125, 211, 252, 0.15);
+          color: #7dd3fc;
+        }
+
+        .delete-button {
+          border: 1px solid rgba(248, 113, 113, 0.5);
+          background: rgba(248, 113, 113, 0.15);
+          color: #fca5a5;
+        }
+
         @media (max-width: 768px) {
           .admin-main {
             padding: 20px 12px !important;
           }
 
           .header-row {
-            flex-direction: column;
-            align-items: flex-start !important;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: 1fr;
+            padding: 14px;
           }
 
           .header-title {
@@ -278,10 +468,6 @@ export default function AdminEnrollmentsClient({
             gap: 8px;
           }
 
-          .enrollments-table {
-            min-width: 980px;
-          }
-
           .action-buttons {
             min-width: 140px;
           }
@@ -292,6 +478,11 @@ export default function AdminEnrollmentsClient({
 }
 
 const tdStyle = {
-  padding: "12px 8px",
+  padding: "13px 10px",
   borderBottom: "1px solid rgba(255,255,255,.06)",
+  verticalAlign: "middle",
+  overflowWrap: "anywhere" as const,
+  lineHeight: 1.42,
+  color: "#dbeafe",
+  fontSize: 14,
 };

@@ -53,7 +53,7 @@ export default function DashboardContent({
   serviceBookings,
 }: DashboardContentProps) {
   const [serviceBookingItems, setServiceBookingItems] = useState(serviceBookings);
-  const [enrollmentItems, setEnrollmentItems] = useState(initialEnrollments);
+  const [enrollmentItems] = useState(initialEnrollments);
   const [deleteLoadingId, setDeleteLoadingId] = useState("");
   const [deleteMessage, setDeleteMessage] = useState("");
 
@@ -66,11 +66,8 @@ export default function DashboardContent({
     [enrollmentItems]
   );
 
-  const deleteRecord = async (
-    type: "enrollment" | "serviceBooking",
-    id: string,
-    label: string
-  ) => {
+  const deleteServiceBooking = async (id: string) => {
+    const label = "service booking";
     const confirmed = window.confirm(`Delete ${label}? This cannot be undone.`);
     if (!confirmed) return;
 
@@ -80,7 +77,7 @@ export default function DashboardContent({
     const res = await fetch("/api/admin/dashboard-records", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type, id }),
+      body: JSON.stringify({ type: "serviceBooking", id }),
     });
     const payload = await res.json().catch(() => null);
 
@@ -91,11 +88,7 @@ export default function DashboardContent({
       return;
     }
 
-    if (type === "enrollment") {
-      setEnrollmentItems((current) => current.filter((item) => item.id !== id));
-    } else {
-      setServiceBookingItems((current) => current.filter((item) => item.id !== id));
-    }
+    setServiceBookingItems((current) => current.filter((item) => item.id !== id));
 
     setDeleteMessage(`${label} deleted.`);
   };
@@ -184,7 +177,7 @@ export default function DashboardContent({
                     Dashboard shows enrollment status only. Approvals are handled from the simple admin approval page.
                   </p>
                   <Table
-                    headers={["Student", "Email", "WhatsApp", "Course", "Status", "Requested At", "Approved At", "Action"]}
+                    headers={["Student", "Email", "WhatsApp", "Course", "Status", "Requested At", "Approved At"]}
                     rows={enrollmentItems.map((e) => [
                       e.user?.name || "Unknown",
                       e.user?.email || "-",
@@ -193,11 +186,6 @@ export default function DashboardContent({
                       <StatusBadge key={`${e.id}-status`} status={e.status} />,
                       fmt(e.enrolledAt),
                       fmt(e.approvedAt),
-                      <DeleteButton
-                        key={`${e.id}-delete`}
-                        disabled={deleteLoadingId === e.id}
-                        onClick={() => deleteRecord("enrollment", e.id, "enrollment")}
-                      />,
                     ])}
                   />
                 </>
@@ -235,7 +223,7 @@ export default function DashboardContent({
                     <DeleteButton
                       key={`${s.id}-delete`}
                       disabled={deleteLoadingId === s.id}
-                      onClick={() => deleteRecord("serviceBooking", s.id, "service booking")}
+                      onClick={() => deleteServiceBooking(s.id)}
                     />,
                   ])}
                 />

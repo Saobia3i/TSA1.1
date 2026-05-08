@@ -213,3 +213,30 @@ export async function PATCH(request: Request) {
     );
   }
 }
+
+export async function DELETE(request: Request) {
+  const session = await ensureAdmin();
+  if (!session) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  try {
+    const { enrollmentId } = actionSchema.pick({ enrollmentId: true }).parse(await request.json());
+
+    await prisma.enrollment.delete({ where: { id: enrollmentId } });
+
+    revalidatePath("/dashboard");
+    revalidatePath("/admin/enrollments");
+
+    return NextResponse.json({ success: true, message: "Enrollment deleted." });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: error.issues[0]?.message || "Invalid enrollment ID" },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({ error: "Failed to delete enrollment" }, { status: 500 });
+  }
+}
