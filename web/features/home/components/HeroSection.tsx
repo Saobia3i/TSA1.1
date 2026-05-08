@@ -343,9 +343,16 @@ export default function HeroSection() {
           min-height:calc(100vh - 70px);
           align-items:center;
           width:100%;
-          max-width:1280px;
+          max-width:1400px;
           margin:0 auto;
           padding:100px clamp(16px, 4vw, 64px) 56px;
+        }
+        .h-wave-shell {
+          position:absolute;
+          inset:0;
+          width:100%;
+          max-width:1400px;
+          margin:0 auto;
         }
         .h-right-col  { display:block; }
         .h-wave-desk  { display:block; }
@@ -353,9 +360,6 @@ export default function HeroSection() {
         .h-left-col { display:flex; flex-direction:column; gap:32px; max-width:600px; }
         .ff-card { --card-top: 0%; --card-right: 0%; }
 
-        @media(min-width:1400px) {
-          .h-grid { max-width:1400px; }
-        }
         @media(max-width:1100px) {
           .h-grid { grid-template-columns:1.08fr 0.92fr; column-gap:24px; }
         }
@@ -391,7 +395,9 @@ export default function HeroSection() {
         <>
           {/* desktop wave */}
           <div className="h-wave-desk" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none' }}>
-            <RightWave />
+            <div className="h-wave-shell">
+              <RightWave />
+            </div>
           </div>
           {/* mobile wave */}
           <div className="h-wave-mob" style={{ position:'absolute', inset:0, zIndex:1, pointerEvents:'none' }}>
