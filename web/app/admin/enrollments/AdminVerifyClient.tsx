@@ -4,7 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function AdminVerifyClient({ email }: { email: string }) {
+export default function AdminVerifyClient({
+  email,
+  redirectTo = "/admin/enrollments?verified=1",
+}: {
+  email: string;
+  redirectTo?: string;
+}) {
   const router = useRouter();
   const [pin, setPin] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,7 +30,7 @@ export default function AdminVerifyClient({ email }: { email: string }) {
       if (!res.ok) {
         throw new Error(payload?.error || "Verification failed");
       }
-      router.push("/admin/enrollments?verified=1");
+      router.push(redirectTo);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Verification failed");

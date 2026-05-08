@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getTestimonials } from "@/features/home/data/testimonials";
+import { getPublishedTestimonials } from "@/lib/testimonials";
 
 const BASE_URL = "https://tensorsecurityacademy.com";
 
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function TestimonialsPage() {
-  const testimonials = getTestimonials();
+export default async function TestimonialsPage() {
+  const testimonials = await getPublishedTestimonials();
 
   const jsonLd = {
     "@context": "https://schema.org",

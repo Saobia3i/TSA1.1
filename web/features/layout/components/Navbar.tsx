@@ -12,6 +12,8 @@ import {
   Settings,
   LogOut,
   Home,
+  MessageSquareQuote,
+  CircleHelp,
 } from "lucide-react";
 import Linkedin from "@mui/icons-material/LinkedIn";
 import Instagram from "@mui/icons-material/Instagram";
@@ -37,6 +39,8 @@ const aboutDropdownLinks = [
   { href: "/about/team", label: "Our Team Members", icon: UserGroupIcon },
   { href: "/about/join", label: "Join Us", icon: Handshake },
   { href: "/news", label: "News", icon: NewspaperIcon },
+  { href: "/testimonials", label: "Testimonials", icon: MessageSquareQuote },
+  { href: "/faq", label: "FAQ", icon: CircleHelp },
 ];
 
 const socialLinks = [
@@ -156,7 +160,11 @@ export default function Navbar({ user = null }: NavbarProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const isAboutActive = pathname.startsWith("/about");
+  const isAboutActive =
+    pathname.startsWith("/about") ||
+    pathname === "/news" ||
+    pathname === "/testimonials" ||
+    pathname === "/faq";
   const closeMobileNavigation = () => {
     setMobileMenuOpen(false);
     setAboutDropdownOpenMobile(false);

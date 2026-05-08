@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ExternalLink, Quote } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { getTestimonials, type Testimonial } from "@/features/home/data/testimonials";
 
 function getInitials(name: string) {
@@ -125,10 +125,27 @@ function TestimonialCard({
 }
 
 export default function TestimonialsPreview() {
-  const reviews = useMemo(() => getTestimonials(), []);
+  const [reviews, setReviews] = useState<Testimonial[]>(() => getTestimonials());
   const [expandedTestimonialIds, setExpandedTestimonialIds] = useState<Set<string>>(() => new Set());
   const [isHoverPaused, setIsHoverPaused] = useState(false);
   const [isTouchPaused, setIsTouchPaused] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetch("/api/testimonials")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { testimonials?: Testimonial[] } | null) => {
+        if (isMounted && data?.testimonials?.length) {
+          setReviews(data.testimonials);
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const midpoint = Math.ceil(reviews.length / 2);
   const upperRowReviews = reviews.slice(0, midpoint);
@@ -458,19 +475,36 @@ export default function TestimonialsPreview() {
             flex-direction: column;
           }
 
+          .testimonials-grid-wrap {
+            gap: 10px;
+          }
+
           .testimonial-lane {
+            height: 162px;
+            padding: 2px 0 12px;
+            margin: 0;
             -webkit-mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
             mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
           }
 
+          .testimonial-track {
+            height: 148px;
+          }
+
           .testimonial-card {
             width: min(360px, calc(100vw - 48px));
-            min-height: 148px;
+            height: 148px;
+            min-height: 0;
             padding: 13px 14px;
           }
 
           .testimonial-card.is-expanded {
-            min-height: 230px;
+            height: 230px;
+          }
+
+          .testimonial-lane:has(.testimonial-card.is-expanded) {
+            height: 244px;
+          }
           }
 
           .testimonial-avatar {

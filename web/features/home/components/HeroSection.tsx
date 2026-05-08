@@ -2,9 +2,10 @@
 
 import { memo, useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, ExternalLink, Quote } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getTestimonials, type Testimonial } from '@/features/home/data/testimonials';
 
 /* ── data ─────────────────────────────────────────────────── */
 const HERO_SLIDES = [
@@ -288,6 +289,96 @@ const CertMarquee = memo(function CertMarquee() {
 });
 
 /* ── main ─────────────────────────────────────────────────── */
+function getInitials(name: string) {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase();
+}
+
+const HeroTestimonials = memo(function HeroTestimonials() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(() => getTestimonials());
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetch('/api/testimonials')
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { testimonials?: Testimonial[] } | null) => {
+        if (isMounted && data?.testimonials?.length) {
+          setTestimonials(data.testimonials);
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const scrollingTestimonials = [...testimonials, ...testimonials];
+
+  return (
+    <div className="hero-testimonials is-ready" aria-label="Featured testimonials">
+      <div className="hero-testimonials-heading">
+        <Quote size={14} aria-hidden="true" />
+        <span>What people say</span>
+      </div>
+
+      <div className="hero-testimonials-window">
+        <div className="hero-testimonials-track">
+          {scrollingTestimonials.map((testimonial, index) => (
+            <article className="hero-testimonial-card" key={`${testimonial.id}-${index}`}>
+              <div className="hero-testimonial-top">
+                <div className="hero-testimonial-avatar">
+                  {testimonial.image ? (
+                    <Image
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      fill
+                      sizes="30px"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <span>{getInitials(testimonial.name)}</span>
+                  )}
+                </div>
+
+                <div className="hero-testimonial-person">
+                  <h3>{testimonial.name}</h3>
+                  {testimonial.position ? <p>{testimonial.position}</p> : null}
+                </div>
+              </div>
+
+              <p className="hero-testimonial-review">{testimonial.review}</p>
+
+              {testimonial.postLink ? (
+                <Link
+                  className="hero-testimonial-link"
+                  href={testimonial.postLink}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label={`Open ${testimonial.name}'s testimonial post`}
+                >
+                  <span>View post</span>
+                  <ExternalLink size={13} aria-hidden="true" />
+                </Link>
+              ) : (
+                <span className="hero-testimonial-link hero-testimonial-link-static">
+                  Verified
+                </span>
+              )}
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+});
+
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showDeferredVisuals, setShowDeferredVisuals] = useState(false);
@@ -336,6 +427,7 @@ export default function HeroSection() {
         @keyframes floatC { 0%,100%{transform:translateY(0) rotate(1deg)} 50%{transform:translateY(-8px) rotate(-1deg)} }
         @keyframes floatD { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
         @keyframes floatE { 0%,100%{transform:translateY(0) rotate(.5deg)} 50%{transform:translateY(-12px) rotate(-.5deg)} }
+        @keyframes heroTestimonialsScroll { from{transform:translateX(-50%)} to{transform:translateX(0)} }
 
         .h-grid {
           display:grid;
@@ -351,17 +443,174 @@ export default function HeroSection() {
           position:absolute;
           inset:0;
           width:100%;
-          max-width:1680px;
-          margin:0 auto;
         }
-        .h-right-col  { display:block; }
         .h-wave-desk  { display:block; }
         .h-wave-mob   { display:none; }
         .h-left-col { display:flex; flex-direction:column; gap:32px; max-width:600px; }
+        .h-right-col {
+          align-self:stretch;
+          display:flex;
+          min-width:0;
+          align-items:flex-end;
+          justify-content:flex-end;
+          padding:300px 0 64px 0;
+        }
         .ff-card { --card-top: 0%; --card-right: 0%; }
+        .hero-testimonials {
+          width:min(100%, 600px);
+          pointer-events:auto;
+          user-select:text;
+          opacity:0;
+          transform:translateY(10px);
+          transition:opacity .35s ease, transform .35s ease;
+          transition-delay:.18s;
+        }
+        .hero-testimonials.is-ready {
+          opacity:1;
+          transform:translateY(0);
+        }
+        .hero-testimonials-heading {
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+          margin:0 0 6px;
+          color:rgba(186,230,253,0.78);
+          font-size:10px;
+          font-weight:800;
+          letter-spacing:0.12em;
+          text-transform:uppercase;
+        }
+        .hero-testimonials-heading svg { color:#22d3ee; }
+        .hero-testimonials-window {
+          overflow:hidden;
+          padding:2px 0 14px;
+          margin:0 0 -14px;
+          -webkit-mask-image:linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+          mask-image:linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+        }
+        .hero-testimonials-track {
+          display:flex;
+          align-items:flex-start;
+          gap:12px;
+          width:max-content;
+          animation:heroTestimonialsScroll 28s linear infinite;
+          will-change:transform;
+        }
+        .hero-testimonials:hover .hero-testimonials-track {
+          animation-play-state:paused;
+        }
+        .hero-testimonial-card {
+          min-width:0;
+          flex:0 0 clamp(190px, 13vw, 230px);
+          height:104px;
+          display:flex;
+          flex-direction:column;
+          align-items:flex-start;
+          padding:10px 11px;
+          border:1px solid rgba(34,211,238,0.2);
+          border-radius:10px;
+          background:linear-gradient(135deg, rgba(2,8,24,0.9), rgba(8,15,34,0.84));
+          box-shadow:0 14px 34px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.06);
+          backdrop-filter:blur(14px);
+        }
+        .hero-testimonial-top {
+          display:flex;
+          align-items:center;
+          gap:9px;
+          width:100%;
+          min-width:0;
+        }
+        .hero-testimonial-avatar {
+          position:relative;
+          width:26px;
+          height:26px;
+          flex:0 0 26px;
+          overflow:hidden;
+          border:2px solid rgba(34,211,238,0.4);
+          border-radius:999px;
+          background:linear-gradient(135deg, rgba(34,211,238,0.2), rgba(168,85,247,0.2));
+        }
+        .hero-testimonial-avatar span {
+          display:flex;
+          width:100%;
+          height:100%;
+          align-items:center;
+          justify-content:center;
+          color:#fff;
+          font-size:9px;
+          font-weight:900;
+        }
+        .hero-testimonial-person {
+          min-width:0;
+          flex:1;
+        }
+        .hero-testimonial-person h3 {
+          margin:0 0 2px;
+          overflow:hidden;
+          color:#fff;
+          font-size:11px;
+          font-weight:900;
+          line-height:1.2;
+          text-overflow:ellipsis;
+          white-space:nowrap;
+        }
+        .hero-testimonial-person p {
+          margin:0;
+          overflow:hidden;
+          color:#22d3ee;
+          font-size:9px;
+          font-weight:800;
+          line-height:1.3;
+          text-overflow:ellipsis;
+          white-space:nowrap;
+        }
+        .hero-testimonial-review {
+          display:-webkit-box;
+          min-height:calc(1.45em * 2);
+          margin:8px 0 0;
+          overflow:hidden;
+          color:rgba(226,232,240,0.7);
+          font-size:10px;
+          font-weight:600;
+          line-height:1.45;
+          -webkit-box-orient:vertical;
+          -webkit-line-clamp:2;
+        }
+        .hero-testimonial-link {
+          display:inline-flex;
+          min-height:22px;
+          align-items:center;
+          justify-content:center;
+          gap:7px;
+          margin-top:auto;
+          padding:0 8px;
+          border:1px solid rgba(34,211,238,0.28);
+          border-radius:999px;
+          color:#22d3ee;
+          background:rgba(34,211,238,0.08);
+          font-size:10px;
+          font-weight:800;
+          text-decoration:none;
+        }
+        .hero-testimonial-link-static {
+          border-color:transparent;
+          background:transparent;
+          padding-left:0;
+        }
 
         @media(max-width:1100px) {
           .h-grid { grid-template-columns:1.08fr 0.92fr; column-gap:24px; }
+          .h-right-col {
+            display:flex !important;
+            padding:220px 0 54px;
+          }
+          .hero-testimonials {
+            display:block !important;
+            width:min(100%, 460px);
+          }
+          .hero-testimonial-card {
+            flex-basis:200px;
+          }
         }
         @media(max-width:1024px) and (min-width:769px) {
           .h-left-col { max-width:100%; }
@@ -370,12 +619,44 @@ export default function HeroSection() {
         }
 
         @media(max-width:768px) {
-          .h-grid { grid-template-columns:1fr; padding:88px clamp(16px, 5vw, 24px) 36px; }
-          .h-right-col { display:none !important; }
+          .h-grid { grid-template-columns:1fr; padding:88px clamp(16px, 5vw, 24px) 24px; }
+          .h-right-col {
+            display:flex !important;
+            align-self:auto;
+            align-items:flex-start;
+            justify-content:flex-start;
+            padding:8px 0 30px;
+          }
           .h-wave-desk { display:none !important; }
           .h-wave-mob  { display:block !important; }
           .h-left-col { gap:16px !important; max-width:100% !important; }
           .ff-card { display:none !important; }
+          .hero-testimonials {
+            width:100%;
+          }
+          .hero-testimonials-heading {
+            font-size:10px;
+          }
+          .hero-testimonial-card {
+            flex-basis:190px;
+            height:96px;
+            padding:9px 10px;
+          }
+          .hero-testimonial-avatar {
+            width:24px;
+            height:24px;
+            flex-basis:24px;
+          }
+          .hero-testimonial-review {
+            margin-top:6px;
+            font-size:9px;
+            line-height:1.35;
+            min-height:calc(1.35em * 2);
+          }
+          .hero-testimonial-link {
+            min-height:20px;
+            font-size:9px;
+          }
         }
         @media(max-width:480px) { .h-grid { padding:80px 16px 28px; } }
 
@@ -510,8 +791,9 @@ export default function HeroSection() {
 
         </div>
 
-        {/* right col placeholder */}
-        <div className="h-right-col" />
+        <div className="h-right-col">
+          {showDeferredVisuals ? <HeroTestimonials /> : null}
+        </div>
       </div>
 
 
