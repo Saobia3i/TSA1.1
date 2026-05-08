@@ -427,7 +427,7 @@ export default function HeroSection() {
         @keyframes floatC { 0%,100%{transform:translateY(0) rotate(1deg)} 50%{transform:translateY(-8px) rotate(-1deg)} }
         @keyframes floatD { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
         @keyframes floatE { 0%,100%{transform:translateY(0) rotate(.5deg)} 50%{transform:translateY(-12px) rotate(-.5deg)} }
-        @keyframes heroTestimonialsScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        @keyframes heroTestimonialsScroll { from{transform:translateX(-50%)} to{transform:translateX(0)} }
 
         .h-grid {
           display:grid;
@@ -491,8 +491,7 @@ export default function HeroSection() {
         .hero-testimonials-track {
           display:flex;
           align-items:flex-start;
-          flex-direction:row-reverse;
-          gap:10px;
+          gap:8px;
           width:max-content;
           animation:heroTestimonialsScroll 22s linear infinite;
           will-change:transform;
@@ -502,7 +501,7 @@ export default function HeroSection() {
         }
         .hero-testimonial-card {
           min-width:0;
-          flex:0 0 clamp(180px, 11vw, 210px);
+          flex:0 0 clamp(170px, 10vw, 190px);
           height:104px;
           display:flex;
           flex-direction:column;
