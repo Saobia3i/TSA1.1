@@ -215,9 +215,9 @@ export default function Navbar({ user = null }: NavbarProps) {
         }
 
         .nav-shell {
-          max-width: 1280px;
+          max-width: 1400px;
           margin: 0 auto;
-          padding: 0 20px;
+          padding: 0 clamp(16px, 4vw, 64px);
           height: 70px;
           display: flex;
           align-items: center;
@@ -261,7 +261,7 @@ export default function Navbar({ user = null }: NavbarProps) {
 
         @media (max-width: 1180px) {
           .nav-shell {
-            padding: 0 16px;
+            padding: 0 clamp(12px, 3vw, 24px);
             gap: 12px;
           }
 
@@ -284,10 +284,6 @@ export default function Navbar({ user = null }: NavbarProps) {
         }
 
         @media (min-width: 1181px) and (max-width: 1380px) {
-          .nav-shell {
-            padding: 0 16px;
-          }
-
           .desktop-only-nav {
             gap: 22px;
           }
