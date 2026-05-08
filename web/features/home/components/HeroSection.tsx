@@ -319,7 +319,7 @@ const HeroTestimonials = memo(function HeroTestimonials() {
     };
   }, []);
 
-  const scrollingTestimonials = [...testimonials, ...testimonials];
+  const scrollingTestimonials = [...testimonials, ...testimonials, ...testimonials];
 
   return (
     <div className="hero-testimonials is-ready" aria-label="Featured testimonials">
@@ -427,7 +427,7 @@ export default function HeroSection() {
         @keyframes floatC { 0%,100%{transform:translateY(0) rotate(1deg)} 50%{transform:translateY(-8px) rotate(-1deg)} }
         @keyframes floatD { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
         @keyframes floatE { 0%,100%{transform:translateY(0) rotate(.5deg)} 50%{transform:translateY(-12px) rotate(-.5deg)} }
-        @keyframes heroTestimonialsScroll { from{transform:translateX(-50%)} to{transform:translateX(0)} }
+        @keyframes heroTestimonialsScroll { from{transform:translateX(-66.666%)} to{transform:translateX(-33.333%)} }
 
         .h-grid {
           display:grid;
@@ -596,6 +596,31 @@ export default function HeroSection() {
           border-color:transparent;
           background:transparent;
           padding-left:0;
+        }
+
+        @media(min-width:1600px) {
+          .h-grid {
+            max-width:none;
+            grid-template-columns:minmax(0, 0.94fr) minmax(0, 1.06fr);
+            padding-left:clamp(64px, 5vw, 96px);
+            padding-right:clamp(64px, 5vw, 96px);
+          }
+
+          .h-left-col {
+            max-width:620px;
+          }
+
+          .hero-testimonials {
+            width:min(100%, 660px);
+          }
+
+          .hero-testimonials-track {
+            gap:6px;
+          }
+
+          .hero-testimonial-card {
+            flex-basis:240px;
+          }
         }
 
         @media(max-width:1100px) {
