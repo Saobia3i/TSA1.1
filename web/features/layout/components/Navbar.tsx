@@ -300,6 +300,24 @@ export default function Navbar({ user = null }: NavbarProps) {
             gap: 10px;
           }
         }
+
+        @media (min-width: 1600px) {
+          .nav-shell {
+            max-width: none;
+            padding-left: clamp(64px, 5vw, 96px);
+            padding-right: clamp(64px, 5vw, 96px);
+          }
+        }
+
+        @supports (-moz-appearance:none) {
+          @media (min-width: 1400px) {
+            .nav-shell {
+              max-width: none;
+              padding-left: clamp(56px, 5vw, 96px);
+              padding-right: clamp(56px, 5vw, 96px);
+            }
+          }
+        }
       `}</style>
 
       <nav

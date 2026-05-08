@@ -623,6 +623,29 @@ export default function HeroSection() {
           }
         }
 
+        @supports (-moz-appearance:none) {
+          @media(min-width:1400px) {
+            .h-grid {
+              max-width:none;
+              grid-template-columns:minmax(0, 0.94fr) minmax(0, 1.06fr);
+              padding-left:clamp(56px, 5vw, 96px);
+              padding-right:clamp(56px, 5vw, 96px);
+            }
+
+            .hero-testimonials {
+              width:min(100%, 660px);
+            }
+
+            .hero-testimonials-track {
+              gap:6px;
+            }
+
+            .hero-testimonial-card {
+              flex-basis:240px;
+            }
+          }
+        }
+
         @media(max-width:1100px) {
           .h-grid { grid-template-columns:1.08fr 0.92fr; column-gap:24px; }
           .h-right-col {
