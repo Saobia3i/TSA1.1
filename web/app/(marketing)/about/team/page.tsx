@@ -236,8 +236,10 @@ export default function TeamPage() {
                   color: "#FFD700",
                 }}
               >
-                <Sparkles style={{ width: "12px", height: "12px" }} />
-                FOUNDER
+                {[
+                  <Sparkles key="ic" style={{ width: "10px", height: "10px", flexShrink: 0 }} />,
+                  <span key="t">FOUNDER</span>,
+                ]}
               </div>
 
               <motion.div

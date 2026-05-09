@@ -226,7 +226,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
           {/* Badges Section - Centered */}
           <header style={{ marginBottom: '56px' }}>
             <div 
-              className="flex items-center justify-center gap-4 flex-wrap"
+              className="flex items-center justify-start gap-4 flex-wrap"
               style={{ marginBottom: '40px' }}
             >
               <span
@@ -282,6 +282,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
               style={{
                 ...pageTitleStyle,
                 marginTop: '40px',
+                textAlign: 'left',
               }}
             >
               {news.title}
@@ -290,7 +291,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
               style={{
                 width: '100%',
                 height: '4px',
-                margin: '0 0 32px',
+                margin: '0 0 32px 0',
                 borderRadius: '999px',
                 background: 'linear-gradient(90deg, #22d3ee, #a855f7)',
                 boxShadow: '0 6px 16px rgba(168, 85, 247, 0.35)',
@@ -305,7 +306,8 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                 ...pageSubtitleStyle,
                 fontSize: 'var(--font-size-lg)',
                 color: 'var(--color-text-secondary)',
-                marginTop: '32px',
+                margin: '32px 0 0',
+                textAlign: 'left',
               }}
             >
               {news.shortDescription}
@@ -325,6 +327,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                       color: 'var(--color-text)',
                       fontFamily: 'var(--font-family-base)',
                       lineHeight: 'var(--line-height-tight)',
+                      textAlign: 'left',
                       textTransform: 'uppercase',
                       letterSpacing: '0.5px',
                       marginTop: '64px',
@@ -337,6 +340,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                       style={{
                         width: '100%',
                         height: '3px',
+                        marginLeft: 0,
                         background: 'linear-gradient(to right, var(--color-primary), var(--color-teal-500))'
                       }}
                     />
@@ -387,11 +391,12 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                     </div>
                     {block.caption && (
                       <figcaption 
-                        className="mt-4 text-center italic"
+                        className="mt-4 italic"
                         style={{
                           fontSize: 'var(--font-size-sm)',
                           color: 'var(--color-text-secondary)',
-                          fontFamily: 'var(--font-family-base)'
+                          fontFamily: 'var(--font-family-base)',
+                          textAlign: 'left',
                         }}
                       >
                         {block.caption}
@@ -415,11 +420,12 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                       </div>
                     </div>
                     <p 
-                      className="mt-5 text-center font-medium"
+                      className="mt-5 font-medium"
                       style={{
                         fontSize: 'var(--font-size-base)',
                         color: 'var(--color-text-secondary)',
-                        fontFamily: 'var(--font-family-base)'
+                        fontFamily: 'var(--font-family-base)',
+                        textAlign: 'left',
                       }}
                     >
                       <a 
@@ -461,7 +467,8 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                             fontSize: 'var(--font-size-xl)',
                             fontWeight: 'var(--font-weight-semibold)',
                             color: 'var(--color-text)',
-                            fontFamily: 'var(--font-family-base)'
+                            fontFamily: 'var(--font-family-base)',
+                            textAlign: 'left',
                           }}
                         >
                           {block.title}
@@ -472,7 +479,8 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                             fontSize: 'var(--font-size-base)',
                             color: 'var(--color-text-secondary)',
                             lineHeight: 'var(--line-height-normal)',
-                            fontFamily: 'var(--font-family-base)'
+                            fontFamily: 'var(--font-family-base)',
+                            textAlign: 'left',
                           }}
                         >
                           {block.description}

@@ -78,7 +78,9 @@ export default function ServiceDetailsPage({ service }: Props) {
             style={{
               ...pageTitleStyle,
               background: 'linear-gradient(135deg, #22d3ee 0%, #a855f7 50%, #ec4899 100%)',
-              marginBottom: '20px',
+              maxWidth: '1200px',
+              margin: '0 auto 28px',
+              lineHeight: 1.12,
               textShadow: '0 0 30px rgba(34, 211, 238, 0.5)'
             }}
           >
@@ -103,8 +105,8 @@ export default function ServiceDetailsPage({ service }: Props) {
               background: 'rgba(255, 255, 255, 0.05)',
               border: '2px solid rgba(34, 211, 238, 0.8)',
               borderRadius: '16px',
-              padding: '24px',
-              maxWidth: '1200px',
+              padding: 'clamp(28px, 4vw, 52px) clamp(20px, 4vw, 44px)',
+              maxWidth: '1160px',
               margin: '0 auto',
               backdropFilter: 'blur(10px)',
               WebkitBackdropFilter: 'blur(10px)',
@@ -135,31 +137,45 @@ export default function ServiceDetailsPage({ service }: Props) {
               
             }}
           >
-            <p
+            <div
               style={{
-                ...pageSubtitleStyle,
-                fontSize: '18px',
-                color: '#fff',
-                lineHeight: 1.7,
-                margin: '20px 0',
-                fontWeight: 600,
-                textAlign: 'center'
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '24px',
+                maxWidth: '1040px',
+                margin: '0 auto',
               }}
             >
-              {service.shortDescription}
-            </p>
-            <p
-              style={{
-                fontSize: '16px',
-                color: '#fff',
-                lineHeight: 1.8,
-                fontFamily: 'var(--font-space-mono)',
-                margin: '20px 0',
-                textAlign: 'center'
-              }}
-            >
-              {service.longDescription}
-            </p>
+              <p
+                style={{
+                  ...pageSubtitleStyle,
+                  maxWidth: '100%',
+                  fontSize: '18px',
+                  color: '#fff',
+                  lineHeight: 1.7,
+                  margin: 0,
+                  fontWeight: 700,
+                  textAlign: 'center'
+                }}
+              >
+                {service.shortDescription}
+              </p>
+              <p
+                style={{
+                  maxWidth: '100%',
+                  fontSize: '16px',
+                  color: '#fff',
+                  lineHeight: 1.8,
+                  fontFamily: 'var(--font-nunito)',
+                  fontWeight: 600,
+                  margin: 0,
+                  textAlign: 'center'
+                }}
+              >
+                {service.longDescription}
+              </p>
+            </div>
           </div>
         </div>
 

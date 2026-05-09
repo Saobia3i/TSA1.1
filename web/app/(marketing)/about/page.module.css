@@ -245,6 +245,7 @@ html {
   position: relative;
   max-width: 1100px;
   margin: 0 auto;
+  padding-inline: clamp(4px, 2vw, 12px);
   transform: translateZ(0);
   backface-visibility: hidden;
 }
@@ -258,12 +259,18 @@ html {
   background: linear-gradient(to bottom, rgba(0, 212, 255, 0.8), rgba(124, 58, 237, 0.8), rgba(6, 182, 212, 0.8));
   transform: translateX(-50%);
   z-index: 1;
+  pointer-events: none;
 }
 
+/* 3-column grid: card | spine (dot) | card — zigzag regardless of Flex quirks / single visible flex child */
 .roadmapItemWrapper {
   position: relative;
-  display: flex;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
+  column-gap: clamp(10px, 2.5vw, 24px);
   margin-bottom: clamp(60px, 10vw, 100px);
   transform: translateZ(0);
   backface-visibility: hidden;
@@ -271,14 +278,6 @@ html {
 
 .roadmapItemWrapper:last-child {
   margin-bottom: 0;
-}
-
-.roadmapItemLeft {
-  justify-content: flex-start;
-}
-
-.roadmapItemRight {
-  justify-content: flex-end;
 }
 
 .connectingLine {
@@ -301,24 +300,43 @@ html {
   transform-origin: left;
 }
 
-/* Central Dot */
+/* Central Dot — sits in middle grid track (paired with `.centralLine`) */
 .centralDot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: clamp(20px, 4vw, 30px);
-  height: clamp(20px, 4vw, 30px);
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  align-self: center;
+  flex-shrink: 0;
+  width: clamp(18px, 3.8vw, 28px);
+  height: clamp(18px, 3.8vw, 28px);
   border-radius: 50%;
   background: linear-gradient(135deg, #00d4ff, #7c3aed, #06b6d4);
   border: 3px solid rgba(0, 0, 0, 0.9);
   z-index: 15;
 }
 
-/* Premium Card */
+/* Left column: hug toward spine; right column: hug outward from spine */
+.roadmapItemLeft .premiumCard {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: end;
+  align-self: center;
+  min-width: 0;
+}
+
+.roadmapItemRight .premiumCard {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: start;
+  align-self: center;
+  min-width: 0;
+}
+
 .premiumCard {
-  width: 100%;
-  max-width: clamp(280px, 42vw, 480px);
+  width: min(100%, min(480px, 94vw));
+  max-width: min(480px, 94vw);
+  box-sizing: border-box;
   padding: clamp(28px, 5vw, 42px);
   background: rgba(105, 13, 170, 0.221);
   backdrop-filter: blur(30px);
@@ -835,20 +853,26 @@ html {
 
 .compactCardBadge {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  display: flex;
+  top: clamp(10px, 2vw, 14px);
+  left: clamp(10px, 2vw, 14px);
+  right: auto;
+  transform: none;
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
+  gap: 3px;
+  padding: 3px 6px;
+  width: fit-content;
+  max-width: calc(100% - clamp(20px, 5vw, 32px));
+  box-sizing: border-box;
   background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(124, 58, 237, 0.18));
-  border: 2px solid #00d4ff;
-  border-radius: 16px;
-  font-size: 9px;
+  border: 1.5px solid #00d4ff;
+  border-radius: 999px;
+  font-size: 8px;
   font-weight: 800;
   color: #00d4ff;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   z-index: 2;
+  white-space: nowrap;
 }
 
 .compactCardImage {
@@ -942,16 +966,44 @@ html {
 
 /* Responsive - Mobile First */
 @media (max-width: 767px) {
-  /* Hide desktop-only elements */
-  :global(.desktop-only-line),
-  :global(.desktop-only-dot) {
-    display: none !important;
+  .premiumRoadmapContainer {
+    padding-inline: 0;
   }
 
-  /* Center roadmap items on mobile */
-  .roadmapItemLeft,
-  .roadmapItemRight {
-    justify-content: center !important;
+  .centralLine {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    opacity: 0.95;
+  }
+
+  .roadmapItemWrapper {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 14px;
+    align-items: start;
+    margin-bottom: clamp(36px, 9vw, 54px);
+  }
+
+  .centralDot {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: center;
+    align-self: center;
+    margin-top: 0;
+  }
+
+  .roadmapItemLeft .premiumCard,
+  .roadmapItemRight .premiumCard {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: center;
+    width: min(100%, 520px);
+    max-width: 100%;
+  }
+
+  .compactIconBadgeRight {
+    left: clamp(14px, 2.5vw, 20px);
+    right: auto;
   }
 
   /* Adjust spotlight positions */
@@ -1103,5 +1155,3 @@ html {
   box-shadow: 0 0 50px rgba(6, 182, 212, 0.5);
   border-color: rgba(6, 182, 212, 0.6);
 }
-
-

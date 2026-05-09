@@ -208,7 +208,7 @@ export default function AboutPage() {
           </div>
 
           <div className={ styles.premiumRoadmapContainer }>
-            <div className={ `${ styles.centralLine } desktop-only-line` } />
+            <div className={ styles.centralLine } />
 
             { DIFFERENCES.map((diff, index) => {
               const isLeft = index % 2 === 0;
@@ -223,7 +223,7 @@ export default function AboutPage() {
                   transition={ { duration: 0.5, delay: index * 0.1 } }
                   className={ `${ styles.roadmapItemWrapper } ${ isLeft ? styles.roadmapItemLeft : styles.roadmapItemRight }` }
                 >
-                  <div className={ `${ styles.centralDot } desktop-only-dot` } />
+                  <div className={ styles.centralDot } />
 
                   <motion.div
                     whileHover={ { scale: 1.03, y: -8 } }
