@@ -270,10 +270,7 @@ main {
    ============================================ */
 
 /* ✅ Optimize section rendering with CSS containment */
-section {
-  contain: layout style paint;
-  content-visibility: auto;
-}
+/* Removed global section containment to prevent layout shifts */
 
 /* ✅ Improve paint performance for cards and containers */
 article, 
@@ -703,12 +700,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ✅ Optimize viewport-based rendering */
-@supports (content-visibility: auto) {
-  section, article, aside {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 500px;
-  }
-}
+/* Removed content-visibility from global tags to prevent scrollbar jumping */
 
 /* ✅ Reduce repaint on scroll */
 .fixed-header,
