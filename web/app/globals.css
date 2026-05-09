@@ -286,11 +286,7 @@ article,
   padding-right: clamp(16px, 4vw, 48px);
 }
 
-/* ✅ Optimize image rendering */
-img {
-  content-visibility: auto;
-  contain: size layout style;
-}
+/* Removed global image content-visibility as it breaks intrinsic sizing and causes layout shifts */
 
 /* ============================================
    TYPOGRAPHY & FONTS
