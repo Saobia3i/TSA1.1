@@ -24,9 +24,9 @@ export default function FAQPage() {
           <p
             style={{
               color: "#22d3ee",
-              fontFamily: "var(--font-space-mono)",
-              fontSize: "13px",
-              fontWeight: 700,
+              fontFamily: "var(--font-family-base)",
+              fontSize: "var(--font-size-sm)",
+              fontWeight: "var(--font-weight-bold)",
               letterSpacing: "1px",
               textTransform: "uppercase",
               marginBottom: "12px",
@@ -37,15 +37,32 @@ export default function FAQPage() {
           <h1
             style={{
               margin: 0,
-              color: "#ffffff",
-              fontFamily: "var(--font-nunito)",
-              fontSize: "clamp(34px, 6vw, 54px)",
-              fontWeight: 800,
-              lineHeight: 1.08,
+              background: "linear-gradient(135deg, #22d3ee, #a855f7)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              fontFamily: "var(--font-family-base)",
+              fontSize: "clamp(32px, 5vw, 48px)",
+              fontWeight: "var(--font-weight-bold)",
+              letterSpacing: 0,
+              lineHeight: 1.15,
             }}
           >
             Frequently Asked Questions
           </h1>
+          <p
+            style={{
+              maxWidth: "680px",
+              margin: "16px auto 0",
+              color: "#9ca3af",
+              fontFamily: "var(--font-family-base)",
+              fontSize: "clamp(14px, 2vw, 16px)",
+              fontWeight: "var(--font-weight-medium)",
+              lineHeight: 1.6,
+            }}
+          >
+            Quick answers about our training, mentorship, labs, and cybersecurity services.
+          </p>
         </div>
 
         <div style={{ display: "grid", gap: "16px" }}>
@@ -64,9 +81,9 @@ export default function FAQPage() {
                 style={{
                   margin: "0 0 10px",
                   color: "#ffffff",
-                  fontFamily: "var(--font-nunito)",
+                  fontFamily: "var(--font-family-base)",
                   fontSize: "clamp(18px, 3vw, 22px)",
-                  fontWeight: 800,
+                  fontWeight: "var(--font-weight-bold)",
                   lineHeight: 1.25,
                 }}
               >
@@ -76,8 +93,9 @@ export default function FAQPage() {
                 style={{
                   margin: 0,
                   color: "#cbd5e1",
-                  fontFamily: "var(--font-nunito)",
+                  fontFamily: "var(--font-family-base)",
                   fontSize: "clamp(14px, 2.4vw, 16px)",
+                  fontWeight: "var(--font-weight-medium)",
                   lineHeight: 1.7,
                 }}
               >

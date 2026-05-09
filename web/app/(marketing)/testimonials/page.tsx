@@ -61,9 +61,9 @@ export default async function TestimonialsPage() {
           <p
             style={{
               color: "#22d3ee",
-              fontFamily: "var(--font-space-mono)",
-              fontSize: "13px",
-              fontWeight: 700,
+              fontFamily: "var(--font-family-base)",
+              fontSize: "var(--font-size-sm)",
+              fontWeight: "var(--font-weight-bold)",
               letterSpacing: "1px",
               textTransform: "uppercase",
               marginBottom: "12px",
@@ -74,11 +74,15 @@ export default async function TestimonialsPage() {
           <h1
             style={{
               margin: 0,
-              color: "#ffffff",
-              fontFamily: "var(--font-nunito)",
-              fontSize: "clamp(34px, 6vw, 56px)",
-              fontWeight: 800,
-              lineHeight: 1.08,
+              background: "linear-gradient(135deg, #22d3ee, #a855f7)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              fontFamily: "var(--font-family-base)",
+              fontSize: "clamp(32px, 5vw, 48px)",
+              fontWeight: "var(--font-weight-bold)",
+              letterSpacing: 0,
+              lineHeight: 1.15,
             }}
           >
             What People Say About Us
@@ -88,12 +92,13 @@ export default async function TestimonialsPage() {
               maxWidth: "720px",
               margin: "16px auto 0",
               color: "#9ca3af",
-              fontFamily: "var(--font-nunito)",
-              fontSize: "clamp(14px, 2.4vw, 16px)",
-              lineHeight: 1.7,
+              fontFamily: "var(--font-family-base)",
+              fontSize: "clamp(14px, 2vw, 16px)",
+              fontWeight: "var(--font-weight-medium)",
+              lineHeight: 1.6,
             }}
           >
-            Real feedback from learners and professionals growing with Tensor Security Academy.
+            Student reviews, professional perspectives, and community feedback on our work.
           </p>
         </div>
 
@@ -120,9 +125,9 @@ export default async function TestimonialsPage() {
                 style={{
                   margin: "0 0 6px",
                   color: "#ffffff",
-                  fontFamily: "var(--font-nunito)",
+                  fontFamily: "var(--font-family-base)",
                   fontSize: "clamp(18px, 3vw, 22px)",
-                  fontWeight: 800,
+                  fontWeight: "var(--font-weight-bold)",
                   lineHeight: 1.25,
                 }}
               >
@@ -133,9 +138,9 @@ export default async function TestimonialsPage() {
                   style={{
                     margin: "0 0 16px",
                     color: "#22d3ee",
-                    fontFamily: "var(--font-nunito)",
-                    fontSize: "13px",
-                    fontWeight: 700,
+                    fontFamily: "var(--font-family-base)",
+                    fontSize: "var(--font-size-sm)",
+                    fontWeight: "var(--font-weight-semibold)",
                     lineHeight: 1.45,
                   }}
                 >
@@ -146,8 +151,9 @@ export default async function TestimonialsPage() {
                 style={{
                   margin: 0,
                   color: "#cbd5e1",
-                  fontFamily: "var(--font-nunito)",
+                  fontFamily: "var(--font-family-base)",
                   fontSize: "clamp(14px, 2.4vw, 16px)",
+                  fontWeight: "var(--font-weight-medium)",
                   lineHeight: 1.7,
                 }}
               >
@@ -162,9 +168,9 @@ export default async function TestimonialsPage() {
                     display: "inline-flex",
                     marginTop: "18px",
                     color: "#22d3ee",
-                    fontFamily: "var(--font-nunito)",
-                    fontSize: "13px",
-                    fontWeight: 800,
+                    fontFamily: "var(--font-family-base)",
+                    fontSize: "var(--font-size-sm)",
+                    fontWeight: "var(--font-weight-bold)",
                   }}
                 >
                   View original post

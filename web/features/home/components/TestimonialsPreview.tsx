@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getTestimonials, type Testimonial } from "@/features/home/data/testimonials";
+import styles from "./TestimonialsPreview.module.css";
 
 function getInitials(name: string) {
   return name
@@ -32,7 +33,7 @@ function TestimonialCard({
 }) {
   return (
     <article
-      className={`testimonial-card ${isExpanded ? "is-expanded" : ""}`}
+      className={`${styles.card} ${isExpanded ? styles.expandedCard : ""}`}
       aria-expanded={isExpanded}
       onClick={() => {
         onToggleExpand();
@@ -75,9 +76,11 @@ function TestimonialCard({
         }
       }}
     >
-      <div className="testimonial-card-shine" />
-      <div className="testimonial-card-header">
-        <div className="testimonial-avatar">
+      <div className={styles.cardShine} />
+      <Quote className={styles.quoteIcon} aria-hidden="true" />
+
+      <div className={styles.cardHeader}>
+        <div className={styles.avatar}>
           {testimonial.image ? (
             <Image
               src={testimonial.image}
@@ -91,17 +94,15 @@ function TestimonialCard({
           )}
         </div>
 
-        <div className="testimonial-person">
+        <div className={styles.person}>
           <h3>{testimonial.name}</h3>
           {testimonial.position ? <p>{testimonial.position}</p> : null}
         </div>
-
-        <Quote className="testimonial-quote-icon" aria-hidden="true" />
       </div>
 
-      <p className="testimonial-review">{testimonial.review}</p>
+      <p className={styles.review}>{testimonial.review}</p>
 
-      <div className="testimonial-card-footer">
+      <div className={styles.cardFooter}>
         {testimonial.postLink ? (
           <Link
             href={testimonial.postLink}
@@ -172,392 +173,28 @@ export default function TestimonialsPreview() {
 
   return (
     <section
-      className={`testimonials-preview ${isPaused ? "is-paused" : ""}`}
+      className={`${styles.preview} ${isPaused ? styles.paused : ""}`}
       aria-label="What people say about us"
     >
-      <style>{`
-        @keyframes testimonials-move-left {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-
-        @keyframes testimonials-move-right {
-          0% { transform: translateX(-50%); }
-          100% { transform: translateX(0); }
-        }
-
-        .testimonials-preview {
-          position: relative;
-          overflow: hidden;
-          padding: clamp(28px, 5vw, 52px) clamp(14px, 4vw, 24px);
-          background:
-            radial-gradient(circle at 10% 0%, rgba(168, 85, 247, 0.1), transparent 34%),
-            radial-gradient(circle at 82% 44%, rgba(34, 211, 238, 0.08), transparent 36%),
-            transparent;
-        }
-
-        .testimonials-preview::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background-image:
-            linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-          background-size: 56px 56px;
-          mask-image: linear-gradient(to bottom, transparent, black 22%, black 78%, transparent);
-          pointer-events: none;
-        }
-
-        .testimonials-inner {
-          position: relative;
-          z-index: 1;
-          width: 100%;
-          max-width: 1040px;
-          margin: 0 auto;
-        }
-
-        .testimonials-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 14px;
-          margin: 0 0 clamp(16px, 3vw, 24px);
-          text-align: left;
-        }
-
-        .testimonials-title-wrap {
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          min-width: 0;
-        }
-
-        .testimonials-title-mark {
-          color: #22d3ee;
-          font-size: clamp(21px, 3vw, 28px);
-          font-weight: 900;
-          line-height: 1;
-        }
-
-        .testimonials-title {
-          margin: 0;
-          color: #ffffff;
-          font-family: var(--font-nunito);
-          font-size: clamp(22px, 2.8vw, 30px);
-          font-weight: 800;
-          line-height: 1.15;
-        }
-
-        .testimonials-grid-wrap {
-          display: flex;
-          flex-direction: column;
-          gap: clamp(12px, 2.4vw, 18px);
-          width: 100%;
-        }
-
-        .testimonial-lane {
-          overflow: hidden;
-          padding: 2px 0 16px;
-          margin: -2px 0 -16px;
-          border-radius: 18px;
-          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-          mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-        }
-
-        .testimonial-track {
-          display: flex;
-          align-items: flex-start;
-          gap: 16px;
-          width: max-content;
-          will-change: transform;
-        }
-
-        .testimonial-track-upper {
-          animation: testimonials-move-left 26s linear infinite;
-        }
-
-        .testimonial-track-lower {
-          animation: testimonials-move-right 26s linear infinite;
-        }
-
-        .testimonials-preview.is-paused .testimonial-track {
-          animation-play-state: paused;
-        }
-
-        .testimonial-card {
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          width: clamp(340px, 42vw, 500px);
-          min-height: 156px;
-          padding: 15px 16px;
-          overflow: hidden;
-          border: 1px solid rgba(148, 163, 184, 0.16);
-          border-radius: 12px;
-          background:
-            linear-gradient(135deg, rgba(15, 23, 42, 0.84), rgba(2, 6, 23, 0.88)),
-            radial-gradient(circle at 0% 0%, rgba(34, 211, 238, 0.08), transparent 42%);
-          box-shadow:
-            0 18px 42px rgba(0, 0, 0, 0.26),
-            inset 0 1px 0 rgba(255, 255, 255, 0.04);
-          box-sizing: border-box;
-          font-family: var(--font-nunito);
-          cursor: pointer;
-          transition: min-height 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .testimonial-card.is-expanded {
-          min-height: 220px;
-          border-color: rgba(34, 211, 238, 0.34);
-          box-shadow:
-            0 22px 54px rgba(0, 0, 0, 0.32),
-            0 0 0 1px rgba(34, 211, 238, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        }
-
-        .testimonial-card-shine {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.055), transparent);
-          transform: translateX(-70%);
-          pointer-events: none;
-        }
-
-        .testimonial-card:hover .testimonial-card-shine {
-          transform: translateX(70%);
-          transition: transform 0.7s ease;
-        }
-
-        .testimonial-card-header {
-          position: relative;
-          z-index: 1;
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          min-width: 0;
-        }
-
-        .testimonial-avatar {
-          position: relative;
-          width: 40px;
-          height: 40px;
-          flex: 0 0 40px;
-          overflow: hidden;
-          border: 2px solid rgba(34, 211, 238, 0.38);
-          border-radius: 999px;
-          background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(168, 85, 247, 0.2));
-          box-shadow: 0 0 20px rgba(34, 211, 238, 0.14);
-        }
-
-        .testimonial-avatar span {
-          display: flex;
-          width: 100%;
-          height: 100%;
-          align-items: center;
-          justify-content: center;
-          color: #ffffff;
-          font-size: 13px;
-          font-weight: 800;
-        }
-
-        .testimonial-person {
-          min-width: 0;
-          flex: 1;
-        }
-
-        .testimonial-person h3 {
-          margin: 0 0 3px;
-          color: #ffffff;
-          font-size: 15px;
-          font-weight: 800;
-          line-height: 1.2;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        .testimonial-person p {
-          margin: 0;
-          color: #22d3ee;
-          font-size: 12px;
-          font-weight: 700;
-          line-height: 1.35;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        .testimonial-quote-icon {
-          width: 20px;
-          height: 20px;
-          flex: 0 0 auto;
-          color: rgba(34, 211, 238, 0.7);
-        }
-
-        .testimonial-review {
-          position: relative;
-          z-index: 1;
-          display: -webkit-box;
-          min-height: calc(1.5em * 2);
-          margin: 10px 0 0;
-          overflow: hidden;
-          color: #aeb7cc;
-          font-size: 13px;
-          font-weight: 500;
-          line-height: 1.5;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-        }
-
-        .testimonial-card.is-expanded .testimonial-review {
-          display: block;
-          overflow: visible;
-          -webkit-line-clamp: unset;
-        }
-
-        .testimonial-card-footer {
-          position: relative;
-          z-index: 1;
-          display: flex;
-          align-items: center;
-          justify-content: flex-start;
-          gap: 12px;
-          margin-top: auto;
-          padding-top: 14px;
-          border-top: 0;
-        }
-
-        .testimonial-card-footer span {
-          display: inline-flex;
-          min-height: 28px;
-          align-items: center;
-          color: #22d3ee;
-          font-size: 12px;
-          font-weight: 700;
-        }
-
-        .testimonial-card-footer a {
-          display: inline-flex;
-          min-height: 28px;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          flex: 0 0 auto;
-          padding: 0 10px;
-          border: 1px solid rgba(34, 211, 238, 0.28);
-          border-radius: 999px;
-          color: #22d3ee;
-          background: rgba(34, 211, 238, 0.08);
-          transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-        }
-
-        .testimonial-card-footer a:hover {
-          transform: translateY(-2px);
-          border-color: rgba(34, 211, 238, 0.56);
-          background: rgba(34, 211, 238, 0.14);
-        }
-
-        .testimonial-card-footer svg {
-          width: 16px;
-          height: 16px;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .testimonial-track {
-            animation: none;
-            transform: none;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .testimonials-header {
-            align-items: flex-start;
-            flex-direction: column;
-          }
-
-          .testimonials-grid-wrap {
-            gap: 10px;
-          }
-
-          .testimonial-lane {
-            height: 162px;
-            padding: 2px 0 12px;
-            margin: 0;
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
-            mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
-          }
-
-          .testimonial-track {
-            height: 148px;
-          }
-
-          .testimonial-card {
-            width: min(360px, calc(100vw - 48px));
-            height: 148px;
-            min-height: 0;
-            padding: 13px 14px;
-          }
-
-          .testimonial-card.is-expanded {
-            height: 230px;
-          }
-
-          .testimonial-lane:has(.testimonial-card.is-expanded) {
-            height: 244px;
-          }
-          }
-
-          .testimonial-avatar {
-            width: 36px;
-            height: 36px;
-            flex-basis: 36px;
-          }
-
-          .testimonial-person h3 {
-            font-size: 14px;
-          }
-
-          .testimonial-person p,
-          .testimonial-card-footer span {
-            font-size: 11px;
-          }
-
-          .testimonial-review {
-            margin-top: 8px;
-            font-size: 12px;
-            line-height: 1.45;
-            min-height: calc(1.45em * 2);
-          }
-        }
-
-        @media (min-width: 641px) {
-          .testimonial-card-header {
-            justify-content: flex-start;
-          }
-
-          .testimonial-card-footer {
-            justify-content: flex-start;
-          }
-        }
-      `}</style>
-
-      <div className="testimonials-inner">
+      <div className={styles.inner}>
         <motion.div
-          className="testimonials-header"
+          className={styles.header}
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="testimonials-title-wrap">
-            <span className="testimonials-title-mark" aria-hidden="true">&gt;</span>
-            <h2 className="testimonials-title">What People Say</h2>
+          <div className={styles.titleWrap}>
+            <h2 className={styles.title}>What People Say About Us</h2>
+            <p className={styles.subtitle}>
+              Student reviews, professional perspectives, and community feedback on our work.
+            </p>
           </div>
         </motion.div>
 
-        <div className="testimonials-grid-wrap">
-          <div className="testimonial-lane">
-            <div className="testimonial-track testimonial-track-upper">
+        <div className={styles.gridWrap}>
+          <div className={styles.lane}>
+            <div className={`${styles.track} ${styles.trackUpper}`}>
               {[...upperRowReviews, ...upperRowReviews].map((testimonial, index) => (
                 <TestimonialCard
                   key={`upper-${testimonial.id}-${index}`}
@@ -572,8 +209,8 @@ export default function TestimonialsPreview() {
           </div>
 
           {lowerRowReviews.length > 0 ? (
-            <div className="testimonial-lane">
-              <div className="testimonial-track testimonial-track-lower">
+            <div className={styles.lane}>
+              <div className={`${styles.track} ${styles.trackLower}`}>
                 {[...lowerRowReviews, ...lowerRowReviews].map((testimonial, index) => (
                   <TestimonialCard
                     key={`lower-${testimonial.id}-${index}`}

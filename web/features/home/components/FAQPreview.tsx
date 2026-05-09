@@ -91,13 +91,13 @@ export default function FAQPreview() {
                     color: "#e5e7eb",
                     cursor: "pointer",
                     textAlign: "left",
-                    fontFamily: "var(--font-nunito)",
+                    fontFamily: "var(--font-family-base)",
                   }}
                 >
                   <span
                     style={{
                       fontSize: "clamp(14px, 2.3vw, 17px)",
-                      fontWeight: 800,
+                      fontWeight: "var(--font-weight-bold)",
                       lineHeight: 1.35,
                     }}
                   >
@@ -146,8 +146,9 @@ export default function FAQPreview() {
                           margin: 0,
                           padding: "0 clamp(14px, 3vw, 24px) clamp(18px, 3vw, 24px)",
                           color: "#cbd5e1",
-                          fontFamily: "var(--font-nunito)",
+                          fontFamily: "var(--font-family-base)",
                           fontSize: "clamp(13px, 2vw, 15px)",
+                          fontWeight: "var(--font-weight-medium)",
                           lineHeight: 1.7,
                         }}
                       >

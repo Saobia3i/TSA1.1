@@ -62,7 +62,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
 
   return (
     <section className="page-with-navbar">
-      <div style={{ maxWidth: '950px', margin: '0 auto', padding: '80px 24px 60px' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '80px clamp(16px, 3vw, 32px) 60px' }}>
         {/* Back Button */}
         <div style={{ marginBottom: '48px' }}>
           <Link 
@@ -93,9 +93,10 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
             background: 'rgba(17, 24, 39, 0.85)',
             border: '2px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '20px',
-            padding: 'clamp(24px, 4vw, 48px)',
+            padding: 'clamp(24px, 4vw, 56px)',
             backdropFilter: 'blur(10px)',
             boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
+            width: '100%',
           }}
         >
           {/* Hero Images Carousel */}
@@ -282,6 +283,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
               style={{
                 ...pageTitleStyle,
                 marginTop: '40px',
+                maxWidth: '1100px',
                 textAlign: 'left',
               }}
             >
@@ -295,7 +297,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                 borderRadius: '999px',
                 background: 'linear-gradient(90deg, #22d3ee, #a855f7)',
                 boxShadow: '0 6px 16px rgba(168, 85, 247, 0.35)',
-                maxWidth: '720px',
+                maxWidth: '100%',
               }}
             />
             
@@ -307,6 +309,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
                 fontSize: 'var(--font-size-lg)',
                 color: 'var(--color-text-secondary)',
                 margin: '32px 0 0',
+                maxWidth: '980px',
                 textAlign: 'left',
               }}
             >
@@ -315,7 +318,7 @@ export default function NewsDetails({ id }: NewsDetailsProps) {
           </header>
 
           {/* Content Blocks */}
-          <div className="news-content" style={{ marginTop: '72px' }}>
+          <div className="news-content" style={{ marginTop: '72px', maxWidth: '1080px' }}>
             {news.content.map((block: NewsBlock, idx: number) => (
               <div key={idx} style={{ marginBottom: '32px' }}>
                 {block.type === "heading" && (
