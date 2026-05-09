@@ -1,20 +1,20 @@
 @keyframes moveLeft {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(calc(-50% - 8px), 0, 0);
   }
 }
 
 @keyframes moveRight {
   0% {
-    transform: translateX(-50%);
+    transform: translate3d(calc(-50% - 8px), 0, 0);
   }
 
   100% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -107,7 +107,6 @@
   align-items: flex-start;
   gap: 16px;
   width: max-content;
-  will-change: transform;
 }
 
 .trackUpper {
@@ -127,9 +126,11 @@
   display: grid;
   grid-template-rows: auto auto 1fr;
   align-content: start;
-  width: clamp(340px, 42vw, 500px) !important;
-  max-width: none !important;
+  min-width: clamp(340px, 42vw, 500px) !important;
+  max-width: 500px !important;
+  flex: 0 0 auto !important;
   min-height: 156px;
+  height: 156px;
   margin: 0 !important;
   padding: 15px 16px !important;
   overflow: hidden;
@@ -151,6 +152,7 @@
 
 .expandedCard {
   min-height: 220px;
+  height: auto;
   border-color: rgba(34, 211, 238, 0.34);
   box-shadow:
     0 22px 54px rgba(0, 0, 0, 0.32),
@@ -356,7 +358,8 @@
   }
 
   .card {
-    width: min(360px, calc(100vw - 48px)) !important;
+    min-width: min(360px, calc(100vw - 48px)) !important;
+    max-width: min(360px, calc(100vw - 48px)) !important;
     height: 148px;
     min-height: 0;
     padding: 13px 14px !important;

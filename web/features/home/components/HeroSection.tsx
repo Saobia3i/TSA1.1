@@ -319,7 +319,7 @@ const HeroTestimonials = memo(function HeroTestimonials() {
     };
   }, []);
 
-  const scrollingTestimonials = [...testimonials, ...testimonials, ...testimonials];
+  const scrollingTestimonials = [...testimonials, ...testimonials];
 
   return (
     <div className="hero-testimonials is-ready" aria-label="Featured testimonials">
@@ -427,7 +427,7 @@ export default function HeroSection() {
         @keyframes floatC { 0%,100%{transform:translateY(0) rotate(1deg)} 50%{transform:translateY(-8px) rotate(-1deg)} }
         @keyframes floatD { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
         @keyframes floatE { 0%,100%{transform:translateY(0) rotate(.5deg)} 50%{transform:translateY(-12px) rotate(-.5deg)} }
-        @keyframes heroTestimonialsScroll { from{transform:translateX(-66.666%)} to{transform:translateX(-33.333%)} }
+        @keyframes heroTestimonialsScroll { from{transform:translate3d(0,0,0)} to{transform:translate3d(calc(-50% - calc(var(--track-gap) / 2)), 0, 0)} }
 
         .h-grid {
           display:grid;
@@ -489,19 +489,20 @@ export default function HeroSection() {
           mask-image:linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
         }
         .hero-testimonials-track {
+          --track-gap: 8px;
           display:flex;
           align-items:flex-start;
-          gap:8px;
+          gap:var(--track-gap);
           width:max-content;
           animation:heroTestimonialsScroll 22s linear infinite;
-          will-change:transform;
         }
         .hero-testimonials:hover .hero-testimonials-track {
           animation-play-state:paused;
         }
         .hero-testimonial-card {
-          min-width:0;
-          flex:0 0 clamp(210px, 13vw, 250px);
+          min-width: clamp(210px, 13vw, 250px);
+          max-width: 250px;
+          flex: 0 0 auto;
           height:104px;
           display:flex;
           flex-direction:column;
@@ -613,13 +614,13 @@ export default function HeroSection() {
           .hero-testimonials {
             width:min(100%, 660px);
           }
-
           .hero-testimonials-track {
-            gap:6px;
+            --track-gap: 6px;
           }
 
           .hero-testimonial-card {
-            flex-basis:240px;
+            min-width: 240px;
+            max-width: 240px;
           }
         }
 
@@ -635,13 +636,13 @@ export default function HeroSection() {
             .hero-testimonials {
               width:min(100%, 660px);
             }
-
             .hero-testimonials-track {
-              gap:6px;
+              --track-gap: 6px;
             }
 
             .hero-testimonial-card {
-              flex-basis:240px;
+              min-width: 240px;
+              max-width: 240px;
             }
           }
         }
@@ -657,7 +658,8 @@ export default function HeroSection() {
             width:min(100%, 460px);
           }
           .hero-testimonial-card {
-            flex-basis:190px;
+            min-width: 190px;
+            max-width: 190px;
           }
         }
         @media(max-width:1024px) and (min-width:769px) {
@@ -686,7 +688,8 @@ export default function HeroSection() {
             font-size:10px;
           }
           .hero-testimonial-card {
-            flex-basis:190px;
+            min-width: 190px;
+            max-width: 190px;
             height:96px;
             padding:9px 10px;
           }

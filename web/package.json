@@ -75,6 +75,7 @@
     "eslint-config-next": "16.0.3",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
+    "playwright": "^1.59.1",
     "prisma": "^5.22.0",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
