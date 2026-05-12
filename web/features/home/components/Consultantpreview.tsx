@@ -8,152 +8,206 @@ import { getFeaturedConsultants } from '@/features/consultant/Consultantdata';
 import Image from 'next/image';
 import { homePreviewCardButtonStyle, sectionSubtitleStyle, sectionTitleStyle } from '@/features/home/components/homeSectionStyles';
 
-const VideoSection = ({ isMobile }: { isMobile: boolean }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ duration: 0.8, type: "spring", bounce: 0.3, delay: 0.1 }}
-    whileHover={{ y: -10, scale: 1.03 }}
-    style={{
-      position: 'relative',
-      width: '100%',
-      maxWidth: isMobile ? '240px' : '230px',
-      margin: '0 auto',
-      zIndex: 10,
-    }}
-  >
-    {/* Ultra Premium Glow */}
-    <motion.div 
-      animate={{ opacity: [0.6, 0.9, 0.6], scale: [0.95, 1.05, 0.95] }}
-      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      style={{
-        position: 'absolute',
-        inset: '-20px',
-        background: 'radial-gradient(ellipse at center, rgba(34, 211, 238, 0.5) 0%, rgba(168, 85, 247, 0.3) 50%, transparent 70%)',
-        filter: 'blur(30px)',
-        zIndex: 0,
-      }} 
-    />
+const VideoSection = ({ isMobile }: { isMobile: boolean }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
 
-    {/* Featured Tag (Golden Shimmer) */}
-    <motion.div 
-      initial={{ opacity: 0, x: -10 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ delay: 0.7 }}
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8, type: "spring", bounce: 0.3, delay: 0.1 }}
+      whileHover={{ y: -10, scale: 1.03 }}
       style={{
-        position: 'absolute',
-        top: '-14px',
-        left: '-16px',
-        borderRadius: '12px',
-        zIndex: 4,
-        boxShadow: '0 6px 20px rgba(251, 191, 36, 0.4)',
-        border: '1px solid rgba(255, 255, 255, 0.5)',
-        overflow: 'hidden',
+        position: 'relative',
+        width: '100%',
+        maxWidth: isMobile ? '240px' : '230px',
+        margin: '0 auto',
+        zIndex: 10,
       }}
     >
-      <motion.div
-        animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-        transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+      {/* Ultra Premium Glow */}
+      <motion.div 
+        animate={{ opacity: [0.6, 0.9, 0.6], scale: [0.95, 1.05, 0.95] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         style={{
-          background: 'linear-gradient(270deg, #d97706, #fbbf24, #fef08a, #fbbf24, #d97706)',
-          backgroundSize: '300% 300%',
-          padding: '5px 16px',
-          fontSize: '11px',
-          fontWeight: 900,
-          color: '#451a03',
-          letterSpacing: '1px',
-          textTransform: 'uppercase',
+          position: 'absolute',
+          inset: '-20px',
+          background: 'radial-gradient(ellipse at center, rgba(34, 211, 238, 0.5) 0%, rgba(168, 85, 247, 0.3) 50%, transparent 70%)',
+          filter: 'blur(30px)',
+          zIndex: 0,
+        }} 
+      />
+
+      {/* Featured Tag (Golden Shimmer) */}
+      <motion.div 
+        initial={{ opacity: 0, x: -10 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.7 }}
+        style={{
+          position: 'absolute',
+          top: '-14px',
+          left: '-16px',
+          borderRadius: '12px',
+          zIndex: 4,
+          boxShadow: '0 6px 20px rgba(251, 191, 36, 0.4)',
+          border: '1px solid rgba(255, 255, 255, 0.5)',
+          overflow: 'hidden',
         }}
       >
-        Exclusive
+        <motion.div
+          animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+          transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+          style={{
+            background: 'linear-gradient(270deg, #d97706, #fbbf24, #fef08a, #fbbf24, #d97706)',
+            backgroundSize: '300% 300%',
+            padding: '5px 16px',
+            fontSize: '11px',
+            fontWeight: 900,
+            color: '#451a03',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+          }}
+        >
+          Exclusive
+        </motion.div>
+      </motion.div>
+
+      {/* Video Container with animated cyan/purple gradient border */}
+      <motion.div 
+        animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+        transition={{ duration: 6, ease: "linear", repeat: Infinity }}
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          width: '100%',
+          aspectRatio: '9/16',
+          borderRadius: '24px',
+          padding: '4px',
+          background: 'linear-gradient(270deg, #22d3ee, #a855f7, #22d3ee)',
+          backgroundSize: '200% 200%',
+          boxShadow: '0 30px 60px -15px rgba(0,0,0,0.9), 0 0 40px rgba(168, 85, 247, 0.25)',
+        }}
+      >
+        {/* Inner Screen */}
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          borderRadius: '22px',
+          overflow: 'hidden',
+          background: '#040b16',
+        }}>
+          {!isPlaying && (
+            <div 
+              onClick={() => setIsPlaying(true)}
+              style={{
+                position: 'absolute',
+                top: 0, left: 0, right: 0, bottom: 0,
+                zIndex: 10,
+                cursor: 'pointer',
+                backgroundImage: `url('https://img.youtube.com/vi/PVoFJsqNUpQ/hqdefault.jpg')`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {/* Dark overlay for better button visibility */}
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'rgba(0,0,0,0.3)',
+              }} />
+              
+              {/* Custom Play Button */}
+              <motion.div 
+                whileHover={{ scale: 1.1 }}
+                style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.9), rgba(168, 85, 247, 0.9))',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backdropFilter: 'blur(8px)',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(34, 211, 238, 0.6)',
+                  zIndex: 2,
+                  border: '2px solid rgba(255, 255, 255, 0.8)',
+                }}
+              >
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" stroke="none" style={{ marginLeft: '4px' }}>
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </motion.div>
+            </div>
+          )}
+
+          {isPlaying && (
+            <iframe
+              src="https://www.youtube.com/embed/PVoFJsqNUpQ?autoplay=1&controls=1&rel=0&modestbranding=1"
+              title="Consultant Promotional Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{
+                width: '100%',
+                height: '100%',
+                border: 'none',
+              }}
+            />
+          )}
+        </div>
+      </motion.div>
+
+      {/* Floating Action Badge Bottom Right */}
+      <motion.div 
+        onClick={() => setIsPlaying(true)}
+        whileHover={{ scale: 1.1 }}
+        style={{
+          position: 'absolute',
+          bottom: '-12px',
+          right: '-12px',
+          background: 'rgba(15, 23, 42, 0.9)',
+          backdropFilter: 'blur(12px)',
+          padding: '8px 16px',
+          borderRadius: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          zIndex: 3,
+          boxShadow: '0 12px 30px rgba(0,0,0,0.6), 0 0 0 1px rgba(168, 85, 247, 0.4)',
+          cursor: 'pointer',
+        }}
+      >
+        <div style={{
+          width: '24px',
+          height: '24px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #a855f7, #ec4899)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 0 12px rgba(168, 85, 247, 0.6)',
+        }}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff" stroke="none" style={{ marginLeft: '2px' }}>
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+        </div>
+        <span style={{ 
+          fontSize: '12px',
+          fontWeight: 800,
+          color: '#fff',
+          letterSpacing: '0.5px',
+          fontFamily: 'var(--font-nunito)',
+        }}>
+          {isPlaying ? 'Playing' : 'Play Short'}
+        </span>
       </motion.div>
     </motion.div>
-
-    {/* Video Container with animated cyan/purple gradient border */}
-    <motion.div 
-      animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-      transition={{ duration: 6, ease: "linear", repeat: Infinity }}
-      style={{
-        position: 'relative',
-        zIndex: 1,
-        width: '100%',
-        aspectRatio: '9/16',
-        borderRadius: '24px',
-        padding: '4px',
-        background: 'linear-gradient(270deg, #22d3ee, #a855f7, #22d3ee)',
-        backgroundSize: '200% 200%',
-        boxShadow: '0 30px 60px -15px rgba(0,0,0,0.9), 0 0 40px rgba(168, 85, 247, 0.25)',
-      }}
-    >
-      {/* Inner Screen */}
-      <div style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        borderRadius: '22px',
-        overflow: 'hidden',
-        background: '#040b16',
-      }}>
-        <iframe
-          src="https://www.youtube.com/embed/PVoFJsqNUpQ?autoplay=0&controls=1&rel=0&modestbranding=1"
-          title="Consultant Promotional Video"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          style={{
-            width: '100%',
-            height: '100%',
-            border: 'none',
-          }}
-        />
-      </div>
-    </motion.div>
-
-    {/* Floating Action Badge Bottom Right */}
-    <motion.div 
-      whileHover={{ scale: 1.1 }}
-      style={{
-        position: 'absolute',
-        bottom: '-12px',
-        right: '-12px',
-        background: 'rgba(15, 23, 42, 0.9)',
-        backdropFilter: 'blur(12px)',
-        padding: '8px 16px',
-        borderRadius: '20px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        zIndex: 3,
-        boxShadow: '0 12px 30px rgba(0,0,0,0.6), 0 0 0 1px rgba(168, 85, 247, 0.4)',
-        cursor: 'pointer',
-      }}
-    >
-      <div style={{
-        width: '24px',
-        height: '24px',
-        borderRadius: '50%',
-        background: 'linear-gradient(135deg, #a855f7, #ec4899)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxShadow: '0 0 12px rgba(168, 85, 247, 0.6)',
-      }}>
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff" stroke="none" style={{ marginLeft: '2px' }}>
-          <polygon points="5 3 19 12 5 21 5 3"></polygon>
-        </svg>
-      </div>
-      <span style={{ 
-        fontSize: '12px',
-        fontWeight: 800,
-        color: '#fff',
-        letterSpacing: '0.5px',
-        fontFamily: 'var(--font-nunito)',
-      }}>
-        Play Short
-      </span>
-    </motion.div>
-  </motion.div>
-);
+  );
+};
 
 export default function ConsultantPreview() {
   const consultant = getFeaturedConsultants()[0];
