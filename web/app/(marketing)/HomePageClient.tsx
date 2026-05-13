@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { Quote, Handshake } from "lucide-react";
+import { Quote, Handshake, Mail } from "lucide-react";
+import LinkedinIcon from "@mui/icons-material/LinkedIn";
 import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -252,7 +253,7 @@ export default function HomePage() {
               >
                 <Image
                   src="https://ik.imagekit.io/7yw4jtfbt/TSA/WhatsApp%20Image%202025-12-25%20at%207.49.50%20PM.jpeg?tr=w-280,h-280,q-85,f-webp"
-                  alt="Founder - Abrar Jahin"
+                  alt="Founder & CEO - Abrar Jahin"
                   width={280}
                   height={280}
                   priority
@@ -342,25 +343,50 @@ export default function HomePage() {
                   }}
                 />
                 <div>
-                  <p
-                    style={{
-                      fontSize: "18px",
-                      fontWeight: 700,
-                      color: "#22d3ee",
-                      fontFamily: "var(--font-nunito)",
-                      marginBottom: "2px",
-                    }}
-                  >
-                    Abrar Jahin
-                  </p>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "2px" }}>
+                    <p
+                      style={{
+                        fontSize: "18px",
+                        fontWeight: 700,
+                        color: "#22d3ee",
+                        fontFamily: "var(--font-nunito)",
+                        margin: 0,
+                      }}
+                    >
+                      Abrar Jahin
+                    </p>
+                    <motion.a
+                      href="https://www.linkedin.com/in/abrarjahinsachcha/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={isMobile ? {} : { scale: 1.1, backgroundColor: "rgba(34, 211, 238, 0.1)", y: -2 }}
+                      whileTap={isMobile ? {} : { scale: 0.95 }}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "28px",
+                        height: "28px",
+                        borderRadius: "50%",
+                        border: "1.5px solid rgba(34, 211, 238, 0.4)",
+                        color: "#22d3ee",
+                        textDecoration: "none",
+                        transition: "all 0.3s ease",
+                      }}
+                      title="Connect with Abrar Jahin on LinkedIn"
+                    >
+                      <LinkedinIcon style={{ width: "16px", height: "16px" }} />
+                    </motion.a>
+                  </div>
                   <p
                     style={{
                       fontSize: "13px",
-                      color: "#9ca3af",
+                      color: "#ffffff",
+                      fontWeight: "bold",
                       fontFamily: "var(--font-nunito)",
                     }}
                   >
-                    Founder,Tensor Security Academy
+                    Founder & CEO,Tensor Security Academy
                   </p>
                 </div>
               </motion.div>

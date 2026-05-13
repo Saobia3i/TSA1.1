@@ -1,6 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import { TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -209,9 +210,12 @@ export default function CoursesPreview() {
                                 letterSpacing: '0.5px',
                                 boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
                                 zIndex: 10,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px',
                               }}
                             >
-                              {badgeText === 'Trending' && '🔥 '}
+                              {badgeText === 'Trending' && <TrendingUp style={{ width: '14px', height: '14px' }} />}
                               {badgeText}
                             </motion.div>
                           )}
