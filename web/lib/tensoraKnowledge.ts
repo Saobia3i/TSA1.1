@@ -239,7 +239,7 @@ const staticChunks: KnowledgeChunk[] = [
       "- SEO optimization, performance tuning, and deployment infrastructure.",
       "",
       "This is not a template or a team effort — Saobia Islam is the sole engineer who conceived, architected, and brought this entire platform to life.",
-      "Email: islamsaobia@gmail.com",
+     
       "Linkedin: www.linkedin.com/in/saobia-islam/"
     ].join("\n"),
     keywords: [
